@@ -22,12 +22,16 @@ function Sidebar() {
                                 label: "Quote List",
                             },
                             {
-                                url: "/settings",
-                                label: "settings",
+                                url: "/quote-settings/display",
+                                label: "Quote settings",
+                            },
+                            {
+                                url: "/settings/general",
+                                label: "Settings",
                             },
                             {
                                 url: "/pricing",
-                                label: "Pricing",
+                                label: "Pricing Plan",
                             },
                         ]}
                     />
@@ -44,11 +48,23 @@ function Sidebar() {
                     <Route path="trash-quote" />
                     <Route path="abandoned-quote" />
                 </Route>
+                <Route path="/quote-settings">
+                    <Route path="display" element={<SettingsPage />} />
+                    <Route path="quote-form" />
+                    <Route path="quote-items" />
+                    <Route path="quote-view&button" />
+                </Route>
                 <Route path="/settings">
-                    <Route path="/display" element={<SettingsPage />} />
-                    <Route path="/quote-form" />
-                    <Route path="/quote-item" />
-                    <Route path="/quote-view&button" />
+                    <Route path="general" element={<SettingsPage />} />
+
+                    <Route
+                        path="notification&template"
+                        element={<SettingsPage />}
+                    />
+                    <Route path="salesperson">
+                        <Route path="create-salesperson-account" />
+                    </Route>
+                    <Route path="advanced" />
                 </Route>
                 <Route path="/pricing" element={<PricingPage />} />
             </Routes>
