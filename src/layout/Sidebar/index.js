@@ -1,5 +1,5 @@
 import { Frame, Navigation } from "@shopify/polaris";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import DashboardPage from "../../pages/DashboardPage";
 import QuoteListPage from "../../pages/QuoteListPage";
 import SettingsPage from "../../pages/SettingsPage";
@@ -7,7 +7,6 @@ import PricingPage from "../../pages/PricingPage";
 
 function Sidebar() {
     const location = useLocation();
-    const navigate = useNavigate();
     return (
         <Frame
             navigation={
@@ -15,9 +14,8 @@ function Sidebar() {
                     <Navigation.Section
                         items={[
                             {
-                                url: "javascript:void(0)",
+                                url: "/dashboard",
                                 label: "Dashboard",
-                                onClick: () => navigate("/dashboard"),
                             },
                             {
                                 url: "/quote/list",

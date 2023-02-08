@@ -1,0 +1,45 @@
+// .quote-list {
+//     display: flex;
+//     width: 100%;
+
+// }
+
+.quote-list__card-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .card-wrapper__btn-search {
+        width: 24%;
+    }
+
+    .card-wrapper__btn-calendar {
+        display: flex;
+
+        .Polaris-Button {
+            .Polaris-Button__Content {
+                width: 200px;
+                flex-direction: row-reverse;
+
+                .Polaris-Button__Icon {
+                    margin-left: 1%;
+                }
+            }
+        }
+    }
+
+    .card-wrapper__btn-create {
+        .Polaris-Button {
+            background: linear-gradient(180deg, #6371c7, #5563c1);
+
+            &:hover {
+                background: linear-gradient(180deg, #5c6ac4, #4959bd);
+            }
+
+            &:active {
+                background: linear-gradient(180deg, #3f4eae, #3f4eae);
+            }
+        }
+    }
+
+}
