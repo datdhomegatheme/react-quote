@@ -1,13 +1,14 @@
 import {
+    ActionList,
     Badge,
     Button,
     ButtonGroup,
     Card,
     DatePicker,
-    Icon,
     IndexTable,
     List,
     Page,
+    Popover,
     Tabs,
     Text,
     TextField,
@@ -17,6 +18,8 @@ import {
     CalendarMinor,
     SettingsMinor,
     PlusMinor,
+    DeleteMinor,
+    ViewMinor,
 } from "@shopify/polaris-icons";
 
 import { useCallback, useState } from "react";
@@ -25,6 +28,13 @@ function QuoteListPage() {
     const [selected, setSelected] = useState(0);
     const [textFieldValue, setTextFieldValue] = useState("");
     const [showCalendar, setOnShowCalendar] = useState(false);
+    const [popoverActive, setPopoverActive] = useState(false);
+
+    const togglePopoverActive = useCallback(
+        () => setPopoverActive((popoverActive) => !popoverActive),
+        []
+    );
+
     const handleTextFieldChange = (event) => {
         setTextFieldValue(event);
     };
@@ -179,8 +189,32 @@ function QuoteListPage() {
                     </List.Item>
                 )}
             </IndexTable.Cell>
+            <IndexTable.Cell>
+                <ButtonGroup>
+                    <div className="data-table__btn-view">
+                        <Button plain icon={ViewMinor} />
+                    </div>
+                    <Button plain icon={DeleteMinor} />
+                </ButtonGroup>
+            </IndexTable.Cell>
         </IndexTable.Row>
     ));
+
+    const buttonSelect = (
+        <Button onClick={togglePopoverActive} icon={SettingsMinor}></Button>
+    );
+
+    const buttonCalendar = (
+        <div className="card-wrapper__btn-calendar">
+            <Button
+                fullWidth
+                icon={CalendarMinor}
+                onClick={handleClickCalendar}
+            >
+                Choose time
+            </Button>
+        </div>
+    );
 
     return (
         <section className="quote-list">
@@ -201,30 +235,51 @@ function QuoteListPage() {
                                     />
                                 </div>
                                 <ButtonGroup>
-                                    <div className="card-wrapper__btn-calendar">
-                                        <Button
-                                            fullWidth
-                                            icon={CalendarMinor}
-                                            onClick={handleClickCalendar}
+                                    <div className="quote-list__popover-calendar">
+                                        <Popover
+                                            active={showCalendar}
+                                            activator={buttonCalendar}
                                         >
-                                            Choose time
-                                        </Button>
-                                        {showCalendar === true && (
-                                            <DatePicker
-                                                month={month}
-                                                year={year}
-                                                onChange={setSelectedDates}
-                                                onMonthChange={
-                                                    handleMonthChange
-                                                }
-                                                selected={selectedDates}
-                                                multiMonth
-                                                allowRange
-                                            />
-                                        )}
+                                            <div className="quote-list__date-picker">
+                                                <DatePicker
+                                                    month={month}
+                                                    year={year}
+                                                    onChange={setSelectedDates}
+                                                    onMonthChange={
+                                                        handleMonthChange
+                                                    }
+                                                    selected={selectedDates}
+                                                    multiMonth
+                                                    allowRange
+                                                />
+                                                <div className="quote-list__date-picker__btn-group">
+                                                    <ButtonGroup>
+                                                        <Button>Reset</Button>
+                                                        <Button primary>
+                                                            Apply
+                                                        </Button>
+                                                    </ButtonGroup>
+                                                </div>
+                                            </div>
+                                        </Popover>
                                     </div>
 
-                                    <Button icon={SettingsMinor}></Button>
+                                    <Popover
+                                        active={popoverActive}
+                                        activator={buttonSelect}
+                                        onClose={togglePopoverActive}
+                                    >
+                                        <ActionList
+                                            actionRole="menuitem"
+                                            items={[
+                                                { content: "Refresh data" },
+                                                {
+                                                    content:
+                                                        "Export quote list",
+                                                },
+                                            ]}
+                                        />
+                                    </Popover>
                                     <div className="card-wrapper__btn-create">
                                         <Button primary icon={PlusMinor}>
                                             Create a quote
@@ -233,27 +288,31 @@ function QuoteListPage() {
                                 </ButtonGroup>
                             </div>
                             <Card.Section>
-                                <IndexTable
-                                    resourceName={resourceName}
-                                    itemCount={DataQuoteLists.length}
-                                    selectedItemsCount={
-                                        allResourcesSelected
-                                            ? "All"
-                                            : selectedResources.length
-                                    }
-                                    onSelectionChange={handleSelectionChange}
-                                    headings={[
-                                        { title: "Quote Id" },
-                                        { title: "Customer Information" },
-                                        { title: "Assign Salesperson" },
-                                        { title: "Create Time" },
-                                        { title: "Status" },
-                                        { title: "Logs" },
-                                        { title: "Actions" },
-                                    ]}
-                                >
-                                    {rowMarkup}
-                                </IndexTable>
+                                <div className="quote-list__data-table">
+                                    <IndexTable
+                                        resourceName={resourceName}
+                                        itemCount={DataQuoteLists.length}
+                                        selectedItemsCount={
+                                            allResourcesSelected
+                                                ? "All"
+                                                : selectedResources.length
+                                        }
+                                        onSelectionChange={
+                                            handleSelectionChange
+                                        }
+                                        headings={[
+                                            { title: "Quote Id" },
+                                            { title: "Customer Information" },
+                                            { title: "Assign Salesperson" },
+                                            { title: "Create Time" },
+                                            { title: "Status" },
+                                            { title: "Logs" },
+                                            { title: "Actions" },
+                                        ]}
+                                    >
+                                        {rowMarkup}
+                                    </IndexTable>
+                                </div>
                             </Card.Section>
                         </Card.Section>
                     </Card>

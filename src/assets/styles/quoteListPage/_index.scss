@@ -13,20 +13,24 @@
         width: 24%;
     }
 
-    .card-wrapper__btn-calendar {
-        display: flex;
+    .quote-list__popover-calendar {
 
-        .Polaris-Button {
-            .Polaris-Button__Content {
-                width: 200px;
-                flex-direction: row-reverse;
+        .card-wrapper__btn-calendar {
+            display: flex;
 
-                .Polaris-Button__Icon {
-                    margin-left: 1%;
+            .Polaris-Button {
+                .Polaris-Button__Content {
+                    width: 200px;
+                    flex-direction: row-reverse;
+
+                    .Polaris-Button__Icon {
+                        margin-left: 1%;
+                    }
                 }
             }
         }
     }
+
 
     .card-wrapper__btn-create {
         .Polaris-Button {
@@ -38,6 +42,40 @@
 
             &:active {
                 background: linear-gradient(180deg, #3f4eae, #3f4eae);
+            }
+        }
+    }
+
+    .quote-list__data-table {
+        .data-table__btn-view {
+            .Polaris-Button__Icon {
+                color: #5c6ac4;
+            }
+        }
+    }
+
+}
+
+
+
+.Polaris-PositionedOverlay {
+
+    .Polaris-Box {
+
+        .Polaris-Popover__Content {
+            max-width: fit-content;
+            max-height: fit-content;
+
+            .quote-list__date-picker {
+                max-width: 600px;
+
+                .quote-list__date-picker__btn-group {
+                    .Polaris-ButtonGroup {
+                        justify-content: space-between;
+                        margin-top: 2%;
+                    }
+
+                }
             }
         }
     }
