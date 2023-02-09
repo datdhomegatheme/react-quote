@@ -1,3 +1,19 @@
 // @import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 @import "../../../node_modules/@shopify/polaris/build/esm/styles.css";
-@import "../styles/quoteListPage"
+@import "../styles/quoteListPage";
+
+
+// custom btn-primary 
+
+.Polaris-Button--primary {
+
+    background: linear-gradient(180deg, #6371c7, #5563c1);
+
+    &:hover {
+        background: linear-gradient(180deg, #5c6ac4, #4959bd);
+    }
+
+    &:active {
+        background: linear-gradient(180deg, #3f4eae, #3f4eae);
+    }
+}

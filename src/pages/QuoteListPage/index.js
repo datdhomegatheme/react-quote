@@ -7,8 +7,10 @@ import {
     DatePicker,
     IndexTable,
     List,
+    Modal,
     Page,
     Popover,
+    Select,
     Tabs,
     Text,
     TextField,
@@ -24,11 +26,91 @@ import {
 
 import { useCallback, useState } from "react";
 
+const DataQuoteLists = [
+    {
+        id: 0,
+        customerInformation: {
+            name: "Hieu",
+            email: "hieu@gmail.com",
+            message: "hi",
+        },
+        assignSalesperson: "Admin",
+        createTime: {
+            date: "02/07/2023",
+            time: "04:47:00",
+        },
+        status: "read",
+        logs: "Send Email Successful",
+    },
+    {
+        id: 1,
+        customerInformation: {
+            name: "Hieu111",
+            email: "hieu111@gmail.com",
+            message: "hi111",
+        },
+        assignSalesperson: "Admin",
+        createTime: {
+            date: "02/07/2023",
+            time: "04:47:00",
+        },
+        status: "Purchased",
+        logs: "Send Email Successful",
+    },
+    {
+        id: 2,
+        customerInformation: {
+            name: "Hieu222",
+            email: "hieu222@gmail.com",
+            message: "hi222",
+        },
+        assignSalesperson: "Admin",
+        createTime: {
+            date: "02/07/2023",
+            time: "04:47:00",
+        },
+        status: "read",
+        logs: "Email has not been sent to customer",
+    },
+];
+
+// const sortCurrency = (rows, index, direction) => {
+//     return [...rows].sort((rowA, rowB) => {
+//         const amountA = parseFloat(rowA[index].substring(1));
+//         const amountB = parseFloat(rowB[index].substring(1));
+
+//         return direction === "descending"
+//             ? amountB - amountA
+//             : amountA - amountB;
+//     });
+// };
+
 function QuoteListPage() {
-    const [selected, setSelected] = useState(0);
+    const [selectedTab, setSelectedTab] = useState(0);
     const [textFieldValue, setTextFieldValue] = useState("");
     const [showCalendar, setOnShowCalendar] = useState(false);
     const [popoverActive, setPopoverActive] = useState(false);
+    const [selectedIndexTable, setSelectedIndexTable] = useState(1);
+
+    const [showModal, setShowModal] = useState(false);
+
+    const HandleChangeModal = () => {
+        setShowModal(!showModal);
+    };
+    // const [sortedRows, setSortedRows] = useState(null);
+
+    // const rows = sortedRows ? sortedRows : DataQuoteLists;
+
+    // const handleSort = useCallback(
+    //     (index, direction) =>
+    //         setSortedRows(sortCurrency(rows, index, direction)),
+    //     [rows]
+    // );
+
+    const handleSelectIndexPageChange = useCallback(
+        (value) => setSelectedIndexTable(value),
+        []
+    );
 
     const togglePopoverActive = useCallback(
         () => setPopoverActive((popoverActive) => !popoverActive),
@@ -39,7 +121,7 @@ function QuoteListPage() {
         setTextFieldValue(event);
     };
     const handleTabChange = useCallback((selectedTabIndex) =>
-        setSelected(selectedTabIndex)
+        setSelectedTab(selectedTabIndex)
     );
     const [{ month, year }, setDate] = useState({ month: 1, year: 2018 });
     const [selectedDates, setSelectedDates] = useState({
@@ -75,52 +157,10 @@ function QuoteListPage() {
         },
     ];
 
-    const DataQuoteLists = [
-        {
-            id: 0,
-            customerInformation: {
-                name: "Hieu",
-                email: "hieu@gmail.com",
-                message: "hi",
-            },
-            assignSalesperson: "Admin",
-            createTime: {
-                date: "02/07/2023",
-                time: "04:47:00",
-            },
-            status: "read",
-            logs: "Send Email Successful",
-        },
-        {
-            id: 1,
-            customerInformation: {
-                name: "Hieu111",
-                email: "hieu111@gmail.com",
-                message: "hi111",
-            },
-            assignSalesperson: "Admin",
-            createTime: {
-                date: "02/07/2023",
-                time: "04:47:00",
-            },
-            status: "Purchased",
-            logs: "Send Email Successful",
-        },
-        {
-            id: 2,
-            customerInformation: {
-                name: "Hieu222",
-                email: "hieu222@gmail.com",
-                message: "hi222",
-            },
-            assignSalesperson: "Admin",
-            createTime: {
-                date: "02/07/2023",
-                time: "04:47:00",
-            },
-            status: "read",
-            logs: "Email has not been sent to customer",
-        },
+    const options = [
+        { label: "10", value: "10" },
+        { label: "20", value: "20" },
+        { label: "50", value: "50" },
     ];
 
     const { selectedResources, allResourcesSelected, handleSelectionChange } =
@@ -142,13 +182,24 @@ function QuoteListPage() {
                     {item.customerInformation.name}
                     <br />
                 </Text>
-                <Button plain>Quick View</Button>
+                <Modal
+                    activator={
+                        <Button onClick={() => setShowModal(true)} plain>
+                            Quick View
+                        </Button>
+                    }
+                    open={showModal}
+                    onClose={HandleChangeModal}
+                    title={"Quick View Quote Information"}
+                ></Modal>
             </IndexTable.Cell>
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="p">
                     {item.assignSalesperson + ` `}
                 </Text>
-                <Button plain>Change</Button>
+                <Button onClick={() => console.log(111)} plain>
+                    Change
+                </Button>
             </IndexTable.Cell>
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="p">
@@ -221,10 +272,10 @@ function QuoteListPage() {
             <Page fullWidth>
                 <Tabs
                     tabs={tabs}
-                    selected={selected}
+                    selected={selectedTab}
                     onSelect={handleTabChange}
                 >
-                    <Card title={tabs[selected].content}>
+                    <Card title={tabs[selectedTab].content}>
                         <Card.Section>
                             <div className="quote-list__card-wrapper">
                                 <div className="card-wrapper__btn-search">
@@ -280,11 +331,9 @@ function QuoteListPage() {
                                             ]}
                                         />
                                     </Popover>
-                                    <div className="card-wrapper__btn-create">
-                                        <Button primary icon={PlusMinor}>
-                                            Create a quote
-                                        </Button>
-                                    </div>
+                                    <Button primary icon={PlusMinor}>
+                                        Create a quote
+                                    </Button>
                                 </ButtonGroup>
                             </div>
                             <Card.Section>
@@ -309,9 +358,34 @@ function QuoteListPage() {
                                             { title: "Logs" },
                                             { title: "Actions" },
                                         ]}
+                                        // rows={rows}
+                                        sortable={[
+                                            true,
+                                            false,
+                                            false,
+                                            false,
+                                            true,
+                                            true,
+                                            false,
+                                        ]}
+                                        // defaultSortDirection="descending"
+                                        // onSort={handleSort}
                                     >
                                         {rowMarkup}
                                     </IndexTable>
+                                    <div
+                                        className={
+                                            "quote-list__select-index-table"
+                                        }
+                                    >
+                                        <Select
+                                            options={options}
+                                            onChange={
+                                                handleSelectIndexPageChange
+                                            }
+                                            value={selectedIndexTable}
+                                        ></Select>
+                                    </div>
                                 </div>
                             </Card.Section>
                         </Card.Section>

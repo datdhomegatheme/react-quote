@@ -1,14 +1,29 @@
-import { Frame, Navigation } from "@shopify/polaris";
+import { Frame, Navigation, TopBar } from "@shopify/polaris";
 import { Route, Routes, useLocation } from "react-router-dom";
 import DashboardPage from "../../pages/DashboardPage";
 import QuoteListPage from "../../pages/QuoteListPage";
 import SettingsPage from "../../pages/SettingsPage";
 import PricingPage from "../../pages/PricingPage";
+import { useCallback, useState } from "react";
 
 function Sidebar() {
     const location = useLocation();
+    const [showSidebar, setShowSidebar] = useState(false);
+    const handleNavigationToggle = useCallback(() => {
+        setShowSidebar((showSidebar) => !showSidebar);
+    }, []);
+
+    const topBarMarkup = (
+        <TopBar
+            showNavigationToggle
+            onNavigationToggle={handleNavigationToggle}
+        />
+    );
     return (
         <Frame
+            topBar={topBarMarkup}
+            showMobileNavigation={showSidebar}
+            onNavigationDismiss={handleNavigationToggle}
             navigation={
                 <Navigation location={location.pathname}>
                     <Navigation.Section
