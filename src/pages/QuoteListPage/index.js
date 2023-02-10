@@ -5,6 +5,7 @@ import {
     ButtonGroup,
     Card,
     DatePicker,
+    Grid,
     IndexTable,
     List,
     Modal,
@@ -13,6 +14,7 @@ import {
     Select,
     Tabs,
     Text,
+    TextContainer,
     TextField,
     useIndexResourceState,
 } from "@shopify/polaris";
@@ -25,65 +27,10 @@ import {
 } from "@shopify/polaris-icons";
 
 import { useCallback, useState } from "react";
-
-const DataQuoteLists = [
-    {
-        id: 0,
-        customerInformation: {
-            name: "Hieu",
-            email: "hieu@gmail.com",
-            message: "hi",
-        },
-        assignSalesperson: "Admin",
-        createTime: {
-            date: "02/07/2023",
-            time: "04:47:00",
-        },
-        status: "read",
-        logs: "Send Email Successful",
-    },
-    {
-        id: 1,
-        customerInformation: {
-            name: "Hieu111",
-            email: "hieu111@gmail.com",
-            message: "hi111",
-        },
-        assignSalesperson: "Admin",
-        createTime: {
-            date: "02/07/2023",
-            time: "04:47:00",
-        },
-        status: "Purchased",
-        logs: "Send Email Successful",
-    },
-    {
-        id: 2,
-        customerInformation: {
-            name: "Hieu222",
-            email: "hieu222@gmail.com",
-            message: "hi222",
-        },
-        assignSalesperson: "Admin",
-        createTime: {
-            date: "02/07/2023",
-            time: "04:47:00",
-        },
-        status: "read",
-        logs: "Email has not been sent to customer",
-    },
-];
-
-// const sortCurrency = (rows, index, direction) => {
-//     return [...rows].sort((rowA, rowB) => {
-//         const amountA = parseFloat(rowA[index].substring(1));
-//         const amountB = parseFloat(rowB[index].substring(1));
-
-//         return direction === "descending"
-//             ? amountB - amountA
-//             : amountA - amountB;
-//     });
-// };
+import {
+    DataQuoteLists,
+    DataQuoteProductsInformation,
+} from "./DataItemQuoteList";
 
 function QuoteListPage() {
     const [selectedTab, setSelectedTab] = useState(0);
@@ -97,15 +44,6 @@ function QuoteListPage() {
     const HandleChangeModal = () => {
         setShowModal(!showModal);
     };
-    // const [sortedRows, setSortedRows] = useState(null);
-
-    // const rows = sortedRows ? sortedRows : DataQuoteLists;
-
-    // const handleSort = useCallback(
-    //     (index, direction) =>
-    //         setSortedRows(sortCurrency(rows, index, direction)),
-    //     [rows]
-    // );
 
     const handleSelectIndexPageChange = useCallback(
         (value) => setSelectedIndexTable(value),
@@ -165,8 +103,23 @@ function QuoteListPage() {
 
     const { selectedResources, allResourcesSelected, handleSelectionChange } =
         useIndexResourceState(DataQuoteLists);
+    const rowMarkupQuoteProductsInformation = DataQuoteProductsInformation.map(
+        (item, index) => (
+            <IndexTable.Row id={item.id} key={index} position={index}>
+                <IndexTable.Cell>{item.image}</IndexTable.Cell>
+                <IndexTable.Cell>
+                    {item.product}
+                    <br />
+                    Default Title
+                </IndexTable.Cell>
+                <IndexTable.Cell>{item.quantity}</IndexTable.Cell>
+                <IndexTable.Cell>{item.price}</IndexTable.Cell>
+                <IndexTable.Cell>{item.price * item.quantity}</IndexTable.Cell>
+            </IndexTable.Row>
+        )
+    );
 
-    const rowMarkup = DataQuoteLists.map((item, index) => (
+    const rowMarkupQuoteLists = DataQuoteLists.map((item, index) => (
         <IndexTable.Row
             id={item.id}
             key={index}
@@ -192,16 +145,60 @@ function QuoteListPage() {
                     onClose={HandleChangeModal}
                     title={"Quick View Quote Information"}
                 >
-                    <Modal.Section></Modal.Section>
+                    <Modal.Section>
+                        <Card.Section title="Products">
+                            <Card.Section>
+                                <IndexTable
+                                    headings={[
+                                        { title: "Image" },
+                                        { title: "Product" },
+                                        { title: "Quantity" },
+                                        { title: "Price" },
+                                        { title: "Total Price" },
+                                    ]}
+                                    selectable={false}
+                                    itemCount={
+                                        DataQuoteProductsInformation.length
+                                    }
+                                >
+                                    {rowMarkupQuoteProductsInformation}
+                                </IndexTable>
+                            </Card.Section>
+                        </Card.Section>
+                    </Modal.Section>
+                    <Modal.Section>
+                        <Card.Section title="Customer Information">
+                            <Card.Section>
+                                <TextContainer>
+                                    <Text variant="headingXs" as="h6">
+                                        Name:{" "}
+                                        <Text variant="bodySm" as="span">
+                                            {item.customerInformation.name}
+                                        </Text>
+                                    </Text>
+                                    <Text variant="headingXs" as="h6">
+                                        Email:{" "}
+                                        <Text variant="bodySm" as="span">
+                                            {item.customerInformation.email}
+                                        </Text>
+                                    </Text>
+                                    <Text variant="headingXs" as="h6">
+                                        Message:{" "}
+                                        <Text variant="bodySm" as="span">
+                                            {item.customerInformation.message}
+                                        </Text>
+                                    </Text>
+                                </TextContainer>
+                            </Card.Section>
+                        </Card.Section>
+                    </Modal.Section>
                 </Modal>
             </IndexTable.Cell>
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="p">
                     {item.assignSalesperson + ` `}
                 </Text>
-                <Button onClick={() => console.log(111)} plain>
-                    Change
-                </Button>
+                <Button plain>Change</Button>
             </IndexTable.Cell>
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="p">
@@ -360,7 +357,6 @@ function QuoteListPage() {
                                             { title: "Logs" },
                                             { title: "Actions" },
                                         ]}
-                                        // rows={rows}
                                         sortable={[
                                             true,
                                             false,
@@ -370,10 +366,8 @@ function QuoteListPage() {
                                             true,
                                             false,
                                         ]}
-                                        // defaultSortDirection="descending"
-                                        // onSort={handleSort}
                                     >
-                                        {rowMarkup}
+                                        {rowMarkupQuoteLists}
                                     </IndexTable>
                                     <div
                                         className={
