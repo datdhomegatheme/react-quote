@@ -191,7 +191,9 @@ function QuoteListPage() {
                     open={showModal}
                     onClose={HandleChangeModal}
                     title={"Quick View Quote Information"}
-                ></Modal>
+                >
+                    <Modal.Section></Modal.Section>
+                </Modal>
             </IndexTable.Cell>
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="p">
