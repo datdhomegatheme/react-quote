@@ -5,7 +5,7 @@ import {
     ButtonGroup,
     Card,
     DatePicker,
-    Grid,
+    Divider,
     IndexTable,
     List,
     Modal,
@@ -14,7 +14,6 @@ import {
     Select,
     Tabs,
     Text,
-    TextContainer,
     TextField,
     useIndexResourceState,
 } from "@shopify/polaris";
@@ -30,6 +29,8 @@ import { useCallback, useState } from "react";
 import {
     DataQuoteLists,
     DataQuoteProductsInformation,
+    optionsPageIndex,
+    QuotePageTabs,
 } from "./DataItemQuoteList";
 
 function QuoteListPage() {
@@ -38,10 +39,9 @@ function QuoteListPage() {
     const [showCalendar, setOnShowCalendar] = useState(false);
     const [popoverActive, setPopoverActive] = useState(false);
     const [selectedIndexTable, setSelectedIndexTable] = useState(1);
-
     const [showModal, setShowModal] = useState(false);
 
-    const HandleChangeModal = () => {
+    const handleChangeModal = () => {
         setShowModal(!showModal);
     };
 
@@ -61,6 +61,7 @@ function QuoteListPage() {
     const handleTabChange = useCallback((selectedTabIndex) =>
         setSelectedTab(selectedTabIndex)
     );
+
     const [{ month, year }, setDate] = useState({ month: 1, year: 2018 });
     const [selectedDates, setSelectedDates] = useState({
         start: new Date("Wed Feb 07 2018 00:00:00 GMT-0500 (EST)"),
@@ -80,35 +81,18 @@ function QuoteListPage() {
         singular: "customer",
         plural: "customers",
     };
-    const tabs = [
-        {
-            id: "quote-list",
-            content: "Quote List",
-        },
-        {
-            id: "quote-trashed",
-            content: "Trashed Quote",
-        },
-        {
-            id: "quote-abandon",
-            content: "Abandon Quote",
-        },
-    ];
-
-    const options = [
-        { label: "10", value: "10" },
-        { label: "20", value: "20" },
-        { label: "50", value: "50" },
-    ];
 
     const { selectedResources, allResourcesSelected, handleSelectionChange } =
         useIndexResourceState(DataQuoteLists);
+
     const rowMarkupQuoteProductsInformation = DataQuoteProductsInformation.map(
         (item, index) => (
             <IndexTable.Row id={item.id} key={index} position={index}>
                 <IndexTable.Cell>{item.image}</IndexTable.Cell>
                 <IndexTable.Cell>
-                    {item.product}
+                    <Button plain removeUnderline>
+                        {item.product}
+                    </Button>
                     <br />
                     Default Title
                 </IndexTable.Cell>
@@ -136,60 +120,59 @@ function QuoteListPage() {
                     <br />
                 </Text>
                 <Modal
+                    large
                     activator={
-                        <Button onClick={() => setShowModal(true)} plain>
+                        <Button
+                            removeUnderline
+                            onClick={() => setShowModal(true)}
+                            plain
+                        >
                             Quick View
                         </Button>
                     }
                     open={showModal}
-                    onClose={HandleChangeModal}
+                    onClose={handleChangeModal}
                     title={"Quick View Quote Information"}
                 >
                     <Modal.Section>
                         <Card.Section title="Products">
-                            <Card.Section>
-                                <IndexTable
-                                    headings={[
-                                        { title: "Image" },
-                                        { title: "Product" },
-                                        { title: "Quantity" },
-                                        { title: "Price" },
-                                        { title: "Total Price" },
-                                    ]}
-                                    selectable={false}
-                                    itemCount={
-                                        DataQuoteProductsInformation.length
-                                    }
-                                >
-                                    {rowMarkupQuoteProductsInformation}
-                                </IndexTable>
-                            </Card.Section>
+                            <Divider borderStyle="base" />
+                            <IndexTable
+                                headings={[
+                                    { title: "Image" },
+                                    { title: "Product" },
+                                    { title: "Quantity" },
+                                    { title: "Price" },
+                                    { title: "Total Price" },
+                                ]}
+                                selectable={false}
+                                itemCount={DataQuoteProductsInformation.length}
+                            >
+                                {rowMarkupQuoteProductsInformation}
+                            </IndexTable>
                         </Card.Section>
                     </Modal.Section>
                     <Modal.Section>
                         <Card.Section title="Customer Information">
-                            <Card.Section>
-                                <TextContainer>
-                                    <Text variant="headingXs" as="h6">
-                                        Name:{" "}
-                                        <Text variant="bodySm" as="span">
-                                            {item.customerInformation.name}
-                                        </Text>
-                                    </Text>
-                                    <Text variant="headingXs" as="h6">
-                                        Email:{" "}
-                                        <Text variant="bodySm" as="span">
-                                            {item.customerInformation.email}
-                                        </Text>
-                                    </Text>
-                                    <Text variant="headingXs" as="h6">
-                                        Message:{" "}
-                                        <Text variant="bodySm" as="span">
-                                            {item.customerInformation.message}
-                                        </Text>
-                                    </Text>
-                                </TextContainer>
-                            </Card.Section>
+                            <Divider borderStyle="base" />
+                            <Text variant="headingSm" as="h6">
+                                Name:{" "}
+                                <Text variant="bodySm" as="span">
+                                    {item.customerInformation.name}
+                                </Text>
+                            </Text>
+                            <Text variant="headingSm" as="h6">
+                                Email:{" "}
+                                <Text variant="bodySm" as="span">
+                                    {item.customerInformation.email}
+                                </Text>
+                            </Text>
+                            <Text variant="headingSm" as="h6">
+                                Message:{" "}
+                                <Text variant="bodySm" as="span">
+                                    {item.customerInformation.message}
+                                </Text>
+                            </Text>
                         </Card.Section>
                     </Modal.Section>
                 </Modal>
@@ -198,7 +181,9 @@ function QuoteListPage() {
                 <Text variant="bodyMd" as="p">
                     {item.assignSalesperson + ` `}
                 </Text>
-                <Button plain>Change</Button>
+                <Button removeUnderline plain>
+                    Change
+                </Button>
             </IndexTable.Cell>
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="p">
@@ -270,11 +255,11 @@ function QuoteListPage() {
         <section className="quote-list">
             <Page fullWidth>
                 <Tabs
-                    tabs={tabs}
+                    tabs={QuotePageTabs}
                     selected={selectedTab}
                     onSelect={handleTabChange}
                 >
-                    <Card title={tabs[selectedTab].content}>
+                    <Card title={QuotePageTabs[selectedTab].content}>
                         <Card.Section>
                             <div className="quote-list__card-wrapper">
                                 <div className="card-wrapper__btn-search">
@@ -289,6 +274,7 @@ function QuoteListPage() {
                                         <Popover
                                             active={showCalendar}
                                             activator={buttonCalendar}
+                                            onClose={setOnShowCalendar(false)}
                                         >
                                             <div className="quote-list__date-picker">
                                                 <DatePicker
@@ -375,7 +361,7 @@ function QuoteListPage() {
                                         }
                                     >
                                         <Select
-                                            options={options}
+                                            options={optionsPageIndex}
                                             onChange={
                                                 handleSelectIndexPageChange
                                             }
