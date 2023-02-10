@@ -55,3 +55,9 @@ export const DataQuoteProductsInformation = [
         price: 20000,
     },
 ];
+
+export const OptionsPageIndex = [
+    { label: "10", value: "10" },
+    { label: "20", value: "20" },
+    { label: "50", value: "50" },
+];

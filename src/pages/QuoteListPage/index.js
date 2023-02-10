@@ -5,7 +5,7 @@ import {
     ButtonGroup,
     Card,
     DatePicker,
-    Grid,
+    Divider,
     IndexTable,
     List,
     Modal,
@@ -30,6 +30,7 @@ import { useCallback, useState } from "react";
 import {
     DataQuoteLists,
     DataQuoteProductsInformation,
+    OptionsPageIndex,
 } from "./DataItemQuoteList";
 
 function QuoteListPage() {
@@ -41,7 +42,7 @@ function QuoteListPage() {
 
     const [showModal, setShowModal] = useState(false);
 
-    const HandleChangeModal = () => {
+    const handleChangeModal = () => {
         setShowModal(!showModal);
     };
 
@@ -95,12 +96,6 @@ function QuoteListPage() {
         },
     ];
 
-    const options = [
-        { label: "10", value: "10" },
-        { label: "20", value: "20" },
-        { label: "50", value: "50" },
-    ];
-
     const { selectedResources, allResourcesSelected, handleSelectionChange } =
         useIndexResourceState(DataQuoteLists);
     const rowMarkupQuoteProductsInformation = DataQuoteProductsInformation.map(
@@ -108,7 +103,9 @@ function QuoteListPage() {
             <IndexTable.Row id={item.id} key={index} position={index}>
                 <IndexTable.Cell>{item.image}</IndexTable.Cell>
                 <IndexTable.Cell>
-                    {item.product}
+                    <Button plain removeUnderline>
+                        {item.product}
+                    </Button>
                     <br />
                     Default Title
                 </IndexTable.Cell>
@@ -136,60 +133,59 @@ function QuoteListPage() {
                     <br />
                 </Text>
                 <Modal
+                    large
                     activator={
-                        <Button onClick={() => setShowModal(true)} plain>
+                        <Button
+                            removeUnderline
+                            onClick={() => setShowModal(true)}
+                            plain
+                        >
                             Quick View
                         </Button>
                     }
                     open={showModal}
-                    onClose={HandleChangeModal}
+                    onClose={handleChangeModal}
                     title={"Quick View Quote Information"}
                 >
                     <Modal.Section>
                         <Card.Section title="Products">
-                            <Card.Section>
-                                <IndexTable
-                                    headings={[
-                                        { title: "Image" },
-                                        { title: "Product" },
-                                        { title: "Quantity" },
-                                        { title: "Price" },
-                                        { title: "Total Price" },
-                                    ]}
-                                    selectable={false}
-                                    itemCount={
-                                        DataQuoteProductsInformation.length
-                                    }
-                                >
-                                    {rowMarkupQuoteProductsInformation}
-                                </IndexTable>
-                            </Card.Section>
+                            <Divider borderStyle="base" />
+                            <IndexTable
+                                headings={[
+                                    { title: "Image" },
+                                    { title: "Product" },
+                                    { title: "Quantity" },
+                                    { title: "Price" },
+                                    { title: "Total Price" },
+                                ]}
+                                selectable={false}
+                                itemCount={DataQuoteProductsInformation.length}
+                            >
+                                {rowMarkupQuoteProductsInformation}
+                            </IndexTable>
                         </Card.Section>
                     </Modal.Section>
                     <Modal.Section>
                         <Card.Section title="Customer Information">
-                            <Card.Section>
-                                <TextContainer>
-                                    <Text variant="headingXs" as="h6">
-                                        Name:{" "}
-                                        <Text variant="bodySm" as="span">
-                                            {item.customerInformation.name}
-                                        </Text>
-                                    </Text>
-                                    <Text variant="headingXs" as="h6">
-                                        Email:{" "}
-                                        <Text variant="bodySm" as="span">
-                                            {item.customerInformation.email}
-                                        </Text>
-                                    </Text>
-                                    <Text variant="headingXs" as="h6">
-                                        Message:{" "}
-                                        <Text variant="bodySm" as="span">
-                                            {item.customerInformation.message}
-                                        </Text>
-                                    </Text>
-                                </TextContainer>
-                            </Card.Section>
+                            <Divider borderStyle="base" />
+                            <Text variant="headingSm" as="h6">
+                                Name:{" "}
+                                <Text variant="bodySm" as="span">
+                                    {item.customerInformation.name}
+                                </Text>
+                            </Text>
+                            <Text variant="headingSm" as="h6">
+                                Email:{" "}
+                                <Text variant="bodySm" as="span">
+                                    {item.customerInformation.email}
+                                </Text>
+                            </Text>
+                            <Text variant="headingSm" as="h6">
+                                Message:{" "}
+                                <Text variant="bodySm" as="span">
+                                    {item.customerInformation.message}
+                                </Text>
+                            </Text>
                         </Card.Section>
                     </Modal.Section>
                 </Modal>
@@ -375,7 +371,7 @@ function QuoteListPage() {
                                         }
                                     >
                                         <Select
-                                            options={options}
+                                            options={OptionsPageIndex}
                                             onChange={
                                                 handleSelectIndexPageChange
                                             }
