@@ -30,7 +30,6 @@ import {
     DataQuoteLists,
     DataQuoteProductsInformation,
     optionsPageIndex,
-    QuotePageTabs,
 } from "./DataItemQuoteList";
 
 function QuoteListPage() {
@@ -251,15 +250,30 @@ function QuoteListPage() {
         </div>
     );
 
+    const quotePageTabs = [
+        {
+            id: "quote-list",
+            content: "Quote List",
+        },
+        {
+            id: "quote-trashed",
+            content: "Trashed Quote",
+        },
+        {
+            id: "quote-abandon",
+            content: "Abandon Quote",
+        },
+    ];
+
     return (
         <section className="quote-list">
             <Page fullWidth>
                 <Tabs
-                    tabs={QuotePageTabs}
+                    tabs={quotePageTabs}
                     selected={selectedTab}
                     onSelect={handleTabChange}
                 >
-                    <Card title={QuotePageTabs[selectedTab].content}>
+                    <Card title={quotePageTabs[selectedTab].content}>
                         <Card.Section>
                             <div className="quote-list__card-wrapper">
                                 <div className="card-wrapper__btn-search">

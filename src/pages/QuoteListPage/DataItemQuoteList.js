@@ -61,18 +61,3 @@ export const optionsPageIndex = [
     { label: "20", value: "20" },
     { label: "50", value: "50" },
 ];
-
-export const QuotePageTabs = [
-    {
-        id: "quote-list",
-        content: "Quote List",
-    },
-    {
-        id: "quote-trashed",
-        content: "Trashed Quote",
-    },
-    {
-        id: "quote-abandon",
-        content: "Abandon Quote",
-    },
-];
