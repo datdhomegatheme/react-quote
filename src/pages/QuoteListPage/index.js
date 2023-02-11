@@ -14,7 +14,6 @@ import {
     Select,
     Tabs,
     Text,
-    TextContainer,
     TextField,
     useIndexResourceState,
 } from "@shopify/polaris";
