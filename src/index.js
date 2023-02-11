@@ -7,15 +7,19 @@ import reportWebVitals from "./reportWebVitals";
 import { AppProvider } from "@shopify/polaris";
 import enTranslations from "@shopify/polaris/locales/en.json";
 import Link from "./layout/LinkAdapter";
+import { store } from "./redux/store";
+import { Provider } from "react-redux";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <React.StrictMode>
-        <BrowserRouter>
-            <AppProvider linkComponent={Link} i18n={enTranslations}>
-                <App />
-            </AppProvider>
-        </BrowserRouter>
+        <Provider store={store}>
+            <BrowserRouter>
+                <AppProvider linkComponent={Link} i18n={enTranslations}>
+                    <App />
+                </AppProvider>
+            </BrowserRouter>
+        </Provider>
     </React.StrictMode>
 );
 
