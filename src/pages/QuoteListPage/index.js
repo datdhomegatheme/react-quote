@@ -25,9 +25,10 @@ import {
     ViewMinor,
 } from "@shopify/polaris-icons";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getQuoteListApi } from "../../redux/quoteListSlice";
 import {
-    DataQuoteLists,
     DataQuoteProductsInformation,
     OptionsPageIndex,
 } from "./DataItemQuoteList";
@@ -38,8 +39,9 @@ function QuoteListPage() {
     const [showCalendar, setOnShowCalendar] = useState(false);
     const [popoverActive, setPopoverActive] = useState(false);
     const [selectedIndexTable, setSelectedIndexTable] = useState(1);
-
     const [showModal, setShowModal] = useState(false);
+
+    const quoteList = useSelector((state) => state.quoteList.data);
 
     const handleChangeModal = () => {
         setShowModal(!showModal);
@@ -96,26 +98,9 @@ function QuoteListPage() {
     ];
 
     const { selectedResources, allResourcesSelected, handleSelectionChange } =
-        useIndexResourceState(DataQuoteLists);
-    const rowMarkupQuoteProductsInformation = DataQuoteProductsInformation.map(
-        (item, index) => (
-            <IndexTable.Row id={item.id} key={index} position={index}>
-                <IndexTable.Cell>{item.image}</IndexTable.Cell>
-                <IndexTable.Cell>
-                    <Button plain removeUnderline>
-                        {item.product}
-                    </Button>
-                    <br />
-                    Default Title
-                </IndexTable.Cell>
-                <IndexTable.Cell>{item.quantity}</IndexTable.Cell>
-                <IndexTable.Cell>{item.price}</IndexTable.Cell>
-                <IndexTable.Cell>{item.price * item.quantity}</IndexTable.Cell>
-            </IndexTable.Row>
-        )
-    );
+        useIndexResourceState(quoteList);
 
-    const rowMarkupQuoteLists = DataQuoteLists.map((item, index) => (
+    const rowMarkupQuoteLists = quoteList?.map((item, index) => (
         <IndexTable.Row
             id={item.id}
             key={index}
@@ -136,7 +121,7 @@ function QuoteListPage() {
                     activator={
                         <Button
                             removeUnderline
-                            onClick={() => setShowModal(true)}
+                            onClick={handleChangeModal}
                             plain
                         >
                             Quick View
@@ -158,15 +143,45 @@ function QuoteListPage() {
                                     { title: "Total Price" },
                                 ]}
                                 selectable={false}
-                                itemCount={DataQuoteProductsInformation.length}
+                                itemCount={2}
                             >
-                                {rowMarkupQuoteProductsInformation}
+                                {item.dataQuoteProductsInformation?.map(
+                                    (itemProduct, index) => (
+                                        <IndexTable.Row
+                                            id={itemProduct.id}
+                                            key={index}
+                                            position={index}
+                                        >
+                                            <IndexTable.Cell>
+                                                {itemProduct.image}
+                                            </IndexTable.Cell>
+                                            <IndexTable.Cell>
+                                                <Button plain removeUnderline>
+                                                    {itemProduct.product}
+                                                </Button>
+                                                <br />
+                                                Default Title
+                                            </IndexTable.Cell>
+                                            <IndexTable.Cell>
+                                                {itemProduct.quantity}
+                                            </IndexTable.Cell>
+                                            <IndexTable.Cell>
+                                                {itemProduct.price}
+                                            </IndexTable.Cell>
+                                            <IndexTable.Cell>
+                                                {itemProduct.price *
+                                                    itemProduct.quantity}
+                                            </IndexTable.Cell>
+                                        </IndexTable.Row>
+                                    )
+                                )}
                             </IndexTable>
                         </Card.Section>
                     </Modal.Section>
                     <Modal.Section>
                         <Card.Section title="Customer Information">
                             <Divider borderStyle="base" />
+
                             <Text variant="headingSm" as="h6">
                                 Name:{" "}
                                 <Text variant="bodySm" as="span">
@@ -261,6 +276,12 @@ function QuoteListPage() {
         </div>
     );
 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getQuoteListApi());
+    }, []);
+
     return (
         <section className="quote-list">
             <Page fullWidth>
@@ -334,7 +355,7 @@ function QuoteListPage() {
                                 <div className="quote-list__data-table">
                                     <IndexTable
                                         resourceName={resourceName}
-                                        itemCount={DataQuoteLists.length}
+                                        itemCount={2}
                                         selectedItemsCount={
                                             allResourcesSelected
                                                 ? "All"

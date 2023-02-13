@@ -3,11 +3,11 @@ import axios from "axios";
 
 const API_URL_GET_QUOTE_LIST = "http://localhost:3000/DataQuoteLists";
 
+const initialState = {};
+
 export const quoteListSlice = createSlice({
     name: "quoteList",
-    initialState: {
-        data: [],
-    },
+    initialState,
     reducers: {
         getQuoteList: (state, action) => {
             state.data = action.payload;
@@ -17,12 +17,17 @@ export const quoteListSlice = createSlice({
 
 export const getQuoteListApi = () => async (dispatch) => {
     try {
-        const response = await axios.get(`${API_URL_GET_QUOTE_LIST}`);
-        dispatch(getQuoteList(response.data));
+        axios
+            .get(API_URL_GET_QUOTE_LIST)
+            .then((response) => {
+                dispatch(quoteListSlice.actions.getQuoteList(response.data));
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     } catch (err) {
         console.log(err);
     }
 };
-// Action creators are generated for each case reducer function
-export const { getQuoteList } = quoteListSlice.actions;
+
 export default quoteListSlice.reducer;

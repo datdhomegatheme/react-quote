@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import quoteListSlice from "../redux/counterSlice";
+import quoteListSlice from "./quoteListSlice";
 
 export const store = configureStore({
     reducer: {
-        QuoteList: quoteListSlice,
+        quoteList: quoteListSlice,
     },
 });
