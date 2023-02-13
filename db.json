@@ -3,9 +3,9 @@
         {
             "id": 0,
             "customerInformation": {
-                "name": "Hieu",
-                "email": "hieu@gmail.com",
-                "message": "hi"
+                "name": "Hieu111",
+                "email": "hieu1111@gmail.com",
+                "message": "hi111"
             },
             "assignSalesperson": "Admin",
             "createTime": {
@@ -14,18 +14,20 @@
             },
             "status": "read",
             "logs": "Send Email Successful",
-            "DataQuoteProductsInformation": [
+            "dataQuoteProductsInformation": [
                 {
                     "id": 0,
+                    "idQuote": 0,
                     "image": "",
-                    "product": "rough hill",
+                    "product": "product_1_1",
                     "quantity": 10,
                     "price": 20000
                 },
                 {
                     "id": 1,
+                    "idQuote": 0,
                     "image": "",
-                    "product": "roar",
+                    "product": "product_1_2",
                     "quantity": 2,
                     "price": 10000
                 }
@@ -34,9 +36,9 @@
         {
             "id": 1,
             "customerInformation": {
-                "name": "Hieu111",
-                "email": "hieu111@gmail.com",
-                "message": "hi111"
+                "name": "Hieu2222",
+                "email": "hieu2222@gmail.com",
+                "message": "hi2222"
             },
             "assignSalesperson": "Admin",
             "createTime": {
@@ -45,18 +47,20 @@
             },
             "status": "Purchased",
             "logs": "Send Email Successful",
-            "DataQuoteProductsInformation": [
+            "dataQuoteProductsInformation": [
                 {
                     "id": 0,
+                    "idQuote": 1,
                     "image": "",
-                    "product": "rough hill22222",
+                    "product": "product_2_1",
                     "quantity": 10,
                     "price": 20000
                 },
                 {
                     "id": 1,
+                    "idQuote": 1,
                     "image": "",
-                    "product": "roar2222222",
+                    "product": "product_2_2",
                     "quantity": 2,
                     "price": 10000
                 }
@@ -65,9 +69,9 @@
         {
             "id": 2,
             "customerInformation": {
-                "name": "Hieu222",
-                "email": "hieu222@gmail.com",
-                "message": "hi222"
+                "name": "Hieu33333",
+                "email": "hieu3333@gmail.com",
+                "message": "hi33333"
             },
             "assignSalesperson": "Admin",
             "createTime": {
@@ -78,6 +82,7 @@
             "logs": "Email has not been sent to customer",
             "dataQuoteProductsInformation": [
                 {
+                    "idQuote": 0,
                     "id": 0,
                     "image": "",
                     "product": "rough hill33333",
@@ -85,6 +90,7 @@
                     "price": 20000
                 },
                 {
+                    "idQuote": 0,
                     "id": 1,
                     "image": "",
                     "product": "roar333333",

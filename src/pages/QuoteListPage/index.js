@@ -28,23 +28,24 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getQuoteListApi } from "../../redux/quoteListSlice";
-import {
-    DataQuoteProductsInformation,
-    OptionsPageIndex,
-} from "./DataItemQuoteList";
+import { OptionsPageIndex } from "./DataItemQuoteList";
+import ModalQuickView from "../QuoteListPage/ModalQuickView";
 
-function QuoteListPage() {
+function QuoteListPage(quoteListState) {
     const [selectedTab, setSelectedTab] = useState(0);
     const [textFieldValue, setTextFieldValue] = useState("");
     const [showCalendar, setOnShowCalendar] = useState(false);
     const [popoverActive, setPopoverActive] = useState(false);
     const [selectedIndexTable, setSelectedIndexTable] = useState(1);
     const [showModal, setShowModal] = useState(false);
+    const [quoteDetail, setQuoteDetail] = useState({});
 
     const quoteList = useSelector((state) => state.quoteList.data);
 
-    const handleChangeModal = () => {
+    const handleChangeModal = (quote) => {
         setShowModal(!showModal);
+        setQuoteDetail(quote);
+        console.log(showModal);
     };
 
     const handleSelectIndexPageChange = useCallback(
@@ -100,151 +101,82 @@ function QuoteListPage() {
     const { selectedResources, allResourcesSelected, handleSelectionChange } =
         useIndexResourceState(quoteList);
 
-    const rowMarkupQuoteLists = quoteList?.map((item, index) => (
+    const rowMarkupQuoteLists = quoteList?.map((quote, index) => (
         <IndexTable.Row
-            id={item.id}
+            id={quote.id}
             key={index}
-            selected={selectedResources.includes(item.id)}
+            selected={selectedResources.includes(quote.id)}
         >
-            <IndexTable.Cell>{item.id}</IndexTable.Cell>
+            <IndexTable.Cell>{quote.id}</IndexTable.Cell>
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="p">
                     <Text as="span" fontWeight="bold">
                         Name:
                     </Text>
                     <br />
-                    {item.customerInformation.name}
+                    {quote.customerInformation.name}
                     <br />
                 </Text>
-                <Modal
-                    large
-                    activator={
-                        <Button
-                            removeUnderline
-                            onClick={handleChangeModal}
-                            plain
-                        >
-                            Quick View
-                        </Button>
-                    }
-                    open={showModal}
-                    onClose={handleChangeModal}
-                    title={"Quick View Quote Information"}
+                <Button
+                    removeUnderline
+                    onClick={() => handleChangeModal(quote)}
+                    plain
                 >
-                    <Modal.Section>
-                        <Card.Section title="Products">
-                            <Divider borderStyle="base" />
-                            <IndexTable
-                                headings={[
-                                    { title: "Image" },
-                                    { title: "Product" },
-                                    { title: "Quantity" },
-                                    { title: "Price" },
-                                    { title: "Total Price" },
-                                ]}
-                                selectable={false}
-                                itemCount={2}
-                            >
-                                {item.dataQuoteProductsInformation?.map(
-                                    (itemProduct, index) => (
-                                        <IndexTable.Row
-                                            id={itemProduct.id}
-                                            key={index}
-                                            position={index}
-                                        >
-                                            <IndexTable.Cell>
-                                                {itemProduct.image}
-                                            </IndexTable.Cell>
-                                            <IndexTable.Cell>
-                                                <Button plain removeUnderline>
-                                                    {itemProduct.product}
-                                                </Button>
-                                                <br />
-                                                Default Title
-                                            </IndexTable.Cell>
-                                            <IndexTable.Cell>
-                                                {itemProduct.quantity}
-                                            </IndexTable.Cell>
-                                            <IndexTable.Cell>
-                                                {itemProduct.price}
-                                            </IndexTable.Cell>
-                                            <IndexTable.Cell>
-                                                {itemProduct.price *
-                                                    itemProduct.quantity}
-                                            </IndexTable.Cell>
-                                        </IndexTable.Row>
-                                    )
-                                )}
-                            </IndexTable>
-                        </Card.Section>
-                    </Modal.Section>
-                    <Modal.Section>
-                        <Card.Section title="Customer Information">
-                            <Divider borderStyle="base" />
-
-                            <Text variant="headingSm" as="h6">
-                                Name:{" "}
-                                <Text variant="bodySm" as="span">
-                                    {item.customerInformation.name}
-                                </Text>
-                            </Text>
-                            <Text variant="headingSm" as="h6">
-                                Email:{" "}
-                                <Text variant="bodySm" as="span">
-                                    {item.customerInformation.email}
-                                </Text>
-                            </Text>
-                            <Text variant="headingSm" as="h6">
-                                Message:{" "}
-                                <Text variant="bodySm" as="span">
-                                    {item.customerInformation.message}
-                                </Text>
-                            </Text>
-                        </Card.Section>
-                    </Modal.Section>
-                </Modal>
+                    Quick View
+                </Button>
             </IndexTable.Cell>
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="p">
-                    {item.assignSalesperson + ` `}
+                    {quote.assignSalesperson + " "}
+                    <Button plain>Change</Button>
+                    <div className={"quote-list__select-assign"}>
+                        <Select
+                            options={OptionsPageIndex}
+                            onChange={handleSelectIndexPageChange}
+                            value={selectedIndexTable}
+                        ></Select>
+                    </div>
+                    <ButtonGroup>
+                        <Button primary>Save</Button>
+                        <Button>Cancel</Button>
+                    </ButtonGroup>
                 </Text>
-                <Button plain>Change</Button>
             </IndexTable.Cell>
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="p">
-                    {item.createTime.date}
+                    {quote.createTime.date}
                     <br />
-                    {item.createTime.time}
+                    {quote.createTime.time}
                 </Text>
             </IndexTable.Cell>
             <IndexTable.Cell>
-                {item.status === "read" && (
+                {quote.status === "read" && (
                     <Badge progress="incomplete" status="attention">
                         <Text variant="bodyMd" as="p">
-                            {item.status}
+                            {quote.status}
                         </Text>
                     </Badge>
                 )}
-                {item.status === "Purchased" && (
+                {quote.status === "Purchased" && (
                     <Badge progress="incomplete" status="success">
                         <Text variant="bodyMd" as="p">
-                            {item.status}
+                            {quote.status}
                         </Text>
                     </Badge>
                 )}
             </IndexTable.Cell>
             <IndexTable.Cell>
-                {item.logs === `Send Email Successful` && (
+                {quote.logs === `Send Email Successful` && (
                     <List.Item>
                         <Text variant="bodyMd" as="span">
-                            {item.logs}
+                            {quote.logs}
                         </Text>
                     </List.Item>
                 )}
-                {item.logs === `Email has not been sent to customer` && (
+                {quote.logs === `Email has not been sent to customer` && (
                     <List.Item>
                         <Text color="warning" variant="bodyMd" as="span">
-                            {item.logs}
+                            {quote.logs}
                         </Text>
                     </List.Item>
                 )}
@@ -292,6 +224,11 @@ function QuoteListPage() {
                 >
                     <Card title={tabs[selectedTab].content}>
                         <Card.Section>
+                            <ModalQuickView
+                                handleChangeModal={handleChangeModal}
+                                showModal={showModal}
+                                quote={quoteDetail}
+                            />
                             <div className="quote-list__card-wrapper">
                                 <div className="card-wrapper__btn-search">
                                     <TextField

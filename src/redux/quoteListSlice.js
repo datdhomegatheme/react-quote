@@ -3,7 +3,7 @@ import axios from "axios";
 
 const API_URL_GET_QUOTE_LIST = "http://localhost:3000/DataQuoteLists";
 
-const initialState = {};
+const initialState = { data: [] };
 
 export const quoteListSlice = createSlice({
     name: "quoteList",
