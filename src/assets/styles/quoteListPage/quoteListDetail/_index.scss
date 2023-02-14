@@ -18,30 +18,44 @@
         }
     }
 
-    .quote-view-detail__payment {
+    .quote-view-detail__card {
         margin-top: 2%;
 
-        .payment__table {
-            width: 100%;
+        .quote-view-detail__payment {
+            .payment__table {
+                width: 100%;
 
-            .content__title {
-                margin-top: 10px;
-            }
-
-            .payment__content__value {
                 .content__title {
-                    display: flex;
-                    flex-direction: row-reverse;
+                    margin-top: 10px;
                 }
+
+                .payment__content__value {
+                    .content__title {
+                        display: flex;
+                        flex-direction: row-reverse;
+                    }
+                }
+
+
             }
 
-
+            .payment__buttons {
+                display: flex;
+                justify-content: flex-end;
+            }
         }
 
-        .payment__buttons {
+        .card__viewed-product-list {
             display: flex;
-            justify-content: flex-end;
+            flex-direction: row;
+            margin-left: 2%;
+
+            .viewed-product-list__content {
+                margin-left: 4%;
+            }
         }
+
+
 
     }
 }
