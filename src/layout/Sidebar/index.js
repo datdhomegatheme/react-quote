@@ -5,6 +5,7 @@ import QuoteListPage from "../../pages/QuoteListPage";
 import SettingsPage from "../../pages/SettingsPage";
 import PricingPage from "../../pages/PricingPage";
 import React, { useCallback, useState } from "react";
+import QuoteListDetail from "../../pages/QuoteListPage/QuoteListDetail";
 
 function Sidebar() {
     const location = useLocation();
@@ -56,10 +57,8 @@ function Sidebar() {
             <Routes>
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/quote">
-                    <Route path="list" element={<QuoteListPage />}>
-                        <Route path="create" />
-                        <Route path=":quoteId" />
-                    </Route>
+                    <Route path="list" element={<QuoteListPage />}></Route>
+                    <Route path="list/id" element={<QuoteListDetail />} />
                     <Route path="trash-quote" />
                     <Route path="abandoned-quote" />
                 </Route>

@@ -5,10 +5,8 @@ import {
     ButtonGroup,
     Card,
     DatePicker,
-    Divider,
     IndexTable,
     List,
-    Modal,
     Page,
     Popover,
     Select,
@@ -28,10 +26,13 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getQuoteListApi } from "../../redux/quoteListSlice";
-import { OptionsPageIndex } from "./DataItemQuoteList";
+import { OptionsPageIndex, resourceName, tabs } from "./DataItemQuoteList";
 import ModalQuickView from "../QuoteListPage/ModalQuickView";
+import { useNavigate } from "react-router-dom";
 
-function QuoteListPage(quoteListState) {
+function QuoteListPage() {
+    const navigate = useNavigate();
+
     const [selectedTab, setSelectedTab] = useState(0);
     const [textFieldValue, setTextFieldValue] = useState("");
     const [showCalendar, setOnShowCalendar] = useState(false);
@@ -79,25 +80,6 @@ function QuoteListPage(quoteListState) {
         setOnShowCalendar(!showCalendar);
     };
 
-    const resourceName = {
-        singular: "customer",
-        plural: "customers",
-    };
-    const tabs = [
-        {
-            id: "quote-list",
-            content: "Quote List",
-        },
-        {
-            id: "quote-trashed",
-            content: "Trashed Quote",
-        },
-        {
-            id: "quote-abandon",
-            content: "Abandon Quote",
-        },
-    ];
-
     const { selectedResources, allResourcesSelected, handleSelectionChange } =
         useIndexResourceState(quoteList);
 
@@ -119,19 +101,24 @@ function QuoteListPage(quoteListState) {
                 </Text>
                 <Button
                     removeUnderline
-                    onClick={() => handleChangeModal(quote)}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleChangeModal(quote);
+                    }}
                     plain
                 >
                     Quick View
                 </Button>
             </IndexTable.Cell>
             <IndexTable.Cell>
-                {/* <Text variant="bodyMd" as="p"> */}
                 {quote.assignSalesperson + " "}
                 <Button
                     plain
-                    onClick={() => {
+                    onClick={(e) => {
                         setShowChangeAssign(true);
+                        e.preventDefault();
+                        e.stopPropagation();
                     }}
                 >
                     Change
@@ -146,8 +133,23 @@ function QuoteListPage(quoteListState) {
                                 value={selectedIndexTable}
                             ></Select>
                         </div>
-                        <Button primary>Save</Button>
-                        <Button onClick={() => setShowChangeAssign(false)}>
+                        <Button
+                            primary
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setShowChangeAssign(true);
+                            }}
+                        >
+                            Save
+                        </Button>
+                        <Button
+                            onClick={(e) => {
+                                setShowChangeAssign(false);
+                                e.preventDefault();
+                                e.stopPropagation();
+                            }}
+                        >
                             Cancel
                         </Button>
                     </ButtonGroup>
@@ -196,7 +198,11 @@ function QuoteListPage(quoteListState) {
             <IndexTable.Cell>
                 <ButtonGroup>
                     <div className="data-table__btn-view">
-                        <Button plain icon={ViewMinor} />
+                        <Button
+                            onClick={() => navigate("id")}
+                            plain
+                            icon={ViewMinor}
+                        />
                     </div>
                     <Button plain icon={DeleteMinor} />
                 </ButtonGroup>
@@ -321,7 +327,13 @@ function QuoteListPage(quoteListState) {
                                             ]}
                                         />
                                     </Popover>
-                                    <Button primary icon={PlusMinor}>
+                                    <Button
+                                        primary
+                                        onClick={() =>
+                                            navigate("/quote/create")
+                                        }
+                                        icon={PlusMinor}
+                                    >
                                         Create a quote
                                     </Button>
                                 </ButtonGroup>
@@ -329,8 +341,7 @@ function QuoteListPage(quoteListState) {
                             <Card.Section>
                                 <div className="quote-list__data-table">
                                     <IndexTable
-                                        resourceName={resourceName}
-                                        itemCount={2}
+                                        itemCount={quoteList.length}
                                         selectedItemsCount={
                                             allResourcesSelected
                                                 ? "All"
