@@ -39,13 +39,13 @@ function QuoteListPage(quoteListState) {
     const [selectedIndexTable, setSelectedIndexTable] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [quoteDetail, setQuoteDetail] = useState({});
+    const [showChangeAssign, setShowChangeAssign] = useState(false);
 
     const quoteList = useSelector((state) => state.quoteList.data);
 
     const handleChangeModal = (quote) => {
         setShowModal(!showModal);
         setQuoteDetail(quote);
-        console.log(showModal);
     };
 
     const handleSelectIndexPageChange = useCallback(
@@ -126,21 +126,33 @@ function QuoteListPage(quoteListState) {
                 </Button>
             </IndexTable.Cell>
             <IndexTable.Cell>
-                <Text variant="bodyMd" as="p">
-                    {quote.assignSalesperson + " "}
-                    <Button plain>Change</Button>
-                    <div className={"quote-list__select-assign"}>
-                        <Select
-                            options={OptionsPageIndex}
-                            onChange={handleSelectIndexPageChange}
-                            value={selectedIndexTable}
-                        ></Select>
-                    </div>
+                {/* <Text variant="bodyMd" as="p"> */}
+                {quote.assignSalesperson + " "}
+                <Button
+                    plain
+                    onClick={() => {
+                        setShowChangeAssign(true);
+                    }}
+                >
+                    Change
+                </Button>
+                {showChangeAssign && (
                     <ButtonGroup>
+                        <div className={"quote-list__select-assign"}>
+                            <Select
+                                arrow
+                                options={OptionsPageIndex}
+                                onChange={handleSelectIndexPageChange}
+                                value={selectedIndexTable}
+                            ></Select>
+                        </div>
                         <Button primary>Save</Button>
-                        <Button>Cancel</Button>
+                        <Button onClick={() => setShowChangeAssign(false)}>
+                            Cancel
+                        </Button>
                     </ButtonGroup>
-                </Text>
+                )}
+                {/* </Text> */}
             </IndexTable.Cell>
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="p">
@@ -213,6 +225,8 @@ function QuoteListPage(quoteListState) {
     useEffect(() => {
         dispatch(getQuoteListApi());
     }, []);
+
+    console.log(showChangeAssign);
 
     return (
         <section className="quote-list">
