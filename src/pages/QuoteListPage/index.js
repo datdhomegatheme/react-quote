@@ -64,10 +64,10 @@ function QuoteListPage(quoteListState) {
     const handleTabChange = useCallback((selectedTabIndex) =>
         setSelectedTab(selectedTabIndex)
     );
-    const [{ month, year }, setDate] = useState({ month: 1, year: 2018 });
+    const [{ month, year }, setDate] = useState({ month: 1, year: 2022 });
     const [selectedDates, setSelectedDates] = useState({
-        start: new Date("Wed Feb 07 2018 00:00:00 GMT-0500 (EST)"),
-        end: new Date("Mon Mar 12 2018 00:00:00 GMT-0500 (EST)"),
+        start: new Date("03/25/2022"),
+        end: new Date("04/25/2022"),
     });
 
     const handleMonthChange = useCallback(
@@ -208,6 +208,21 @@ function QuoteListPage(quoteListState) {
         <Button onClick={togglePopoverActive} icon={SettingsMinor}></Button>
     );
 
+    const [datePickerValue, setDatePickerValue] = useState("Choose time");
+
+    const handleDateApplyButton = () => {
+        setDatePickerValue(
+            selectedDates.start.toLocaleDateString("en-US") +
+                "-" +
+                selectedDates.end.toLocaleDateString("en-US")
+        );
+        setOnShowCalendar(false);
+    };
+
+    const handleDateResetButton = () => {
+        setDatePickerValue("Choose time");
+        setOnShowCalendar(false);
+    };
     const buttonCalendar = (
         <div className="card-wrapper__btn-calendar">
             <Button
@@ -215,7 +230,7 @@ function QuoteListPage(quoteListState) {
                 icon={CalendarMinor}
                 onClick={handleClickCalendar}
             >
-                Choose time
+                {datePickerValue}
             </Button>
         </div>
     );
@@ -225,8 +240,6 @@ function QuoteListPage(quoteListState) {
     useEffect(() => {
         dispatch(getQuoteListApi());
     }, []);
-
-    console.log(showChangeAssign);
 
     return (
         <section className="quote-list">
@@ -271,8 +284,19 @@ function QuoteListPage(quoteListState) {
                                                 />
                                                 <div className="quote-list__date-picker__btn-group">
                                                     <ButtonGroup>
-                                                        <Button>Reset</Button>
-                                                        <Button primary>
+                                                        <Button
+                                                            onClick={
+                                                                handleDateResetButton
+                                                            }
+                                                        >
+                                                            Reset
+                                                        </Button>
+                                                        <Button
+                                                            primary
+                                                            onClick={
+                                                                handleDateApplyButton
+                                                            }
+                                                        >
                                                             Apply
                                                         </Button>
                                                     </ButtonGroup>
