@@ -1,6 +1,7 @@
 // @import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 @import "../../../node_modules/@shopify/polaris/build/esm/styles.css";
 @import "../styles/quoteListPage";
+@import "../styles/quoteListPage/quoteListDetail";
 
 
 // custom btn-primary 
@@ -16,4 +17,11 @@
     &:active {
         background: linear-gradient(180deg, #3f4eae, #3f4eae);
     }
+}
+
+
+
+
+tr {
+    display: flex;
 }

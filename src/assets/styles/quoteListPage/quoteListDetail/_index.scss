@@ -1,0 +1,47 @@
+.quote-view-detail {
+    .quote-view-detail__search {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        justify-content: center;
+
+        .search__icon {
+            width: 30px;
+            height: 30px;
+            display: relative;
+            right: 10px;
+        }
+
+        .search__text {
+            width: 572px;
+            height: 42px;
+        }
+    }
+
+    .quote-view-detail__payment {
+        margin-top: 2%;
+
+        .payment__table {
+            width: 100%;
+
+            .content__title {
+                margin-top: 10px;
+            }
+
+            .payment__content__value {
+                .content__title {
+                    display: flex;
+                    flex-direction: row-reverse;
+                }
+            }
+
+
+        }
+
+        .payment__buttons {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+    }
+}
