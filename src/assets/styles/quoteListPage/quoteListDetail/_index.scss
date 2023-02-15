@@ -1,22 +1,59 @@
 .quote-view-detail {
-    .quote-view-detail__search {
-        display: flex;
-        align-items: center;
-        flex-direction: row;
-        justify-content: center;
+    .quote-view-detail__product {
 
-        .search__icon {
-            width: 30px;
-            height: 30px;
-            display: relative;
-            right: 10px;
+        .product__search {}
+
+        .product__heading {
+            display: flex;
+            flex-direction: row;
+            margin-top: 4%;
         }
 
-        .search__text {
-            width: 572px;
-            height: 42px;
+        .product__list {
+
+
+            .products__list__cell-product {
+                display: flex;
+                justify-items: center;
+                align-items: center;
+
+                .cell-product__image {
+                    width: 40px;
+                    height: 40px;
+                    margin-right: 10%;
+                }
+
+                .cell-product__content {
+                    width: 100px
+                }
+
+            }
+
+            .product__list__quantity-price {
+                .Polaris-Grid {
+                    display: flex;
+                    align-items: center;
+                    gap: 32px;
+                }
+
+
+                .products__list__quantity {
+                    width: 70px;
+                }
+
+                .products__list__price {
+                    width: 70px;
+                }
+            }
+
+
+
         }
+
+
+
     }
+
 
     .quote-view-detail__card {
         margin-top: 2%;
@@ -57,5 +94,18 @@
 
 
 
+    }
+
+    .quote-view-detail__timeline {
+        margin-top: 4%;
+
+        .timeline__comment {
+            margin: 4% 0;
+
+            .status__btn {
+                display: flex;
+                flex-direction: row-reverse;
+            }
+        }
     }
 }
