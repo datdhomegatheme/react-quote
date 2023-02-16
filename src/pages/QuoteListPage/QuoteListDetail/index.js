@@ -107,18 +107,6 @@ function QuoteListDetail() {
                                                     />
                                                 }
                                             ></Combobox>
-                                            {/* <div className="search__icon">
-                                                <Icon source={SearchMajor} />
-                                            </div>
-                                            <div className="search__text">
-                                                <TextField
-                                                    placeholder="Search products"
-                                                    value={textValueSearch}
-                                                    onChange={
-                                                        handleTextValueSearchChange
-                                                    }
-                                                />
-                                            </div> */}
                                         </div>
                                         <div className="product__heading">
                                             <Grid>
