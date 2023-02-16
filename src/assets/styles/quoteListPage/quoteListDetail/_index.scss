@@ -1,112 +1,121 @@
 .quote-view-detail {
-    .quote-view-detail__product {
+  .quote-view-detail__product {
+    .product__heading {
+      display: flex;
+      flex-direction: row;
+      margin-top: 4%;
+    }
 
-        .product__search {}
+    .product__list {
+      .products__list__cell-product {
+        display: flex;
+        justify-items: center;
+        align-items: center;
 
-        .product__heading {
+        .cell-product__image {
+          width: 40px;
+          height: 40px;
+          margin-right: 10%;
+        }
+
+        .cell-product__content {
+          width: 100px
+        }
+
+      }
+
+      .product__list__quantity-price {
+        .Polaris-Grid {
+          display: flex;
+          align-items: center;
+          gap: 32px;
+        }
+
+
+        .products__list__quantity {
+          width: 70px;
+        }
+
+        .products__list__price {
+          width: 70px;
+        }
+      }
+
+
+    }
+
+
+  }
+
+
+  .quote-view-detail__card {
+    margin-top: 2%;
+
+    .quote-view-detail__payment {
+      .payment__table {
+        width: 100%;
+
+        .content__title {
+          display: flex;
+          margin-top: 10px;
+        }
+
+        .payment__content__value {
+          .content__title {
             display: flex;
-            flex-direction: row;
-            margin-top: 4%;
-        }
-
-        .product__list {
-
-
-            .products__list__cell-product {
-                display: flex;
-                justify-items: center;
-                align-items: center;
-
-                .cell-product__image {
-                    width: 40px;
-                    height: 40px;
-                    margin-right: 10%;
-                }
-
-                .cell-product__content {
-                    width: 100px
-                }
-
-            }
-
-            .product__list__quantity-price {
-                .Polaris-Grid {
-                    display: flex;
-                    align-items: center;
-                    gap: 32px;
-                }
-
-
-                .products__list__quantity {
-                    width: 70px;
-                }
-
-                .products__list__price {
-                    width: 70px;
-                }
-            }
-
-
-
+            flex-direction: row-reverse;
+          }
         }
 
 
+      }
 
+      .payment__buttons {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+
+    .card__viewed-product-list {
+      display: flex;
+      flex-direction: row;
+      margin-left: 2%;
+
+      .viewed-product-list__content {
+        margin-left: 4%;
+      }
     }
 
 
-    .quote-view-detail__card {
-        margin-top: 2%;
+  }
 
-        .quote-view-detail__payment {
-            .payment__table {
-                width: 100%;
+  .quote-view-detail__timeline {
+    margin-top: 4%;
 
-                .content__title {
-                    display: flex;
-                    margin-top: 10px;
-                }
+    .timeline__comment {
+      margin: 4% 0;
 
-                .payment__content__value {
-                    .content__title {
-                        display: flex;
-                        flex-direction: row-reverse;
-                    }
-                }
+      .status__btn {
+        display: flex;
+        flex-direction: row-reverse;
+      }
+    }
+  }
 
 
-            }
+}
 
-            .payment__buttons {
-                display: flex;
-                justify-content: flex-end;
-            }
-        }
+.quote-view-detail__modal-discount {
+  .modal-discount__type-cost {
+    display: flex;
+    justify-content: space-between;
 
-        .card__viewed-product-list {
-            display: flex;
-            flex-direction: row;
-            margin-left: 2%;
-
-            .viewed-product-list__content {
-                margin-left: 4%;
-            }
-        }
-
-
-
+    .type-cost__type {
+      width: 46%;
     }
 
-    .quote-view-detail__timeline {
-        margin-top: 4%;
-
-        .timeline__comment {
-            margin: 4% 0;
-
-            .status__btn {
-                display: flex;
-                flex-direction: row-reverse;
-            }
-        }
+    .type-cost__cost {
+      width: 46%;
     }
+  }
 }

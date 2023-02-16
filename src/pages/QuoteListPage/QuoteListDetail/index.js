@@ -1,33 +1,30 @@
 import {
-    Page,
-    Card,
-    TextField,
-    Icon,
-    IndexTable,
-    Text,
-    Button,
-    Grid,
-    Divider,
-    ButtonGroup,
-    Image,
     Box,
-    Form,
-    FormLayout,
-    TextContainer,
-    Select,
+    Button,
+    ButtonGroup,
+    Card,
     Checkbox,
     Combobox,
+    Divider,
+    Form,
+    FormLayout,
+    Grid,
+    Icon,
+    Modal,
+    Page,
+    Select,
+    Text,
+    TextContainer,
+    TextField,
 } from "@shopify/polaris";
-import { useCallback, useState } from "react";
-import { SearchMajor } from "@shopify/polaris-icons";
+import {useCallback, useMemo, useState} from "react";
+import {DeleteMinor, ImportMinor, SearchMajor} from "@shopify/polaris-icons";
 import Images from "../../../assets/Images";
-import { ImportMinor } from "@shopify/polaris-icons";
-
-import { DeleteMinor } from "@shopify/polaris-icons";
 
 function QuoteListDetail() {
     //logic text field search
     const [textValueSearch, setTextValueSearch] = useState("");
+
     const handleTextValueSearchChange = useCallback(
         (value) => setTextValueSearch(value),
         []
@@ -43,16 +40,38 @@ function QuoteListDetail() {
     const [datePickerExpiredDay, setDatePickerExpiredDay] = useState(
         new Date()
     );
-    const handleDatePickerExpiredDay = () => {};
+    const handleDatePickerExpiredDay = () => {
+    };
 
     //logic search comboBox
-    // const
+    const dataSelectedOptions = useMemo(
+        () => [
+            {value: 'rustic', label: 'Rustic'},
+            {value: 'antique', label: 'Antique'},
+            {value: 'vinyl', label: 'Vinyl'},
+            {value: 'vintage', label: 'Vintage'},
+            {value: 'refurbished', label: 'Refurbished'},
+        ],
+        [],
+    );
+
+    //logic modal discount
+    const [activeModalDiscount, setActiveModalDiscount] = useState(false);
+    const handleActiveModalDiscount = () => {
+        setActiveModalDiscount(!activeModalDiscount);
+    }
+    //logic modal shipping
+    const [activeModalShipping, setActiveModalShipping] = useState(false);
+    const handleActiveModalShipping = () => {
+        setActiveModalShipping(!activeModalShipping);
+    }
+
 
     return (
         <div className="quote-view-detail">
             <Page
                 fullWidth
-                breadcrumbs={[{ url: "/quote/list" }]}
+                breadcrumbs={[{url: "/quote/list"}]}
                 title="Quote #id"
                 subtitle="update by Admin Otc 11, 10:13 pm"
                 secondaryActions={[
@@ -81,8 +100,8 @@ function QuoteListDetail() {
                 }}
             >
                 <Page fullWidth>
-                    <Grid columns={{ xs: 12 }}>
-                        <Grid.Cell columnSpan={{ lg: 8 }}>
+                    <Grid columns={{xs: 12}}>
+                        <Grid.Cell columnSpan={{lg: 8}}>
                             <div className="quote-view-detail__product">
                                 <Card
                                     title={
@@ -111,7 +130,7 @@ function QuoteListDetail() {
                                         <div className="product__heading">
                                             <Grid>
                                                 <Grid.Cell
-                                                    columnSpan={{ xs: 6 }}
+                                                    columnSpan={{xs: 6}}
                                                 >
                                                     <div className="heading__product">
                                                         <Grid>
@@ -125,7 +144,7 @@ function QuoteListDetail() {
                                                     </div>
                                                 </Grid.Cell>
                                                 <Grid.Cell
-                                                    columnSpan={{ xs: 6 }}
+                                                    columnSpan={{xs: 6}}
                                                 >
                                                     <Grid>
                                                         <Grid.Cell
@@ -166,7 +185,7 @@ function QuoteListDetail() {
                                         <div className="product__list">
                                             <Grid>
                                                 <Grid.Cell
-                                                    columnSpan={{ xs: 6 }}
+                                                    columnSpan={{xs: 6}}
                                                 >
                                                     <div className="products__list__cell-product">
                                                         <img
@@ -202,7 +221,7 @@ function QuoteListDetail() {
                                                 </Grid.Cell>
 
                                                 <Grid.Cell
-                                                    columnSpan={{ xs: 6 }}
+                                                    columnSpan={{xs: 6}}
                                                 >
                                                     <div className="product__list__quantity-price">
                                                         <Grid>
@@ -289,7 +308,7 @@ function QuoteListDetail() {
                                                         </Text>
                                                     </tr>
                                                     <tr className="content__title">
-                                                        <Button plain>
+                                                        <Button onClick={handleActiveModalDiscount} plain>
                                                             <Text
                                                                 variant="bodyLg"
                                                                 as="h1"
@@ -299,7 +318,7 @@ function QuoteListDetail() {
                                                         </Button>
                                                     </tr>
                                                     <tr className="content__title">
-                                                        <Button plain>
+                                                        <Button onClick={handleActiveModalShipping} plain>
                                                             <Text
                                                                 variant="bodyLg"
                                                                 as="h1"
@@ -406,7 +425,7 @@ function QuoteListDetail() {
                                         <Text variant="headingMd" as="h1">
                                             Timeline
                                         </Text>
-                                        <Divider borderStyle="base" />
+                                        <Divider borderStyle="base"/>
                                         <div className="timeline__comment">
                                             <Form>
                                                 <FormLayout>
@@ -436,7 +455,7 @@ function QuoteListDetail() {
                                 </div>
                             </div>
                         </Grid.Cell>
-                        <Grid.Cell columnSpan={{ lg: 4 }}>
+                        <Grid.Cell columnSpan={{lg: 4}}>
                             <Card title="Additional Details">
                                 <Card.Section>
                                     <TextContainer>
@@ -506,7 +525,7 @@ function QuoteListDetail() {
                             </Card>
                             <Card title={"Salesperson Account"}>
                                 <Card.Section>
-                                    <Select />
+                                    <Select/>
                                 </Card.Section>
                             </Card>
                             <Card title={"Expired Day"}>
@@ -540,6 +559,74 @@ function QuoteListDetail() {
                     </Grid>
                 </Page>
             </Page>
+            <Modal open={activeModalDiscount} title={"Add discount"} onClose={handleActiveModalDiscount}
+                   primaryAction={{
+                       content: "Apply",
+
+                   }}
+                   secondaryActions={[
+                       {
+                           content: 'Cancel',
+
+                       },
+                   ]}>
+                <Modal.Section>
+                    <Form>
+                        <FormLayout>
+                            <Checkbox
+                                label="Add custom shipping cost"
+                            />
+                            <TextField
+                                requiredIndicator={true}
+                                label="Shipping cost"
+                                type="currency"
+                            />
+                        </FormLayout>
+
+                    </Form>
+                </Modal.Section>
+            </Modal>
+            <Modal open={activeModalShipping} title={"Add discount"} onClose={handleActiveModalShipping}
+                   primaryAction={{
+                       content: "Apply",
+
+                   }}
+                   secondaryActions={[
+                       {
+                           content: 'Cancel',
+                       },
+                   ]}>
+                <Modal.Section>
+                    <div className={"quote-view-detail__modal-discount"}>
+                        <Form>
+                            <FormLayout>
+                                <Checkbox
+                                    label="Add discount code"
+                                />
+                                <div className={"modal-discount__type-cost"}>
+                                    <div className={"type-cost__type"}>
+                                        <Select
+
+                                            label={"Discount type"}
+                                        />
+                                    </div>
+                                    <div className={"type-cost__cost"}>
+                                        <TextField
+
+                                            requiredIndicator={true}
+                                            label="Shipping cost"
+                                            type="currency"
+                                        />
+                                    </div>
+
+                                </div>
+
+                                <TextField label={"Discount title"}/>
+                            </FormLayout>
+                        </Form>
+                    </div>
+                </Modal.Section>
+            </Modal>
         </div>
     );
 }
