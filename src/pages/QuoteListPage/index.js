@@ -131,7 +131,7 @@ function QuoteListPage() {
                                 options={OptionsPageIndex}
                                 onChange={handleSelectIndexPageChange}
                                 value={selectedIndexTable}
-                            ></Select>
+                            />
                         </div>
                         <Button
                             primary
