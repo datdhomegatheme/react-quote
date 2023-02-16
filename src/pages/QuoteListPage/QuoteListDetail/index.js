@@ -422,9 +422,12 @@ function QuoteListDetail() {
 
                                 <div className="quote-view-detail__timeline">
                                     <Box>
-                                        <Text variant="headingMd" as="h1">
-                                            Timeline
-                                        </Text>
+                                        <div className={"timeline__heading"}>
+                                            <Text variant="headingMd" as="h1">
+                                                Timeline
+                                            </Text>
+                                        </div>
+
                                         <Divider borderStyle="base"/>
                                         <div className="timeline__comment">
                                             <Form>

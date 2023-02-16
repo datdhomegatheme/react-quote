@@ -92,12 +92,42 @@
   .quote-view-detail__timeline {
     margin-top: 4%;
 
+    .timeline__heading{
+      margin-bottom: 4%;
+    }
+
     .timeline__comment {
-      margin: 4% 0;
+      margin-top: 4%;
+      border-left: 4px solid #e3e6e9;
+      padding: 2% 2% 0 2%;
+      &:before{
+        content: "";
+        position: relative;
+        display: flex;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #5c6ac4;
+        inset: 22px -19px;
+      }
 
       .status__btn {
         display: flex;
         flex-direction: row-reverse;
+      }
+    }
+    .timeline__status{
+      border-left: 4px solid #e3e6e9;
+      padding: 2% 2% 0 2%;
+      &:before{
+        content: "";
+        position: relative;
+        display: flex;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #5c6ac4;
+        inset: 16px -19px;
       }
     }
   }
