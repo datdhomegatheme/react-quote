@@ -1,4 +1,4 @@
-import {AlphaStack,  Button, Card, Divider, IndexTable, Modal, Text, Grid} from "@shopify/polaris";
+import {AlphaStack, Button, Card, Divider, IndexTable, Modal, Text, Thumbnail} from "@shopify/polaris";
 
 function ModalQuickView({handleChangeModal, showModal, quote}) {
     return (
@@ -36,7 +36,9 @@ function ModalQuickView({handleChangeModal, showModal, quote}) {
                                                 position={index}
                                             >
                                                 <IndexTable.Cell>
-                                                    {itemProduct.image}
+
+                                                    <Thumbnail alt={itemProduct.title} source={itemProduct.image}/>
+
                                                 </IndexTable.Cell>
                                                 <IndexTable.Cell>
                                                     <Button
