@@ -1,7 +1,6 @@
 // @import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 @import "../../../node_modules/@shopify/polaris/build/esm/styles.css";
-@import "../styles/quoteListPage";
-@import "../styles/quoteListPage/quoteListDetail";
+
 
 
 // custom btn-primary 
@@ -25,3 +24,7 @@
 tr {
     // display: flex;
 }
+
+
+@import "../styles/quoteListPage";
+@import "../styles/quoteListPage/quoteListDetail";
