@@ -615,7 +615,6 @@ function QuoteListDetail() {
                                     </div>
                                     <div className={"type-cost__cost"}>
                                         <TextField
-
                                             requiredIndicator={true}
                                             label="Shipping cost"
                                             type="currency"

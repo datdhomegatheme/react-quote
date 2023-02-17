@@ -7,28 +7,24 @@ import {
     DatePicker,
     IndexTable,
     List,
+    Modal,
     Page,
     Popover,
     Select,
     Tabs,
     Text,
+    TextContainer,
     TextField,
     useIndexResourceState,
 } from "@shopify/polaris";
-import {
-    CalendarMinor,
-    SettingsMinor,
-    PlusMinor,
-    DeleteMinor,
-    ViewMinor,
-} from "@shopify/polaris-icons";
+import {CalendarMinor, DeleteMinor, PlusMinor, SettingsMinor, ViewMinor,} from "@shopify/polaris-icons";
 
-import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getQuoteListApi } from "../../redux/quoteListSlice";
-import { OptionsPageIndex, resourceName, tabs } from "./DataItemQuoteList";
+import {useCallback, useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {getQuoteListApi} from "../../redux/quoteListSlice";
+import {OptionsPageIndex, tabs} from "./DataItemQuoteList";
 import ModalQuickView from "../QuoteListPage/ModalQuickView";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 function QuoteListPage() {
     const navigate = useNavigate();
@@ -41,6 +37,7 @@ function QuoteListPage() {
     const [showModal, setShowModal] = useState(false);
     const [quoteDetail, setQuoteDetail] = useState({});
     const [showChangeAssign, setShowChangeAssign] = useState(false);
+
 
     const quoteList = useSelector((state) => state.quoteList.data);
 
@@ -65,14 +62,14 @@ function QuoteListPage() {
     const handleTabChange = useCallback((selectedTabIndex) =>
         setSelectedTab(selectedTabIndex)
     );
-    const [{ month, year }, setDate] = useState({ month: 1, year: 2022 });
+    const [{month, year}, setDate] = useState({month: 1, year: 2022});
     const [selectedDates, setSelectedDates] = useState({
         start: new Date("03/25/2022"),
         end: new Date("04/25/2022"),
     });
 
     const handleMonthChange = useCallback(
-        (month, year) => setDate({ month, year }),
+        (month, year) => setDate({month, year}),
         []
     );
 
@@ -80,24 +77,30 @@ function QuoteListPage() {
         setOnShowCalendar(!showCalendar);
     };
 
-    const { selectedResources, allResourcesSelected, handleSelectionChange } =
+    const {selectedResources, allResourcesSelected, handleSelectionChange} =
         useIndexResourceState(quoteList);
 
+    // logic delete button
+    const [showModalDelete, setShowModalDelete] = useState(false);
+
+    const handleModalDelete = () => {
+        setShowModalDelete(!showModalDelete);
+    };
     const rowMarkupQuoteLists = quoteList?.map((quote, index) => (
         <IndexTable.Row
             id={quote.id}
             key={index}
             selected={selectedResources.includes(quote.id)}
-        >
+            position={index}>
             <IndexTable.Cell>{quote.id}</IndexTable.Cell>
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="p">
-                    <Text as="span" fontWeight="bold">
+                    <Text variant={"headingSm"} as="span" fontWeight="bold">
                         Name:
                     </Text>
-                    <br />
+                    <br/>
                     {quote.customerInformation.name}
-                    <br />
+                    <br/>
                 </Text>
                 <Button
                     removeUnderline
@@ -159,7 +162,7 @@ function QuoteListPage() {
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="p">
                     {quote.createTime.date}
-                    <br />
+                    <br/>
                     {quote.createTime.time}
                 </Text>
             </IndexTable.Cell>
@@ -204,7 +207,7 @@ function QuoteListPage() {
                             icon={ViewMinor}
                         />
                     </div>
-                    <Button plain icon={DeleteMinor} />
+                    <Button plain icon={DeleteMinor} onClick={handleModalDelete}/>
                 </ButtonGroup>
             </IndexTable.Cell>
         </IndexTable.Row>
@@ -219,8 +222,8 @@ function QuoteListPage() {
     const handleDateApplyButton = () => {
         setDatePickerValue(
             selectedDates.start.toLocaleDateString("en-US") +
-                "-" +
-                selectedDates.end.toLocaleDateString("en-US")
+            "-" +
+            selectedDates.end.toLocaleDateString("en-US")
         );
         setOnShowCalendar(false);
     };
@@ -319,7 +322,7 @@ function QuoteListPage() {
                                         <ActionList
                                             actionRole="menuitem"
                                             items={[
-                                                { content: "Refresh data" },
+                                                {content: "Refresh data"},
                                                 {
                                                     content:
                                                         "Export quote list",
@@ -351,13 +354,13 @@ function QuoteListPage() {
                                             handleSelectionChange
                                         }
                                         headings={[
-                                            { title: "Quote Id" },
-                                            { title: "Customer Information" },
-                                            { title: "Assign Salesperson" },
-                                            { title: "Create Time" },
-                                            { title: "Status" },
-                                            { title: "Logs" },
-                                            { title: "Actions" },
+                                            {title: "Quote Id"},
+                                            {title: "Customer Information"},
+                                            {title: "Assign Salesperson"},
+                                            {title: "Create Time"},
+                                            {title: "Status"},
+                                            {title: "Logs"},
+                                            {title: "Actions"},
                                         ]}
                                         sortable={[
                                             true,
@@ -382,14 +385,38 @@ function QuoteListPage() {
                                                 handleSelectIndexPageChange
                                             }
                                             value={selectedIndexTable}
-                                        ></Select>
+                                        />
                                     </div>
                                 </div>
                             </Card.Section>
                         </Card.Section>
                     </Card>
                 </Tabs>
+                <Modal open={showModalDelete} title={"Delete this quote"} onClose={handleModalDelete}>
+                    <div className="quote-list__modal-delete">
+                        <Modal.Section>
+                            <TextContainer>
+                                <Text variant={"bodyLg"} as={"p"}>Are you sure you want to delete this quote?</Text>
+                                <Text variant={"bodyLg"} as={"p"}>Or move this quote to trash?</Text>
+                                <Text variant={"bodyLg"} as={"p"}>The quote has been in 60 days if it's in trashed
+                                    box.</Text>
+                                <Text variant={"bodyLg"} as={"p"}>This action cannot be undone.</Text>
+                            </TextContainer>
+                        </Modal.Section>
+                        <Modal.Section>
+                            <div className="modal-delete__btn">
+                                <ButtonGroup>
+                                    <Button>Move to Trashed</Button>
+                                    <Button destructive>Delete</Button>
+                                </ButtonGroup>
+                            </div>
+
+                        </Modal.Section>
+                    </div>
+                </Modal>
             </Page>
+
+
         </section>
     );
 }
