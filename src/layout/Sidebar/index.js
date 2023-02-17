@@ -59,7 +59,7 @@ function Sidebar() {
                 <Route path="/" element={<DashboardPage />} />
                 <Route path="/quote">
                     <Route path="list" element={<QuoteListPage />}></Route>
-                    <Route path="list/id" element={<QuoteListDetail />} />
+                    <Route path="list/:id" element={<QuoteListDetail />} />
                     <Route path="trash-quote" />
                     <Route path="abandoned-quote" />
                 </Route>

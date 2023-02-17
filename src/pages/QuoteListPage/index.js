@@ -1,6 +1,8 @@
 import {
     ActionList,
+    AlphaStack,
     Badge,
+    Box,
     Button,
     ButtonGroup,
     Card,
@@ -22,13 +24,13 @@ import {CalendarMinor, DeleteMinor, PlusMinor, SettingsMinor, ViewMinor,} from "
 import {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getQuoteListApi} from "../../redux/quoteListSlice";
-import {OptionsPageIndex, tabs} from "./DataItemQuoteList";
+import {OptionsPageIndex} from "./DataItemQuoteList";
 import ModalQuickView from "../QuoteListPage/ModalQuickView";
 import {useNavigate} from "react-router-dom";
+import Images from "../../assets/Images";
 
 function QuoteListPage() {
     const navigate = useNavigate();
-
     const [selectedTab, setSelectedTab] = useState(0);
     const [textFieldValue, setTextFieldValue] = useState("");
     const [showCalendar, setOnShowCalendar] = useState(false);
@@ -37,7 +39,6 @@ function QuoteListPage() {
     const [showModal, setShowModal] = useState(false);
     const [quoteDetail, setQuoteDetail] = useState({});
     const [showChangeAssign, setShowChangeAssign] = useState(false);
-
 
     const quoteList = useSelector((state) => state.quoteList.data);
 
@@ -202,7 +203,8 @@ function QuoteListPage() {
                 <ButtonGroup>
                     <div className="data-table__btn-view">
                         <Button
-                            onClick={() => navigate("id")}
+                            onClick={() => navigate(`${quote.id}`
+                            )}
                             plain
                             icon={ViewMinor}
                         />
@@ -250,6 +252,196 @@ function QuoteListPage() {
         dispatch(getQuoteListApi());
     }, []);
 
+//tab route
+    const tabs = [
+        {
+            id: "quote-list",
+            content: "Quote List",
+            ui: <Box padding={"4"}>
+                <Card>
+                    <Card.Section>
+                        <ModalQuickView
+                            handleChangeModal={handleChangeModal}
+                            showModal={showModal}
+                            quote={quoteDetail}
+                        />
+                        <div className="quote-list__card-wrapper">
+                            <div className="card-wrapper__btn-search">
+                                <TextField
+                                    placeholder={"search by Quote Id"}
+                                    value={textFieldValue}
+                                    onChange={handleTextFieldChange}
+                                />
+                            </div>
+                            <ButtonGroup>
+                                <div className="quote-list__popover-calendar">
+                                    <Popover
+                                        active={showCalendar}
+                                        activator={buttonCalendar}
+                                    >
+                                        <div className="quote-list__date-picker">
+                                            <DatePicker
+                                                month={month}
+                                                year={year}
+                                                onChange={setSelectedDates}
+                                                onMonthChange={
+                                                    handleMonthChange
+                                                }
+                                                selected={selectedDates}
+                                                multiMonth
+                                                allowRange
+                                            />
+                                            <div className="quote-list__date-picker__btn-group">
+                                                <ButtonGroup>
+                                                    <Button
+                                                        onClick={
+                                                            handleDateResetButton
+                                                        }
+                                                    >
+                                                        Reset
+                                                    </Button>
+                                                    <Button
+                                                        primary
+                                                        onClick={
+                                                            handleDateApplyButton
+                                                        }
+                                                    >
+                                                        Apply
+                                                    </Button>
+                                                </ButtonGroup>
+                                            </div>
+                                        </div>
+                                    </Popover>
+                                </div>
+
+                                <Popover
+                                    active={popoverActive}
+                                    activator={buttonSelect}
+                                    onClose={togglePopoverActive}
+                                >
+                                    <ActionList
+                                        actionRole="menuitem"
+                                        items={[
+                                            {content: "Refresh data"},
+                                            {
+                                                content:
+                                                    "Export quote list",
+                                            },
+                                        ]}
+                                    />
+                                </Popover>
+                                <Button
+                                    primary
+                                    onClick={() =>
+                                        navigate("/quote/create")
+                                    }
+                                    icon={PlusMinor}
+                                >
+                                    Create a quote
+                                </Button>
+                            </ButtonGroup>
+                        </div>
+                        <Card.Section>
+                            <div className="quote-list__data-table">
+                                <IndexTable
+                                    itemCount={quoteList.length}
+                                    selectedItemsCount={
+                                        allResourcesSelected
+                                            ? "All"
+                                            : selectedResources.length
+                                    }
+                                    onSelectionChange={
+                                        handleSelectionChange
+                                    }
+                                    headings={[
+                                        {title: "Quote Id"},
+                                        {title: "Customer Information"},
+                                        {title: "Assign Salesperson"},
+                                        {title: "Create Time"},
+                                        {title: "Status"},
+                                        {title: "Logs"},
+                                        {title: "Actions"},
+                                    ]}
+                                    sortable={[
+                                        true,
+                                        false,
+                                        false,
+                                        false,
+                                        true,
+                                        true,
+                                        false,
+                                    ]}
+                                >
+                                    {rowMarkupQuoteLists}
+                                </IndexTable>
+                                <div
+                                    className={
+                                        "quote-list__select-index-table"
+                                    }
+                                >
+                                    <Select
+                                        options={OptionsPageIndex}
+                                        onChange={
+                                            handleSelectIndexPageChange
+                                        }
+                                        value={selectedIndexTable}
+                                    />
+                                </div>
+                            </div>
+                        </Card.Section>
+                    </Card.Section>
+                </Card>
+            </Box>
+
+        },
+        {
+            id: "quote-trashed",
+            content: "Trashed Quote",
+            ui:
+                <Box padding={"10"}>
+                    <AlphaStack fullWidth align={"center"}>
+                        <Card>
+                            <Card.Section>
+                                <Box paddingBlockEnd={"12"} paddingBlockStart={"4"}>
+                                    <AlphaStack align={"center"}>
+                                        <img alt={"empty quote"} src={Images.emptyQuote}/>
+                                        <Text variant={"headingMd"} as={"h1"}>This is where you'll manage your trashed
+                                            quote</Text>
+                                        <Text variant={"bodySm"} as={"p"} fontWeight={"regular"}>You can edit and
+                                            restore quote that you trashed</Text>
+                                    </AlphaStack>
+                                </Box>
+                            </Card.Section>
+                        </Card>
+                    </AlphaStack>
+                </Box>
+
+        },
+        {
+            id: "quote-abandon",
+            content: "Abandon Quote",
+            ui:
+                <Box padding={"10"}>
+                    <AlphaStack fullWidth align={"center"}>
+                        <Card>
+                            <Card.Section>
+                                <Box paddingBlockEnd={"12"} paddingBlockStart={"4"}>
+                                    <AlphaStack align={"center"}>
+                                        <img alt={"empty quote"} src={Images.emptyQuote}/>
+                                        <Text variant={"headingMd"} as={"h1"}>This is where you'll manage your Abandon
+                                            quote</Text>
+                                        <Text variant={"bodySm"} as={"p"} fontWeight={"regular"}>When your customer has
+                                            not submitted a quote request, a abandoned quote will be created</Text>
+                                    </AlphaStack>
+                                </Box>
+                            </Card.Section>
+                        </Card>
+                    </AlphaStack>
+                </Box>
+        },
+    ];
+
+
     return (
         <section className="quote-list">
             <Page fullWidth>
@@ -258,139 +450,9 @@ function QuoteListPage() {
                     selected={selectedTab}
                     onSelect={handleTabChange}
                 >
-                    <Card title={tabs[selectedTab].content}>
-                        <Card.Section>
-                            <ModalQuickView
-                                handleChangeModal={handleChangeModal}
-                                showModal={showModal}
-                                quote={quoteDetail}
-                            />
-                            <div className="quote-list__card-wrapper">
-                                <div className="card-wrapper__btn-search">
-                                    <TextField
-                                        placeholder={"search by Quote Id"}
-                                        value={textFieldValue}
-                                        onChange={handleTextFieldChange}
-                                    />
-                                </div>
-                                <ButtonGroup>
-                                    <div className="quote-list__popover-calendar">
-                                        <Popover
-                                            active={showCalendar}
-                                            activator={buttonCalendar}
-                                        >
-                                            <div className="quote-list__date-picker">
-                                                <DatePicker
-                                                    month={month}
-                                                    year={year}
-                                                    onChange={setSelectedDates}
-                                                    onMonthChange={
-                                                        handleMonthChange
-                                                    }
-                                                    selected={selectedDates}
-                                                    multiMonth
-                                                    allowRange
-                                                />
-                                                <div className="quote-list__date-picker__btn-group">
-                                                    <ButtonGroup>
-                                                        <Button
-                                                            onClick={
-                                                                handleDateResetButton
-                                                            }
-                                                        >
-                                                            Reset
-                                                        </Button>
-                                                        <Button
-                                                            primary
-                                                            onClick={
-                                                                handleDateApplyButton
-                                                            }
-                                                        >
-                                                            Apply
-                                                        </Button>
-                                                    </ButtonGroup>
-                                                </div>
-                                            </div>
-                                        </Popover>
-                                    </div>
 
-                                    <Popover
-                                        active={popoverActive}
-                                        activator={buttonSelect}
-                                        onClose={togglePopoverActive}
-                                    >
-                                        <ActionList
-                                            actionRole="menuitem"
-                                            items={[
-                                                {content: "Refresh data"},
-                                                {
-                                                    content:
-                                                        "Export quote list",
-                                                },
-                                            ]}
-                                        />
-                                    </Popover>
-                                    <Button
-                                        primary
-                                        onClick={() =>
-                                            navigate("/quote/create")
-                                        }
-                                        icon={PlusMinor}
-                                    >
-                                        Create a quote
-                                    </Button>
-                                </ButtonGroup>
-                            </div>
-                            <Card.Section>
-                                <div className="quote-list__data-table">
-                                    <IndexTable
-                                        itemCount={quoteList.length}
-                                        selectedItemsCount={
-                                            allResourcesSelected
-                                                ? "All"
-                                                : selectedResources.length
-                                        }
-                                        onSelectionChange={
-                                            handleSelectionChange
-                                        }
-                                        headings={[
-                                            {title: "Quote Id"},
-                                            {title: "Customer Information"},
-                                            {title: "Assign Salesperson"},
-                                            {title: "Create Time"},
-                                            {title: "Status"},
-                                            {title: "Logs"},
-                                            {title: "Actions"},
-                                        ]}
-                                        sortable={[
-                                            true,
-                                            false,
-                                            false,
-                                            false,
-                                            true,
-                                            true,
-                                            false,
-                                        ]}
-                                    >
-                                        {rowMarkupQuoteLists}
-                                    </IndexTable>
-                                    <div
-                                        className={
-                                            "quote-list__select-index-table"
-                                        }
-                                    >
-                                        <Select
-                                            options={OptionsPageIndex}
-                                            onChange={
-                                                handleSelectIndexPageChange
-                                            }
-                                            value={selectedIndexTable}
-                                        />
-                                    </div>
-                                </div>
-                            </Card.Section>
-                        </Card.Section>
-                    </Card>
+                    {tabs[selectedTab].ui}
+
                 </Tabs>
                 <Modal open={showModalDelete} title={"Delete this quote"} onClose={handleModalDelete}>
                     <div className="quote-list__modal-delete">

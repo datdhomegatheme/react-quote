@@ -20,8 +20,13 @@ import {
 import {useCallback, useMemo, useState} from "react";
 import {DeleteMinor, ImportMinor, SearchMajor} from "@shopify/polaris-icons";
 import Images from "../../../assets/Images";
+import {useParams} from "react-router-dom";
 
 function QuoteListDetail() {
+
+    //get data quote detail
+    const quoteId = useParams();
+
     //logic text field search
     const [textValueSearch, setTextValueSearch] = useState("");
 
@@ -66,13 +71,12 @@ function QuoteListDetail() {
         setActiveModalShipping(!activeModalShipping);
     }
 
-
     return (
         <div className="quote-view-detail">
             <Page
                 fullWidth
                 breadcrumbs={[{url: "/quote/list"}]}
-                title="Quote #id"
+                title={"Quote #" + quoteId.id}
                 subtitle="update by Admin Otc 11, 10:13 pm"
                 secondaryActions={[
                     {
@@ -115,6 +119,7 @@ function QuoteListDetail() {
                                             <Combobox
                                                 activator={
                                                     <Combobox.TextField
+                                                        placeholder="Search"
                                                         prefix={
                                                             <Icon
                                                                 source={
@@ -122,7 +127,7 @@ function QuoteListDetail() {
                                                                 }
                                                             />
                                                         }
-                                                        placeholder="Search"
+
                                                     />
                                                 }
                                             ></Combobox>
