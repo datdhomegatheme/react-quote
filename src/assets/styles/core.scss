@@ -19,11 +19,24 @@
 }
 
 
-
+.icon404{
+    width: 100px;
+    height: auto;
+}
 
 tr {
     // display: flex;
 }
+
+.hide-element{
+    visibility: hidden;
+}
+
+.show-element {
+    visibility: visible;
+}
+
+
 
 
 @import "../styles/quoteListPage";

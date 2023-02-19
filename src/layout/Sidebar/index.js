@@ -6,6 +6,7 @@ import SettingsPage from "../../pages/SettingsPage";
 import PricingPage from "../../pages/PricingPage";
 import React, { useCallback, useState } from "react";
 import QuoteListDetail from "../../pages/QuoteListPage/QuoteListDetail";
+import NotFoundPage from "../../pages/NotFoundPage";
 
 function Sidebar() {
     const location = useLocation();
@@ -82,6 +83,7 @@ function Sidebar() {
                     <Route path="advanced" />
                 </Route>
                 <Route path="/pricing" element={<PricingPage />} />
+                <Route path="*" element={<NotFoundPage />}/>
             </Routes>
         </Frame>
     );

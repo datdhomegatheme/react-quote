@@ -1,4 +1,5 @@
 import {
+    AlphaStack,
     Box,
     Button,
     ButtonGroup,
@@ -10,6 +11,7 @@ import {
     FormLayout,
     Grid,
     Icon,
+    Listbox,
     Modal,
     Page,
     Select,
@@ -27,13 +29,6 @@ function QuoteListDetail() {
     //get data quote detail
     const quoteId = useParams();
 
-    //logic text field search
-    const [textValueSearch, setTextValueSearch] = useState("");
-
-    const handleTextValueSearchChange = useCallback(
-        (value) => setTextValueSearch(value),
-        []
-    );
 
     //logic expired day checkbox
     const [checkExpiredDay, setCheckExpiredDay] = useState(false);
@@ -41,24 +36,6 @@ function QuoteListDetail() {
         setCheckExpiredDay(!checkExpiredDay);
     };
 
-    //logic expired day Datepicker
-    const [datePickerExpiredDay, setDatePickerExpiredDay] = useState(
-        new Date()
-    );
-    const handleDatePickerExpiredDay = () => {
-    };
-
-    //logic search comboBox
-    const dataSelectedOptions = useMemo(
-        () => [
-            {value: 'rustic', label: 'Rustic'},
-            {value: 'antique', label: 'Antique'},
-            {value: 'vinyl', label: 'Vinyl'},
-            {value: 'vintage', label: 'Vintage'},
-            {value: 'refurbished', label: 'Refurbished'},
-        ],
-        [],
-    );
 
     //logic modal discount
     const [activeModalDiscount, setActiveModalDiscount] = useState(false);
@@ -70,6 +47,91 @@ function QuoteListDetail() {
     const handleActiveModalShipping = () => {
         setActiveModalShipping(!activeModalShipping);
     }
+
+    //logic sale person account
+    const [selectedAccount, setSelectedAccount] = useState();
+    const handleSelectAccount = useCallback((value) => setSelectedAccount(value), [])
+    const optionsAccount = [
+        {label: 'Admin', value: 'Admin'},
+        {label: 'employee', value: 'employee'},
+
+    ];
+
+    //logic handle Discount Type
+    const [selectedDiscountType, setSelectedDiscountType] = useState();
+    const handleDiscountType = useState((value) => {
+        setSelectedDiscountType(value)
+    })
+    const OptionsDiscountType = [
+        {label: "50%", value: "50%"},
+        {label: "20%", value: "20%"}
+    ]
+
+
+    //logic quantity
+    const [valueQuantity, setValueQuantity] = useState();
+    const handleQuantity = useCallback((value) => setValueQuantity(value), []);
+
+    //logic product's price
+    const [valueProductPrice, setValueProductPrice] = useState();
+    const handleProductPrice = useCallback((value) =>
+            setValueProductPrice(value)
+        , [])
+
+    //logic combobox search product
+    const deSelectedOptionsProductSearch = useMemo(
+        () => [
+            {value: 'rustic', label: 'Rustic'},
+            {value: 'antique', label: 'Antique'},
+            {value: 'vinyl', label: 'Vinyl'},
+            {value: 'vintage', label: 'Vintage'},
+            {value: 'refurbished', label: 'Refurbished'},
+        ],
+        [],);
+
+    const [valueProductSearch, setValueProductSearch] = useState("");
+    const [optionsProductSearch, setOptionsProductSearch] = useState(deSelectedOptionsProductSearch)
+    const [selectedOptionsProductSearch, setSelectedOptionProductSearch] = useState();
+
+    const updateValueProductSearch = useCallback((value) => {
+            setValueProductSearch(value);
+
+            if (value === "") {
+                setOptionsProductSearch(deSelectedOptionsProductSearch);
+            }
+
+            const filterRegex = new RegExp(value, "i");
+            const resultOptions = deSelectedOptionsProductSearch.filter((option) => option.label.match(filterRegex));
+            setOptionsProductSearch(resultOptions);
+        },
+        [deSelectedOptionsProductSearch]
+    )
+
+    const updateSelection = useCallback((selected) => {
+        const matchedOption = optionsProductSearch.find((option) => {
+            return option.value.match(selected);
+        });
+        setSelectedOptionProductSearch(selected);
+        setValueProductSearch((matchedOption && matchedOption.label) || "");
+    }, [optionsProductSearch],);
+
+    const optionsMarkup =
+        optionsProductSearch.length > 0
+            ? optionsProductSearch.map((option) => {
+                const {label, value} = option;
+
+                return (
+                    <Listbox.Option
+                        key={`${value}`}
+                        value={value}
+                        selected={selectedOptionsProductSearch === value}
+                        accessibilityLabel={label}
+                    >
+                        {label}
+                    </Listbox.Option>
+                );
+            })
+            : null;
 
     return (
         <div className="quote-view-detail">
@@ -127,10 +189,18 @@ function QuoteListDetail() {
                                                                 }
                                                             />
                                                         }
-
+                                                        label={"Search"}
+                                                        labelHidden
+                                                        value={valueProductSearch}
+                                                        onChane={updateValueProductSearch}
                                                     />
                                                 }
-                                            ></Combobox>
+                                            >
+                                                {optionsProductSearch.length > 0 ? (
+                                                    <Listbox onSelect={updateSelection}>{optionsMarkup}</Listbox>
+                                                ) : null}
+
+                                            </Combobox>
                                         </div>
                                         <div className="product__heading">
                                             <Grid>
@@ -237,8 +307,13 @@ function QuoteListDetail() {
                                                             >
                                                                 <div className="products__list__quantity">
                                                                     <TextField
+                                                                        label={"quantity"}
+                                                                        labelHidden={true}
                                                                         type="number"
                                                                         autoComplete="off"
+                                                                        value={valueQuantity}
+                                                                        onChange={handleQuantity}
+
                                                                     />
                                                                 </div>
                                                             </Grid.Cell>
@@ -250,8 +325,12 @@ function QuoteListDetail() {
                                                             >
                                                                 <div className="products__list__price">
                                                                     <TextField
+                                                                        label={"price"}
+                                                                        labelHidden={true}
                                                                         type="number"
                                                                         autoComplete="off"
+                                                                        value={valueProductPrice}
+                                                                        onChange={handleProductPrice}
                                                                     />
                                                                 </div>
                                                             </Grid.Cell>
@@ -266,7 +345,7 @@ function QuoteListDetail() {
                                                                         variant="bodyMd"
                                                                         as="h1"
                                                                     >
-                                                                        200$
+                                                                        {valueQuantity * valueProductPrice}$
                                                                     </Text>
                                                                 </div>
                                                             </Grid.Cell>
@@ -302,80 +381,50 @@ function QuoteListDetail() {
                                         }
                                     >
                                         <Card.Section>
-                                            <table className="payment__table">
-                                                <th>
-                                                    <tr className="content__title">
-                                                        <Text
-                                                            variant="bodyLg"
-                                                            as="h1"
-                                                        >
-                                                            Subtotal
-                                                        </Text>
-                                                    </tr>
-                                                    <tr className="content__title">
-                                                        <Button onClick={handleActiveModalDiscount} plain>
-                                                            <Text
-                                                                variant="bodyLg"
-                                                                as="h1"
-                                                            >
-                                                                Add discount
-                                                            </Text>
-                                                        </Button>
-                                                    </tr>
-                                                    <tr className="content__title">
-                                                        <Button onClick={handleActiveModalShipping} plain>
-                                                            <Text
-                                                                variant="bodyLg"
-                                                                as="h1"
-                                                            >
-                                                                Add shipping
-                                                            </Text>
-                                                        </Button>
-                                                    </tr>
-                                                    <tr className="content__title">
-                                                        <Text
-                                                            variant="bodyLg"
-                                                            as="h1"
-                                                        >
-                                                            Total
-                                                        </Text>
-                                                    </tr>
-                                                </th>
-                                                <th className="payment__content__value">
-                                                    <tr className="content__title">
-                                                        <Text
-                                                            variant="bodyLg"
-                                                            as="h1"
-                                                        >
-                                                            600$
-                                                        </Text>
-                                                    </tr>
-                                                    <tr className="content__title">
-                                                        <Text
-                                                            variant="bodyLg"
-                                                            as="h1"
-                                                        >
-                                                            0$
-                                                        </Text>
-                                                    </tr>
-                                                    <tr className="content__title">
-                                                        <Text
-                                                            variant="bodyLg"
-                                                            as="h1"
-                                                        >
-                                                            0$
-                                                        </Text>
-                                                    </tr>
-                                                    <tr className="content__title">
-                                                        <Text
-                                                            variant="bodyLg"
-                                                            as="h1"
-                                                        >
-                                                            600$
-                                                        </Text>
-                                                    </tr>
-                                                </th>
-                                            </table>
+                                            <Box padding={"2"}>
+                                                <Grid>
+                                                    <Grid.Cell columnSpan={{xs: 6}}>
+                                                        <AlphaStack>
+                                                            <TextContainer>
+                                                                <Text variant={"bodyLg"} as={"h1"}>
+                                                                    Subtotal
+                                                                </Text>
+                                                                <Text variant={"bodyLg"} as={"h1"}>
+                                                                    <Button onClick={handleActiveModalDiscount} plain>Add
+                                                                        discount</Button>
+                                                                </Text>
+                                                                <Text variant={"bodyLg"} as={"h1"}>
+                                                                    <Button onClick={handleActiveModalShipping} plain>Add
+                                                                        shipping</Button>
+                                                                </Text>
+                                                                <Text variant={"headingMd"} as={"h1"}>
+                                                                    Total
+                                                                </Text>
+                                                            </TextContainer>
+                                                        </AlphaStack>
+                                                    </Grid.Cell>
+                                                    <Grid.Cell columnSpan={{xs: 6}}>
+                                                        <AlphaStack align={"end"}>
+                                                            <TextContainer>
+                                                                <Text variant={"bodyLg"} as={"h1"}>
+                                                                    600$
+                                                                </Text>
+                                                                <Text variant={"bodyLg"} as={"h1"}>
+                                                                    0$
+                                                                </Text>
+                                                                <Text variant={"bodyLg"} as={"h1"}>
+                                                                    0$
+                                                                </Text>
+                                                                <Text variant={"headingMd"} as={"h1"}>
+                                                                    600$
+                                                                </Text>
+                                                            </TextContainer>
+                                                        </AlphaStack>
+                                                    </Grid.Cell>
+                                                </Grid>
+                                            </Box>
+
+
                                         </Card.Section>
                                         <Card.Section>
                                             <div className="payment__buttons">
@@ -438,6 +487,8 @@ function QuoteListDetail() {
                                             <Form>
                                                 <FormLayout>
                                                     <TextField
+                                                        label={"comment"}
+                                                        labelHidden={true}
                                                         autoComplete="off"
                                                         placeholder="leave a comment..."
                                                     />
@@ -533,7 +584,8 @@ function QuoteListDetail() {
                             </Card>
                             <Card title={"Salesperson Account"}>
                                 <Card.Section>
-                                    <Select/>
+                                    <Select label={"Salesperson Account"} labelHidden={true} options={optionsAccount}
+                                            value={selectedAccount} onChange={handleSelectAccount}/>
                                 </Card.Section>
                             </Card>
                             <Card title={"Expired Day"}>
@@ -546,6 +598,7 @@ function QuoteListDetail() {
                                         />
 
                                         <TextField
+                                            autoComplete={"off"}
                                             label={
                                                 <Text
                                                     variant="headingSm"
@@ -585,6 +638,7 @@ function QuoteListDetail() {
                                 label="Add custom shipping cost"
                             />
                             <TextField
+                                autoComplete={"off"}
                                 requiredIndicator={true}
                                 label="Shipping cost"
                                 type="currency"
@@ -613,13 +667,14 @@ function QuoteListDetail() {
                                 />
                                 <div className={"modal-discount__type-cost"}>
                                     <div className={"type-cost__type"}>
-                                        <Select
-
-                                            label={"Discount type"}
+                                        <Select options={OptionsDiscountType} value={selectedDiscountType}
+                                                onChange={handleDiscountType}
+                                                label={"Discount type"}
                                         />
                                     </div>
                                     <div className={"type-cost__cost"}>
                                         <TextField
+                                            autoComplete={"off"}
                                             requiredIndicator={true}
                                             label="Shipping cost"
                                             type="currency"
@@ -628,7 +683,8 @@ function QuoteListDetail() {
 
                                 </div>
 
-                                <TextField label={"Discount title"}/>
+
+                                <TextField autoComplete={"off"} label={"Discount title"}/>
                             </FormLayout>
                         </Form>
                     </div>

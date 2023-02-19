@@ -52,6 +52,17 @@
             fill: #5c6ac4;
         }
     }
+    .data-table__btn-restore{
+        display: flex;
+        justify-content: center;
+        margin-left: 50%;
+        .Polaris-Icon__Svg {
+            width: 16px;
+            height: 16px;
+            fill: #5c6ac4;
+        }
+    }
+
 
     .quote-list__select-index-table {
         width: fit-content;

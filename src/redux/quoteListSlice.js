@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL_GET_QUOTE_LIST = "http://192.168.11.198:3000/DataQuoteLists";
+const API_URL_GET_QUOTE_LIST = " http://localhost:3000/DataQuoteLists";
 
 const initialState = { data: [] };
 

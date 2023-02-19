@@ -52,22 +52,6 @@
     margin-top: 2%;
 
     .quote-view-detail__payment {
-      .payment__table {
-        width: 100%;
-
-        .content__title {
-          display: flex;
-          margin-top: 10px;
-        }
-
-        .payment__content__value {
-          .content__title {
-            display: flex;
-            flex-direction: row-reverse;
-          }
-        }
-
-
       }
 
       .payment__buttons {
@@ -133,7 +117,7 @@
   }
 
 
-}
+
 
 .quote-view-detail__modal-discount {
   .modal-discount__type-cost {
