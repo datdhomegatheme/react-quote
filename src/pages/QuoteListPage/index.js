@@ -210,16 +210,18 @@ function QuoteListPage() {
                             onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                setShowChangeAssign(true);
+                                const element = document.getElementById(`quote-list__assign-btn-${quote.id}`);
+                                element.classList.toggle("show-element")
                             }}
                         >
                             Save
                         </Button>
                         <Button
                             onClick={(e) => {
-                                setShowChangeAssign(false);
                                 e.preventDefault();
                                 e.stopPropagation();
+                                const element = document.getElementById(`quote-list__assign-btn-${quote.id}`);
+                                element.classList.toggle("show-element")
                             }}
                         >
                             Cancel
@@ -316,7 +318,8 @@ function QuoteListPage() {
                 <Button
                     plain
                     onClick={(e) => {
-                        setShowChangeAssign(true);
+                        const element = document.getElementById(`quote-list__assign-btn-${quote.id}`);
+                        element.classList.toggle("show-element")
                         e.preventDefault();
                         e.stopPropagation();
                     }}
@@ -325,14 +328,16 @@ function QuoteListPage() {
                 </Button>
 
 
-                {showChangeAssign && (
+                <div id={`quote-list__assign-btn-${quote.id}`} className={"hide-element"}>
                     <ButtonGroup>
-                        <div className={"quote-list__select-assign"} onClick={handleClickSelectAssign}>
+                        <div className={"quote-list__select-assign"}>
                             <Select
                                 arrow
                                 options={AssignSalesperson}
                                 onChange={handleSelectIndexPageChange}
                                 value={selectedIndexTable}
+                                label={"assign"}
+                                labelHidden={true}
                             />
                         </div>
                         <Button
@@ -340,14 +345,16 @@ function QuoteListPage() {
                             onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                setShowChangeAssign(true);
+                                const element = document.getElementById(`quote-list__assign-btn-${quote.id}`);
+                                element.classList.toggle("show-element")
                             }}
                         >
                             Save
                         </Button>
                         <Button
                             onClick={(e) => {
-                                setShowChangeAssign(false);
+                                const element = document.getElementById(`quote-list__assign-btn-${quote.id}`);
+                                element.classList.toggle("show-element")
                                 e.preventDefault();
                                 e.stopPropagation();
                             }}
@@ -355,8 +362,9 @@ function QuoteListPage() {
                             Cancel
                         </Button>
                     </ButtonGroup>
-                )}
-                {/* </Text> */}
+                </div>
+
+
             </IndexTable.Cell>
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="p">
