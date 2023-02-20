@@ -31,7 +31,7 @@ import {
 import {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getQuoteListApi} from "../../redux/quoteListSlice";
-import {OptionsPageIndex} from "./DataItemQuoteList";
+import {AssignSalesperson, OptionsPageIndex} from "./DataItemQuoteList";
 import ModalQuickView from "../QuoteListPage/ModalQuickView";
 import {useNavigate} from "react-router-dom";
 import Images from "../../assets/Images";
@@ -104,8 +104,6 @@ function QuoteListPage() {
     };
 
 
-
-
     const buttonSelect = (
         <Button onClick={togglePopoverActive} icon={SettingsMinor}></Button>
     );
@@ -138,6 +136,12 @@ function QuoteListPage() {
     );
 
     const dispatch = useDispatch();
+
+    // logic Select Assign
+
+    const handleClickSelectAssign = () => {
+
+    }
 
     //call api update global state
     useEffect(() => {
@@ -179,8 +183,9 @@ function QuoteListPage() {
                 <Button
                     plain
                     onClick={(e) => {
-
-                        setShowChangeAssign(true);
+                        const element = document.getElementById(`quote-list__assign-btn-${quote.id}`);
+                        element.classList.toggle("show-element")
+                        // setShowChangeAssign(true);
                         e.preventDefault();
                         e.stopPropagation();
                     }}
@@ -188,8 +193,7 @@ function QuoteListPage() {
                     Change
                 </Button>
 
-
-                {showChangeAssign && (
+                <div id={`quote-list__assign-btn-${quote.id}`} className={"hide-element"}>
                     <ButtonGroup>
                         <div className={"quote-list__select-assign"}>
                             <Select
@@ -197,6 +201,8 @@ function QuoteListPage() {
                                 options={OptionsPageIndex}
                                 onChange={handleSelectIndexPageChange}
                                 value={selectedIndexTable}
+                                label={"assign"}
+                                labelHidden={true}
                             />
                         </div>
                         <Button
@@ -219,8 +225,9 @@ function QuoteListPage() {
                             Cancel
                         </Button>
                     </ButtonGroup>
-                )}
-                {/* </Text> */}
+                </div>
+
+
             </IndexTable.Cell>
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="p">
@@ -309,7 +316,6 @@ function QuoteListPage() {
                 <Button
                     plain
                     onClick={(e) => {
-
                         setShowChangeAssign(true);
                         e.preventDefault();
                         e.stopPropagation();
@@ -321,10 +327,10 @@ function QuoteListPage() {
 
                 {showChangeAssign && (
                     <ButtonGroup>
-                        <div className={"quote-list__select-assign"}>
+                        <div className={"quote-list__select-assign"} onClick={handleClickSelectAssign}>
                             <Select
                                 arrow
-                                options={OptionsPageIndex}
+                                options={AssignSalesperson}
                                 onChange={handleSelectIndexPageChange}
                                 value={selectedIndexTable}
                             />
@@ -408,8 +414,9 @@ function QuoteListPage() {
                         <Button plain icon={CircleDownMajor} onClick={(e) => {
                             alert("quote restored !!")
                             e.preventDefault();
-                            e.stopPropagation();}
-                        } />
+                            e.stopPropagation();
+                        }
+                        }/>
                     </div>
                     <Button plain icon={DeleteMinor} onClick={handleModalDelete}/>
                 </ButtonGroup>

@@ -5,6 +5,11 @@ export const OptionsPageIndex = [
 ];
 
 
+export const AssignSalesperson = [
+    { label: "Admin", value: "admin" },
+    { label: "employee", value: "employee" },
+]
+
 
 export const resourceName = {
     singular: "customer",
