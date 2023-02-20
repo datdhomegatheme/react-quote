@@ -1,13 +1,6 @@
-import {
-    Button,
-    IndexTable,
-    Modal,
-    Card,
-    Divider,
-    Text,
-} from "@shopify/polaris";
+import {AlphaStack, Button, Card, Divider, IndexTable, Modal, Text, Thumbnail} from "@shopify/polaris";
 
-function ModalQuickView({ handleChangeModal, showModal, quote }) {
+function ModalQuickView({handleChangeModal, showModal, quote}) {
     return (
         <div>
             <Modal
@@ -20,14 +13,14 @@ function ModalQuickView({ handleChangeModal, showModal, quote }) {
                     <div>
                         <Modal.Section>
                             <Card.Section title="Products">
-                                <Divider borderStyle="base" />
+                                <Divider borderStyle="base"/>
                                 <IndexTable
                                     headings={[
-                                        { title: "Image" },
-                                        { title: "Product" },
-                                        { title: "Quantity" },
-                                        { title: "Price" },
-                                        { title: "Total Price" },
+                                        {title: "Image"},
+                                        {title: "Product"},
+                                        {title: "Quantity"},
+                                        {title: "Price"},
+                                        {title: "Total Price"},
                                     ]}
                                     selectable={false}
                                     itemCount={
@@ -43,7 +36,9 @@ function ModalQuickView({ handleChangeModal, showModal, quote }) {
                                                 position={index}
                                             >
                                                 <IndexTable.Cell>
-                                                    {itemProduct.image}
+
+                                                    <Thumbnail alt={itemProduct.title} source={itemProduct.image}/>
+
                                                 </IndexTable.Cell>
                                                 <IndexTable.Cell>
                                                     <Button
@@ -52,7 +47,7 @@ function ModalQuickView({ handleChangeModal, showModal, quote }) {
                                                     >
                                                         {itemProduct.product}
                                                     </Button>
-                                                    <br />
+                                                    <br/>
                                                     Default Title
                                                 </IndexTable.Cell>
                                                 <IndexTable.Cell>
@@ -73,26 +68,32 @@ function ModalQuickView({ handleChangeModal, showModal, quote }) {
                         </Modal.Section>
                         <Modal.Section>
                             <Card.Section title="Customer Information">
-                                <Divider borderStyle="base" />
+                                <div className={"customer-infor__breakline"}>
+                                    <Divider borderStyle="divider"/>
+                                </div>
+                                <div className={"customer-infor__content"}>
+                                    <AlphaStack gap="2">
+                                        <Text variant="headingSm" as="h6">
+                                            Name:{" "}
+                                            <Text variant="bodySm" as="span">
+                                                {quote.customerInformation.name}
+                                            </Text>
+                                        </Text>
 
-                                <Text variant="headingSm" as="h6">
-                                    Name:{" "}
-                                    <Text variant="bodySm" as="span">
-                                        {quote.customerInformation.name}
-                                    </Text>
-                                </Text>
-                                <Text variant="headingSm" as="h6">
-                                    Email:{" "}
-                                    <Text variant="bodySm" as="span">
-                                        {quote.customerInformation.email}
-                                    </Text>
-                                </Text>
-                                <Text variant="headingSm" as="h6">
-                                    Message:{" "}
-                                    <Text variant="bodySm" as="span">
-                                        {quote.customerInformation.message}
-                                    </Text>
-                                </Text>
+                                        <Text variant="headingSm" as="h6">
+                                            Email:{" "}
+                                            <Text variant="bodySm" as="span">
+                                                {quote.customerInformation.email}
+                                            </Text>
+                                        </Text>
+                                        <Text variant="headingSm" as="h6">
+                                            Message:{" "}
+                                            <Text variant="bodySm" as="span">
+                                                {quote.customerInformation.message}
+                                            </Text>
+                                        </Text>
+                                    </AlphaStack>
+                                </div>
                             </Card.Section>
                         </Modal.Section>
                     </div>

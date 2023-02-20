@@ -4,20 +4,12 @@ export const OptionsPageIndex = [
     { label: "50", value: "50" },
 ];
 
-export const tabs = [
-    {
-        id: "quote-list",
-        content: "Quote List",
-    },
-    {
-        id: "quote-trashed",
-        content: "Trashed Quote",
-    },
-    {
-        id: "quote-abandon",
-        content: "Abandon Quote",
-    },
-];
+
+export const AssignSalesperson = [
+    { label: "Admin", value: "admin" },
+    { label: "employee", value: "employee" },
+]
+
 
 export const resourceName = {
     singular: "customer",

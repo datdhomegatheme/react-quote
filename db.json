@@ -1,103 +1,208 @@
 {
-    "DataQuoteLists": [
+  "DataQuoteLists": [
+    {
+      "id": 0,
+      "customerInformation": {
+        "name": "Hieu111",
+        "email": "hieu1111@gmail.com",
+        "message": "hi111"
+      },
+      "idAss": 0,
+      "assignSalesperson": {
+        "id": 0,
+        "name": "Admin"
+      },
+      "createTime": {
+        "date": "02/07/2023",
+        "time": "04:47:00"
+      },
+      "status": "read",
+      "logs": "Send Email Successful",
+      "dataQuoteProductsInformation": [
         {
-            "id": 0,
-            "customerInformation": {
-                "name": "Hieu111",
-                "email": "hieu1111@gmail.com",
-                "message": "hi111"
-            },
-            "assignSalesperson": "Admin",
-            "createTime": {
-                "date": "02/07/2023",
-                "time": "04:47:00"
-            },
-            "status": "read",
-            "logs": "Send Email Successful",
-            "dataQuoteProductsInformation": [
-                {
-                    "id": 0,
-                    "idQuote": 0,
-                    "image": "",
-                    "product": "product_1_1",
-                    "quantity": 10,
-                    "price": 20000
-                },
-                {
-                    "id": 1,
-                    "idQuote": 0,
-                    "image": "",
-                    "product": "product_1_2",
-                    "quantity": 2,
-                    "price": 10000
-                }
-            ]
+          "id": 0,
+          "idQuote": 0,
+          "image": "https://i.pinimg.com/564x/da/7b/e2/da7be2e45116fcfa45acd813e2b01090.jpg",
+          "product": "product_1_1",
+          "quantity": 1,
+          "price": 200,
+          "variant": "40 / gold-black",
+          "sku": 21345
         },
         {
-            "id": 1,
-            "customerInformation": {
-                "name": "Hieu2222",
-                "email": "hieu2222@gmail.com",
-                "message": "hi2222"
-            },
-            "assignSalesperson": "Admin",
-            "createTime": {
-                "date": "02/07/2023",
-                "time": "04:47:00"
-            },
-            "status": "Purchased",
-            "logs": "Send Email Successful",
-            "dataQuoteProductsInformation": [
-                {
-                    "id": 0,
-                    "idQuote": 1,
-                    "image": "",
-                    "product": "product_2_1",
-                    "quantity": 10,
-                    "price": 20000
-                },
-                {
-                    "id": 1,
-                    "idQuote": 1,
-                    "image": "",
-                    "product": "product_2_2",
-                    "quantity": 2,
-                    "price": 10000
-                }
-            ]
-        },
-        {
-            "id": 2,
-            "customerInformation": {
-                "name": "Hieu33333",
-                "email": "hieu3333@gmail.com",
-                "message": "hi33333"
-            },
-            "assignSalesperson": "Admin",
-            "createTime": {
-                "date": "02/07/2023",
-                "time": "04:47:00"
-            },
-            "status": "read",
-            "logs": "Email has not been sent to customer",
-            "dataQuoteProductsInformation": [
-                {
-                    "idQuote": 0,
-                    "id": 0,
-                    "image": "",
-                    "product": "rough hill33333",
-                    "quantity": 10,
-                    "price": 20000
-                },
-                {
-                    "idQuote": 0,
-                    "id": 1,
-                    "image": "",
-                    "product": "roar333333",
-                    "quantity": 2,
-                    "price": 10000
-                }
-            ]
+          "id": 1,
+          "idQuote": 0,
+          "image": "https://www.etsy.com/img/32174391/r/il/eb7848/3786277333/il_794xN.3786277333_erbe.jpg",
+          "product": "product_1_2",
+          "quantity": 2,
+          "price": 100,
+          "variant": "43 / black",
+          "sku": 32111
         }
-    ]
+      ]
+    },
+    {
+      "id": 1,
+      "customerInformation": {
+        "name": "Hieu2222",
+        "email": "hieu2222@gmail.com",
+        "message": "hi2222"
+      },
+      "assignSalesperson": {
+        "id": 1,
+        "name": "Admin"
+      },
+      "createTime": {
+        "date": "02/07/2023",
+        "time": "04:47:00"
+      },
+      "status": "Purchased",
+      "logs": "Send Email Successful",
+      "dataQuoteProductsInformation": [
+        {
+          "id": 0,
+          "idQuote": 1,
+          "image": "https://i.pinimg.com/564x/2b/dc/8f/2bdc8fc7d2690716c2944bc452744898.jpg",
+          "product": "product_2_1",
+          "quantity": 1,
+          "price": 300,
+          "variant": "41 / white",
+          "sku": 32133
+        },
+        {
+          "id": 1,
+          "idQuote": 1,
+          "image": "https://i.pinimg.com/564x/da/7b/e2/da7be2e45116fcfa45acd813e2b01090.jpg",
+          "product": "product_2_2",
+          "quantity": 1,
+          "price": 100,
+          "variant": "42",
+          "sku": 32211
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "customerInformation": {
+        "name": "Hieu33333",
+        "email": "hieu3333@gmail.com",
+        "message": "hi33333"
+      },
+      "assignSalesperson": {
+        "id": 2,
+        "name": "Admin"
+      },
+      "createTime": {
+        "date": "02/07/2023",
+        "time": "04:47:00"
+      },
+      "status": "read",
+      "logs": "Email has not been sent to customer",
+      "dataQuoteProductsInformation": [
+        {
+          "idQuote": 0,
+          "id": 0,
+          "image": "https://i.pinimg.com/564x/13/c8/3e/13c83eb16501b895fc0144b8be6b1d7c.jpg",
+          "product": "rough hill33333",
+          "quantity": 4,
+          "price": 100,
+          "variant": "41 / gold-black",
+          "sku": 21322
+        },
+        {
+          "idQuote": 0,
+          "id": 1,
+          "image": "https://i.pinimg.com/564x/2e/4e/db/2e4edb0fb4320a90e266d2cb5ab99f88.jpg",
+          "product": "roar333333",
+          "quantity": 3,
+          "price": 100,
+          "variant": "40",
+          "sku": 87811
+        }
+      ]
+    }
+  ],
+  "DataTrashedQuoteLists": [
+    {
+      "id": 0,
+      "customerInformation": {
+        "name": "hoang",
+        "email": "hoang@gmail.com ",
+        "message": "hoang message"
+      },
+      "idAss": 0,
+      "assignSalesperson": {
+        "id": 0,
+        "name": "Admin"
+      },
+      "createTime": {
+        "date": "02/02/2022",
+        "time": "04:47:00"
+      },
+      "status": "read",
+      "logs": "Send Email Successful",
+      "dataQuoteProductsInformation": [
+        {
+          "id": 0,
+          "idQuote": 0,
+          "image": "https://i.pinimg.com/564x/da/7b/e2/da7be2e45116fcfa45acd813e2b01090.jpg",
+          "product": "product_0_1",
+          "quantity": 1,
+          "price": 200,
+          "variant": "42 / gold-black",
+          "sku": 291235
+        },
+        {
+          "id": 1,
+          "idQuote": 0,
+          "image": "https://www.etsy.com/img/32174391/r/il/eb7848/3786277333/il_794xN.3786277333_erbe.jpg",
+          "product": "product_0_2",
+          "quantity": 2,
+          "price": 100,
+          "variant": "44 / white",
+          "sku": 212123
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "customerInformation": {
+        "name": "hoang1111",
+        "email": "hoang1111@gmail.com",
+        "message": "hoang1111"
+      },
+      "assignSalesperson": {
+        "id": 1,
+        "name": "Admin"
+      },
+      "createTime": {
+        "date": "01/01/2022",
+        "time": "04:47:00"
+      },
+      "status": "Purchased",
+      "logs": "Send Email Successful",
+      "dataQuoteProductsInformation": [
+        {
+          "id": 0,
+          "idQuote": 1,
+          "image": "https://i.pinimg.com/564x/2b/dc/8f/2bdc8fc7d2690716c2944bc452744898.jpg",
+          "product": "product_1_1",
+          "quantity": 1,
+          "price": 300,
+          "variant": "42 / gold-red",
+          "sku": 21921
+        },
+        {
+          "id": 1,
+          "idQuote": 1,
+          "image": "https://i.pinimg.com/564x/da/7b/e2/da7be2e45116fcfa45acd813e2b01090.jpg",
+          "product": "product_1_2",
+          "quantity": 1,
+          "price": 100,
+          "variant": "39 / white",
+          "sku": 21211
+        }
+      ]
+    }
+  ]
 }

@@ -1,7 +1,6 @@
 // @import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 @import "../../../node_modules/@shopify/polaris/build/esm/styles.css";
-@import "../styles/quoteListPage";
-@import "../styles/quoteListPage/quoteListDetail";
+
 
 
 // custom btn-primary 
@@ -20,8 +19,25 @@
 }
 
 
-
+.icon404{
+    width: 100px;
+    height: auto;
+}
 
 tr {
     // display: flex;
 }
+
+.hide-element{
+    visibility: hidden;
+}
+
+.show-element {
+    visibility: visible;
+}
+
+
+
+
+@import "../styles/quoteListPage";
+@import "../styles/quoteListPage/quoteListDetail";

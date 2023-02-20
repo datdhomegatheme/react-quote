@@ -6,6 +6,7 @@ import SettingsPage from "../../pages/SettingsPage";
 import PricingPage from "../../pages/PricingPage";
 import React, { useCallback, useState } from "react";
 import QuoteListDetail from "../../pages/QuoteListPage/QuoteListDetail";
+import NotFoundPage from "../../pages/NotFoundPage";
 
 function Sidebar() {
     const location = useLocation();
@@ -30,8 +31,9 @@ function Sidebar() {
                     <Navigation.Section
                         items={[
                             {
-                                url: "/dashboard",
+                                url: "/",
                                 label: "Dashboard",
+                                selected: location.pathname.trim() === "/",
                             },
                             {
                                 url: "/quote/list",
@@ -55,10 +57,10 @@ function Sidebar() {
             }
         >
             <Routes>
-                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/" element={<DashboardPage />} />
                 <Route path="/quote">
                     <Route path="list" element={<QuoteListPage />}></Route>
-                    <Route path="list/id" element={<QuoteListDetail />} />
+                    <Route path="list/:id" element={<QuoteListDetail />} />
                     <Route path="trash-quote" />
                     <Route path="abandoned-quote" />
                 </Route>
@@ -81,6 +83,7 @@ function Sidebar() {
                     <Route path="advanced" />
                 </Route>
                 <Route path="/pricing" element={<PricingPage />} />
+                <Route path="*" element={<NotFoundPage />}/>
             </Routes>
         </Frame>
     );
