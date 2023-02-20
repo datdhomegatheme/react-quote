@@ -24,7 +24,7 @@ import {DeleteMinor, ImportMinor, SearchMajor} from "@shopify/polaris-icons";
 import Images from "../../../assets/Images";
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {deleteQuoteApi, getQuoteListApi, updateQuoteApi} from "../../../redux/quoteListSlice";
+import {deleteQuoteApi, getQuoteListApi, postQuoteApi, updateQuoteApi} from "../../../redux/quoteListSlice";
 import {getTrashedQuoteList} from "../../../redux/trashedQuoteListSlice";
 import axios from "axios";
 
@@ -173,30 +173,30 @@ function QuoteListDetail() {
     const [submitValueShipping, setSubmitValueShipping] = useState(0);
 
     const AddProduct = () => {
-        axios.post('http://localhost:3000/DataQuoteLists', {
-            id: 10,
-            customerInformation: quoteDetail[0].customerInformation,
-            assignSalesperson: quoteDetail[0].assignSalesperson,
-            createTime: quoteDetail[0].createTime,
-            status: quoteDetail[0].status,
-            logs: quoteDetail[0].logs,
-            dataQuoteProductInformation:  quoteDetail[0].dataQuoteProductInformation,
-            comments:quoteDetail[0].comments,
-        }).then(function(response){
-            console.log(response);
-        }).catch(function(error){
-            console.log(error);
-        });
+        dispatch(
+            postQuoteApi({
+                id: 10,
+                customerInformation: quoteDetail[0].customerInformation,
+                assignSalesperson: quoteDetail[0].assignSalesperson,
+                createTime: quoteDetail[0].createTime,
+                status: quoteDetail[0].status,
+                logs: quoteDetail[0].logs,
+                dataQuoteProductsInformation: quoteDetail[0].dataQuoteProductsInformation,
+                comments: quoteDetail[0].comments,
+            })
+        )
+
+
+        alert("Quote deleted !")
+
     }
 
     //handle delete quote
 
     const handleDeleteQuote = () => {
-        dispatch(deleteQuoteApi(quoteId))
+        dispatch(deleteQuoteApi(quoteId.id))
         alert("Quote deleted !")
     }
-
-
 
 
     return (
@@ -222,7 +222,9 @@ function QuoteListDetail() {
                             },
                             {
                                 content: "Delete Quote",
-                                onAction: () => {handleDeleteQuote()},
+                                onAction: () => {
+                                    handleDeleteQuote()
+                                },
                             },
                         ],
                     },
