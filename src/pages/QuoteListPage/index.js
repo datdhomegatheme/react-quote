@@ -725,7 +725,7 @@ function QuoteListPage() {
                         <div className="modal-delete__btn">
                             <ButtonGroup>
                                 <Button>Move to Trashed</Button>
-                                <Button destructive onClick={()=> handleDeleteQuote()}>Delete</Button>
+                                <Button destructive onClick={handleDeleteQuote}>Delete</Button>
                             </ButtonGroup>
                         </div>
 
