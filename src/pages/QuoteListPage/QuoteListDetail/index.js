@@ -23,12 +23,22 @@ import {useCallback, useEffect, useMemo, useState} from "react";
 import {DeleteMinor, ImportMinor, SearchMajor} from "@shopify/polaris-icons";
 import Images from "../../../assets/Images";
 import {useParams} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {getQuoteListApi, updateQuoteApi} from "../../../redux/quoteListSlice";
+import {getTrashedQuoteList} from "../../../redux/trashedQuoteListSlice";
 
     function QuoteListDetail() {
-
         //get data quote detail
         const quoteId = useParams();
+        const quoteList = useSelector((state) => state.quoteList.data);
+        const dispatch = useDispatch();
+        useEffect(() => {
+            dispatch(getQuoteListApi());
+            dispatch(getTrashedQuoteList());
+        }, [quoteId]);
 
+        // eslint-disable-next-line eqeqeq
+        const quoteDetail = quoteList.filter((quote)=> quote.id == quoteId.id);
 
         //logic expired day checkbox
         const [checkExpiredDay, setCheckExpiredDay] = useState(false);
@@ -71,12 +81,20 @@ import {useParams} from "react-router-dom";
         //logic quantity
         const [valueQuantity, setValueQuantity] = useState();
         const handleQuantity = useCallback((value) => setValueQuantity(value), []);
-
+        const dataList = [];
         //logic product's price
-        const [valueProductPrice, setValueProductPrice] = useState();
-        const handleProductPrice = useCallback((value) =>
-                setValueProductPrice(value)
-            , [])
+        const [valueProductPrice, setValueProductPrice] = useState([]);
+
+        const handleProductPrice = useCallback((value) =>{
+                // const priceData = quoteDetail[0]?.dataQuoteProductsInformation.filter(item => (item.id === id))
+                // const updatePrice = {
+                //     ...priceData[0].price,
+                //     value
+                // }
+                console.log(value)
+                // setValueProductPrice(value)
+        }
+        , [])
 
         //logic combobox search product
         const deSelectedOptionsProductSearch = useMemo(
@@ -132,6 +150,11 @@ import {useParams} from "react-router-dom";
                     );
                 })
                 : null;
+
+        // handle comment
+        const handleSubmitComment = (quoteId, params) => {
+            dispatch(updateQuoteApi(quoteId, params))
+        }
 
         return (
             <div className="quote-view-detail">
@@ -257,116 +280,119 @@ import {useParams} from "react-router-dom";
                                         </Card.Section>
 
                                         <Card.Section>
-                                            <div className="product__list">
-                                                <Grid>
-                                                    <Grid.Cell
-                                                        columnSpan={{xs: 6}}
-                                                    >
-                                                        <div className="products__list__cell-product">
-                                                            <img
-                                                                className="cell-product__image"
-                                                                alt="white-background-product-photography-example"
-                                                                src={
-                                                                    Images.productExample
-                                                                }
-                                                            />
-                                                            <div className="cell-product__content">
-                                                                <Button plain>
-                                                                    <Text
-                                                                        variant="bodyLg"
-                                                                        as="h1"
-                                                                    >
-                                                                        Product A
-                                                                    </Text>
-                                                                </Button>
-                                                                <Text
-                                                                    variant="bodyMd"
-                                                                    as="h1"
-                                                                >
-                                                                    40 / Black
-                                                                </Text>
-                                                                <Text
-                                                                    variant="bodyMd"
-                                                                    as="h1"
-                                                                >
-                                                                    SKU: 21345
-                                                                </Text>
-                                                            </div>
-                                                        </div>
-                                                    </Grid.Cell>
-
-                                                    <Grid.Cell
-                                                        columnSpan={{xs: 6}}
-                                                    >
-                                                        <div className="product__list__quantity-price">
-                                                            <Grid>
-                                                                <Grid.Cell
-                                                                    columnSpan={{
-                                                                        xs: 3,
-                                                                    }}
-                                                                >
-                                                                    <div className="products__list__quantity">
-                                                                        <TextField
-                                                                            label={"quantity"}
-                                                                            labelHidden={true}
-                                                                            type="number"
-                                                                            autoComplete="off"
-                                                                            value={valueQuantity}
-                                                                            onChange={handleQuantity}
-
-                                                                        />
-                                                                    </div>
-                                                                </Grid.Cell>
-
-                                                                <Grid.Cell
-                                                                    columnSpan={{
-                                                                        xs: 3,
-                                                                    }}
-                                                                >
-                                                                    <div className="products__list__price">
-                                                                        <TextField
-                                                                            label={"price"}
-                                                                            labelHidden={true}
-                                                                            type="number"
-                                                                            autoComplete="off"
-                                                                            value={valueProductPrice}
-                                                                            onChange={handleProductPrice}
-                                                                        />
-                                                                    </div>
-                                                                </Grid.Cell>
-
-                                                                <Grid.Cell
-                                                                    columnSpan={{
-                                                                        xs: 3,
-                                                                    }}
-                                                                >
-                                                                    <div className="products__list__price">
+                                            {quoteDetail[0]?.dataQuoteProductsInformation.map((item, index)=> (
+                                                <div className="product__list" key={index}>
+                                                    <Grid>
+                                                        <Grid.Cell
+                                                            columnSpan={{xs: 6}}
+                                                        >
+                                                            <div className="products__list__cell-product">
+                                                                <img
+                                                                    className="cell-product__image"
+                                                                    alt="white-background-product-photography-example"
+                                                                    src={
+                                                                        item.image
+                                                                    }
+                                                                />
+                                                                <div className="cell-product__content">
+                                                                    <Button plain>
                                                                         <Text
-                                                                            variant="bodyMd"
+                                                                            variant="bodyLg"
                                                                             as="h1"
                                                                         >
-                                                                            {valueQuantity * valueProductPrice}$
+                                                                            {item.product}
                                                                         </Text>
-                                                                    </div>
-                                                                </Grid.Cell>
-                                                                <Grid.Cell
-                                                                    columnSpan={{
-                                                                        xs: 3,
-                                                                    }}
-                                                                >
-                                                                    <div className="products__list__price">
-                                                                        <Icon
-                                                                            source={
-                                                                                DeleteMinor
-                                                                            }
-                                                                        />
-                                                                    </div>
-                                                                </Grid.Cell>
-                                                            </Grid>
-                                                        </div>
-                                                    </Grid.Cell>
-                                                </Grid>
-                                            </div>
+                                                                    </Button>
+                                                                    <Text
+                                                                        variant="bodyMd"
+                                                                        as="h1"
+                                                                    >
+                                                                        {item.variant}
+                                                                    </Text>
+                                                                    <Text
+                                                                        variant="bodyMd"
+                                                                        as="h1"
+                                                                    >
+                                                                        SKU: {item.sku}
+                                                                    </Text>
+                                                                </div>
+                                                            </div>
+                                                        </Grid.Cell>
+
+                                                        <Grid.Cell
+                                                            columnSpan={{xs: 6}}
+                                                        >
+                                                            <div className="product__list__quantity-price">
+                                                                <Grid>
+                                                                    <Grid.Cell
+                                                                        columnSpan={{
+                                                                            xs: 3,
+                                                                        }}
+                                                                    >
+                                                                        <div className="products__list__quantity">
+                                                                            <TextField
+                                                                                label={"quantity"}
+                                                                                labelHidden={true}
+                                                                                type="number"
+                                                                                autoComplete="off"
+                                                                                value={item?.quantity}
+                                                                                onChange={handleQuantity}
+
+                                                                            />
+                                                                        </div>
+                                                                    </Grid.Cell>
+
+                                                                    <Grid.Cell
+                                                                        columnSpan={{
+                                                                            xs: 3,
+                                                                        }}
+                                                                    >
+                                                                        <div className="products__list__price">
+                                                                            <TextField
+                                                                                label={"price"}
+                                                                                labelHidden={true}
+                                                                                type="number"
+                                                                                autoComplete="off"
+                                                                                value={item?.price}
+                                                                                onChange={handleProductPrice}
+                                                                            />
+                                                                        </div>
+                                                                    </Grid.Cell>
+
+                                                                    <Grid.Cell
+                                                                        columnSpan={{
+                                                                            xs: 3,
+                                                                        }}
+                                                                    >
+                                                                        <div className="products__list__price">
+                                                                            <Text
+                                                                                variant="bodyMd"
+                                                                                as="h1"
+                                                                            >
+                                                                                {valueQuantity * valueProductPrice}$
+                                                                            </Text>
+                                                                        </div>
+                                                                    </Grid.Cell>
+                                                                    <Grid.Cell
+                                                                        columnSpan={{
+                                                                            xs: 3,
+                                                                        }}
+                                                                    >
+                                                                        <div className="products__list__price">
+                                                                            <Icon
+                                                                                source={
+                                                                                    DeleteMinor
+                                                                                }
+                                                                            />
+                                                                        </div>
+                                                                    </Grid.Cell>
+                                                                </Grid>
+                                                            </div>
+                                                        </Grid.Cell>
+                                                    </Grid>
+                                                </div>
+                                            ))}
+
                                         </Card.Section>
                                     </Card>
                                 </div>
@@ -493,7 +519,7 @@ import {useParams} from "react-router-dom";
                                                             placeholder="leave a comment..."
                                                         />
                                                         <div className="status__btn">
-                                                            <Button submit>
+                                                            <Button onClick={handleSubmitComment} submit>
                                                                 Post
                                                             </Button>
                                                         </div>

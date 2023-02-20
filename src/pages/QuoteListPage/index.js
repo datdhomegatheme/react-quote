@@ -35,7 +35,7 @@ import {AssignSalesperson, OptionsPageIndex} from "./DataItemQuoteList";
 import ModalQuickView from "../QuoteListPage/ModalQuickView";
 import {useNavigate} from "react-router-dom";
 import Images from "../../assets/Images";
-import {getTrashedQuoteList} from "../../redux/trashedQuoteListSlice";
+import {deleteTrashedQuote, getTrashedQuoteList} from "../../redux/trashedQuoteListSlice";
 
 function QuoteListPage() {
     const navigate = useNavigate();
@@ -46,7 +46,6 @@ function QuoteListPage() {
     const [selectedIndexTable, setSelectedIndexTable] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [quoteDetail, setQuoteDetail] = useState({});
-    const [showChangeAssign, setShowChangeAssign] = useState(false);
 
     //get data from redux global state
     const quoteList = useSelector((state) => state.quoteList.data);
@@ -94,23 +93,36 @@ function QuoteListPage() {
     const {selectedResources, allResourcesSelected, handleSelectionChange} =
         useIndexResourceState(quoteList);
 
-    // logic modal delete
-    const [showModalDelete, setShowModalDelete] = useState(false);
+
 
     const [quoteId, setQuoteId] = useState();
-
-    const handleModalDelete = (e, id) => {
+    //-------> logic modal delete
+    const [showModalQuoteDelete, setShowModalQuoteDelete] = useState(false);
+    const handleModalQuoteDelete = (e, id) => {
         e.preventDefault();
         e.stopPropagation();
         setQuoteId(id);
-        setShowModalDelete(!showModalDelete);
+        setShowModalQuoteDelete(!showModalQuoteDelete);
 
     };
-
-    // --- logic delete quote
+    // --------> logic delete quote
     const handleDeleteQuote = () => {
-        setShowModalDelete(false);
+        setShowModalQuoteDelete(false);
         dispatch(deleteQuoteApi(quoteId))
+    }
+
+   // --------> logic modal delete trashed quote
+    const [showModalTrashedQuoteDelete, setShowModalTrashedQuoteDelete] = useState(false);
+    const handleModalTrashedQuoteDelete = (e, id) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setQuoteId(id);
+        setShowModalTrashedQuoteDelete(!showModalTrashedQuoteDelete);
+    }
+    // --------> logic delete trashed quote
+    const handleDeleteTrashedQuote = () => {
+        setShowModalTrashedQuoteDelete(false);
+        dispatch(deleteTrashedQuote(quoteId))
     }
 
 
@@ -202,7 +214,7 @@ function QuoteListPage() {
                         <div className={"quote-list__select-assign"}>
                             <Select
                                 arrow
-                                options={OptionsPageIndex}
+                                options={AssignSalesperson}
                                 onChange={handleSelectIndexPageChange}
                                 value={selectedIndexTable}
                                 label={"assign"}
@@ -284,7 +296,7 @@ function QuoteListPage() {
                             icon={ViewMinor}
                         />
                     </div>
-                    <Button plain icon={DeleteMinor} onClick={(e)=> handleModalDelete(e,quote.id)}/>
+                    <Button plain icon={DeleteMinor} onClick={(e)=> handleModalQuoteDelete(e,quote.id)}/>
                 </ButtonGroup>
             </IndexTable.Cell>
             {/*----Modal delete-----*/}
@@ -370,7 +382,7 @@ function QuoteListPage() {
                         }
                         }/>
                     </div>
-                    <Button plain icon={DeleteMinor} onClick={handleModalDelete}/>
+                    <Button plain icon={DeleteMinor} onClick={(e)=> handleModalTrashedQuoteDelete(e, quote.id)}/>
                 </ButtonGroup>
             </IndexTable.Cell>
         </IndexTable.Row>
@@ -710,7 +722,8 @@ function QuoteListPage() {
                 </Tabs>
 
             </Page>
-            <Modal open={showModalDelete} title={"Delete this quote"} onClose={handleModalDelete}>
+            {/*-------> Modal delete quote list*/}
+            <Modal open={showModalQuoteDelete} title={"Delete this quote"} onClose={handleModalQuoteDelete}>
                 <div className="quote-list__modal-delete">
                     <Modal.Section>
                         <TextContainer>
@@ -726,6 +739,29 @@ function QuoteListPage() {
                             <ButtonGroup>
                                 <Button>Move to Trashed</Button>
                                 <Button destructive onClick={handleDeleteQuote}>Delete</Button>
+                            </ButtonGroup>
+                        </div>
+
+                    </Modal.Section>
+                </div>
+            </Modal>
+            {/*-------> modal delete trashed quote list */}
+            <Modal open={showModalTrashedQuoteDelete} title={"Delete this quote"} onClose={handleModalTrashedQuoteDelete}>
+                <div className="quote-list__modal-delete">
+                    <Modal.Section>
+                        <TextContainer>
+                            <Text variant={"bodyLg"} as={"p"}>Are you sure you want to delete this trashed quote?</Text>
+                            <Text variant={"bodyLg"} as={"p"}>Or move this quote to trash?</Text>
+                            <Text variant={"bodyLg"} as={"p"}>The quote has been in 60 days if it's in trashed
+                                box.</Text>
+                            <Text variant={"bodyLg"} as={"p"}>This action cannot be undone.</Text>
+                        </TextContainer>
+                    </Modal.Section>
+                    <Modal.Section>
+                        <div className="modal-delete__btn">
+                            <ButtonGroup>
+                                <Button>Move to Trashed</Button>
+                                <Button destructive onClick={handleDeleteTrashedQuote}>Delete</Button>
                             </ButtonGroup>
                         </div>
 

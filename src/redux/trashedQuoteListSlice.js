@@ -13,6 +13,10 @@ export const trashedQuoteListSlice = createSlice({
             state.data = action.payload;
         },
 
+        deleteTrashQuote: (state, action) => {
+            state.data = state.data.filter((data)=> data.id !== action.payload.id)
+        }
+
     },
 });
 
@@ -28,6 +32,20 @@ export const getTrashedQuoteList = () => async(dispatch) => {
             })
     } catch(err){
         console.log(err);
+    }
+}
+
+export const deleteTrashedQuote = (id) => async(dispatch) => {
+    try{
+        axios
+            .delete(`${API_URL_GET_TRASHED_QUOTE_LIST}/${id}`)
+            .then((response)=> {
+                dispatch(trashedQuoteListSlice.actions.deleteTrashQuote(response))
+            }).catch(function (error){
+                console.log(error)
+        })
+    }catch(err){
+        console.log(err)
     }
 }
 

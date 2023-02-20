@@ -15,6 +15,15 @@ export const quoteListSlice = createSlice({
 
         deleteQuote: (state, action)=> {
             state.data =  state.date.filter((data)=> data.id !== action.payload.id)
+        },
+
+        updateQuote: (state, action) => {
+            state.data = state.data.map((item)=> {
+                if(item.id === action.payload.id) {
+                    return action.payload
+                }
+                return item
+            })
         }
     },
 });
@@ -43,6 +52,20 @@ export const deleteQuoteApi = (id) => async (dispatch) => {
             console.log(error)
         })
     }catch(err){
+        console.log(err)
+    }
+}
+
+export const updateQuoteApi = (id, params) => async (dispatch) => {
+    try{
+        axios
+            .put(`${API_URL_GET_QUOTE_LIST}/${id}`, params)
+            .then((response)=> {
+                dispatch(quoteListSlice.actions.updateQuote(response))
+            }).catch(function(error){
+                console.log(error)
+        })
+    }catch(err) {
         console.log(err)
     }
 }
