@@ -7,7 +7,6 @@
         "email": "hieu1111@gmail.com",
         "message": "hi111"
       },
-      "idAss": 0,
       "assignSalesperson": {
         "id": 0,
         "name": "Admin"
@@ -38,6 +37,16 @@
           "price": 100,
           "variant": "43 / black",
           "sku": 32111
+        }
+      ],
+      "comments": [
+        {
+          "date": "13/10/2022",
+          "comment": "hieu1 comment"
+        },
+        {
+          "date": "13/10/2022",
+          "comment": "hieu1 comment"
         }
       ]
     },
@@ -79,6 +88,12 @@
           "variant": "42",
           "sku": 32211
         }
+      ],
+      "comments": [
+        {
+          "date": "13/10/2022",
+          "comment": "hieu2 comment"
+        }
       ]
     },
     {
@@ -119,18 +134,51 @@
           "variant": "40",
           "sku": 87811
         }
+      ],
+      "comments": [
+        {
+          "date": "13/10/2022",
+          "comment": "hieu3 comment"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "customerInformation": {
+        "name": "Hieu111",
+        "email": "hieu1111@gmail.com",
+        "message": "hi111"
+      },
+      "assignSalesperson": {
+        "id": 0,
+        "name": "Admin"
+      },
+      "createTime": {
+        "date": "02/07/2023",
+        "time": "04:47:00"
+      },
+      "status": "read",
+      "logs": "Send Email Successful",
+      "comments": [
+        {
+          "date": "13/10/2022",
+          "comment": "hieu1 comment"
+        },
+        {
+          "date": "13/10/2022",
+          "comment": "hieu1 comment"
+        }
       ]
     }
   ],
   "DataTrashedQuoteLists": [
     {
-      "id": 0,
+      "id": 5,
       "customerInformation": {
         "name": "hoang",
         "email": "hoang@gmail.com ",
         "message": "hoang message"
       },
-      "idAss": 0,
       "assignSalesperson": {
         "id": 0,
         "name": "Admin"
@@ -162,10 +210,16 @@
           "variant": "44 / white",
           "sku": 212123
         }
+      ],
+      "comments": [
+        {
+          "date": "13/10/2022",
+          "comment": "hoang 0 comment"
+        }
       ]
     },
     {
-      "id": 1,
+      "id": 6,
       "customerInformation": {
         "name": "hoang1111",
         "email": "hoang1111@gmail.com",
@@ -201,6 +255,12 @@
           "price": 100,
           "variant": "39 / white",
           "sku": 21211
+        }
+      ],
+      "comments": [
+        {
+          "date": "13/10/2022",
+          "comment": "hoang 1 comment"
         }
       ]
     }

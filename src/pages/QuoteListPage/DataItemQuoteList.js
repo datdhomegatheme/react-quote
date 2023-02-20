@@ -15,3 +15,4 @@ export const resourceName = {
     singular: "customer",
     plural: "customers",
 };
+

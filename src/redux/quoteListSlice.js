@@ -3,22 +3,23 @@ import axios from "axios";
 
 const API_URL_GET_QUOTE_LIST = " http://localhost:3000/DataQuoteLists";
 
-const initialState = { data: [] };
+const initialState = { quote: [
+    ]};
 
 export const quoteListSlice = createSlice({
     name: "quoteList",
     initialState,
     reducers: {
         getQuoteList: (state, action) => {
-            state.data = action.payload;
+            state.quote = action.payload;
         },
 
         deleteQuote: (state, action)=> {
-            state.data =  state.date.filter((data)=> data.id !== action.payload.id)
+            state.quote =  state.quote.filter((data)=> data.id !== action.payload.id)
         },
 
         updateQuote: (state, action) => {
-            state.data = state.data.map((item)=> {
+            state.quote = state.quote.map((item)=> {
                 if(item.id === action.payload.id) {
                     return action.payload
                 }

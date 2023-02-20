@@ -48,7 +48,7 @@ function QuoteListPage() {
     const [quoteDetail, setQuoteDetail] = useState({});
 
     //get data from redux global state
-    const quoteList = useSelector((state) => state.quoteList.data);
+    const quoteList = useSelector((state) => state.quoteList.quote);
     const trashedQuoteList = useSelector((state) => state.trashedQuoteList.data)
 
     const handleChangeModal = (quote) => {
