@@ -30,7 +30,7 @@ import {
 
 import {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getQuoteListApi} from "../../redux/quoteListSlice";
+import {deleteQuoteApi, getQuoteListApi} from "../../redux/quoteListSlice";
 import {AssignSalesperson, OptionsPageIndex} from "./DataItemQuoteList";
 import ModalQuickView from "../QuoteListPage/ModalQuickView";
 import {useNavigate} from "react-router-dom";
@@ -94,14 +94,24 @@ function QuoteListPage() {
     const {selectedResources, allResourcesSelected, handleSelectionChange} =
         useIndexResourceState(quoteList);
 
-    // logic delete button
+    // logic modal delete
     const [showModalDelete, setShowModalDelete] = useState(false);
 
-    const handleModalDelete = (e) => {
-        setShowModalDelete(!showModalDelete);
+    const [quoteId, setQuoteId] = useState();
+
+    const handleModalDelete = (e, id) => {
         e.preventDefault();
         e.stopPropagation();
+        setQuoteId(id);
+        setShowModalDelete(!showModalDelete);
+
     };
+
+    // --- logic delete quote
+    const handleDeleteQuote = () => {
+        setShowModalDelete(false);
+        dispatch(deleteQuoteApi(quoteId))
+    }
 
 
     const buttonSelect = (
@@ -136,12 +146,6 @@ function QuoteListPage() {
     );
 
     const dispatch = useDispatch();
-
-    // logic Select Assign
-
-    const handleClickSelectAssign = () => {
-
-    }
 
     //call api update global state
     useEffect(() => {
@@ -280,9 +284,11 @@ function QuoteListPage() {
                             icon={ViewMinor}
                         />
                     </div>
-                    <Button plain icon={DeleteMinor} onClick={handleModalDelete}/>
+                    <Button plain icon={DeleteMinor} onClick={(e)=> handleModalDelete(e,quote.id)}/>
                 </ButtonGroup>
             </IndexTable.Cell>
+            {/*----Modal delete-----*/}
+
         </IndexTable.Row>
     ));
     const rowMarkupTrashedQuoteLists = trashedQuoteList?.map((quote, index) => (
@@ -315,54 +321,7 @@ function QuoteListPage() {
             </IndexTable.Cell>
             <IndexTable.Cell>
                 {quote.assignSalesperson.name + " "}
-                <Button
-                    plain
-                    onClick={(e) => {
-                        const element = document.getElementById(`quote-list__assign-btn-${quote.id}`);
-                        element.classList.toggle("show-element")
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }}
-                >
-                    Change
-                </Button>
 
-
-                <div id={`quote-list__assign-btn-${quote.id}`} className={"hide-element"}>
-                    <ButtonGroup>
-                        <div className={"quote-list__select-assign"}>
-                            <Select
-                                arrow
-                                options={AssignSalesperson}
-                                onChange={handleSelectIndexPageChange}
-                                value={selectedIndexTable}
-                                label={"assign"}
-                                labelHidden={true}
-                            />
-                        </div>
-                        <Button
-                            primary
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                const element = document.getElementById(`quote-list__assign-btn-${quote.id}`);
-                                element.classList.toggle("show-element")
-                            }}
-                        >
-                            Save
-                        </Button>
-                        <Button
-                            onClick={(e) => {
-                                const element = document.getElementById(`quote-list__assign-btn-${quote.id}`);
-                                element.classList.toggle("show-element")
-                                e.preventDefault();
-                                e.stopPropagation();
-                            }}
-                        >
-                            Cancel
-                        </Button>
-                    </ButtonGroup>
-                </div>
 
 
             </IndexTable.Cell>
@@ -373,22 +332,7 @@ function QuoteListPage() {
                     {quote.createTime.time}
                 </Text>
             </IndexTable.Cell>
-            <IndexTable.Cell>
-                {quote.status === "read" && (
-                    <Badge progress="incomplete" status="attention">
-                        <Text variant="bodyMd" as="p">
-                            {quote.status}
-                        </Text>
-                    </Badge>
-                )}
-                {quote.status === "Purchased" && (
-                    <Badge progress="incomplete" status="success">
-                        <Text variant="bodyMd" as="p">
-                            {quote.status}
-                        </Text>
-                    </Badge>
-                )}
-            </IndexTable.Cell>
+
             <IndexTable.Cell>
                 {quote.logs === `Send Email Successful` && (
                     <List.Item>
@@ -654,15 +598,6 @@ function QuoteListPage() {
                                                     ]}
                                                 />
                                             </Popover>
-                                            <Button
-                                                primary
-                                                onClick={() =>
-                                                    navigate("/quote/create")
-                                                }
-                                                icon={PlusMinor}
-                                            >
-                                                Create a quote
-                                            </Button>
                                         </ButtonGroup>
                                     </div>
                                     <Card.Section>
@@ -682,7 +617,6 @@ function QuoteListPage() {
                                                     {title: "Customer Information"},
                                                     {title: "Assign Salesperson"},
                                                     {title: "Create Time"},
-                                                    {title: "Status"},
                                                     {title: "Logs"},
                                                     {title: "Actions"},
                                                 ]}
@@ -691,7 +625,6 @@ function QuoteListPage() {
                                                     false,
                                                     false,
                                                     false,
-                                                    true,
                                                     true,
                                                     false,
                                                 ]}
@@ -775,29 +708,30 @@ function QuoteListPage() {
                     {tabs[selectedTab].ui}
 
                 </Tabs>
-                <Modal open={showModalDelete} title={"Delete this quote"} onClose={handleModalDelete}>
-                    <div className="quote-list__modal-delete">
-                        <Modal.Section>
-                            <TextContainer>
-                                <Text variant={"bodyLg"} as={"p"}>Are you sure you want to delete this quote?</Text>
-                                <Text variant={"bodyLg"} as={"p"}>Or move this quote to trash?</Text>
-                                <Text variant={"bodyLg"} as={"p"}>The quote has been in 60 days if it's in trashed
-                                    box.</Text>
-                                <Text variant={"bodyLg"} as={"p"}>This action cannot be undone.</Text>
-                            </TextContainer>
-                        </Modal.Section>
-                        <Modal.Section>
-                            <div className="modal-delete__btn">
-                                <ButtonGroup>
-                                    <Button>Move to Trashed</Button>
-                                    <Button destructive>Delete</Button>
-                                </ButtonGroup>
-                            </div>
 
-                        </Modal.Section>
-                    </div>
-                </Modal>
             </Page>
+            <Modal open={showModalDelete} title={"Delete this quote"} onClose={handleModalDelete}>
+                <div className="quote-list__modal-delete">
+                    <Modal.Section>
+                        <TextContainer>
+                            <Text variant={"bodyLg"} as={"p"}>Are you sure you want to delete this quote?</Text>
+                            <Text variant={"bodyLg"} as={"p"}>Or move this quote to trash?</Text>
+                            <Text variant={"bodyLg"} as={"p"}>The quote has been in 60 days if it's in trashed
+                                box.</Text>
+                            <Text variant={"bodyLg"} as={"p"}>This action cannot be undone.</Text>
+                        </TextContainer>
+                    </Modal.Section>
+                    <Modal.Section>
+                        <div className="modal-delete__btn">
+                            <ButtonGroup>
+                                <Button>Move to Trashed</Button>
+                                <Button destructive onClick={()=> handleDeleteQuote()}>Delete</Button>
+                            </ButtonGroup>
+                        </div>
+
+                    </Modal.Section>
+                </div>
+            </Modal>
         </section>
     );
 }

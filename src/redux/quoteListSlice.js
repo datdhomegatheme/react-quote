@@ -12,6 +12,10 @@ export const quoteListSlice = createSlice({
         getQuoteList: (state, action) => {
             state.data = action.payload;
         },
+
+        deleteQuote: (state, action)=> {
+            state.data =  state.date.filter((data)=> data.id !== action.payload.id)
+        }
     },
 });
 
@@ -29,5 +33,17 @@ export const getQuoteListApi = () => async (dispatch) => {
         console.log(err);
     }
 };
-
+export const deleteQuoteApi = (id) => async (dispatch) => {
+    try{
+        axios
+            .delete(`${API_URL_GET_QUOTE_LIST}/${id}`)
+            .then((response)=> {
+                dispatch(quoteListSlice.actions.deleteQuote(response))
+            }).catch(function (error){
+            console.log(error)
+        })
+    }catch(err){
+        console.log(err)
+    }
+}
 export default quoteListSlice.reducer;

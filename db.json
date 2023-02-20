@@ -120,7 +120,7 @@
         "message": "hoang message"
       },
       "idAss": 0,
-      "assignSalesperson":{
+      "assignSalesperson": {
         "id": 0,
         "name": "Admin"
       },
@@ -156,7 +156,7 @@
         "email": "hoang1111@gmail.com",
         "message": "hoang1111"
       },
-      "assignSalesperson":{
+      "assignSalesperson": {
         "id": 1,
         "name": "Admin"
       },
@@ -185,5 +185,5 @@
         }
       ]
     }
-    ]
+  ]
 }
