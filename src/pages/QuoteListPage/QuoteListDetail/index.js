@@ -24,28 +24,74 @@ import {DeleteMinor, ImportMinor, SearchMajor} from "@shopify/polaris-icons";
 import Images from "../../../assets/Images";
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {deleteQuoteApi, getQuoteListApi, postQuoteApi, updateQuoteApi} from "../../../redux/quoteListSlice";
+import {
+    deleteQuoteApi,
+    getQuoteList,
+    getQuoteListApi,
+    postQuoteApi,
+    updateQuoteApi, updateQuoteListApi
+} from "../../../redux/quoteListSlice";
 import {getTrashedQuoteList} from "../../../redux/trashedQuoteListSlice";
-import axios from "axios";
+import {getDataProducts} from "../../../redux/dataProductsSlice";
+import {oldSetting, currentSetting, updateCurrentSetting} from "../../../redux/quoteSettingSlice";
 
 function QuoteListDetail() {
+    const dispatch = useDispatch();
     //get data quote detail
     const quoteId = useParams();
     const quoteList = useSelector((state) => state.quoteList.quote);
-    const dispatch = useDispatch();
+    const quoteDetail = quoteList.filter((quote) => quote.id == quoteId.id)
+    const dataProducts = useSelector((state) => state.dataProducts.product)
+    const oldSettingValue = useSelector((state) => state.quoteSetting.oldSettingValue)
+
+    const currentSettingValue = useSelector((state) => state.quoteSetting.currentSettingValue)
+    const currentSettingDetail = currentSettingValue.filter((quote) => quote.id == quoteId.id)
+
+    const quoteDetailItem = currentSettingValue[0]?.dataQuoteProductsInformation
+    const [quoteDetailItemState, setQuoteDetailItemState] = useState(quoteDetailItem);
+
     useEffect(() => {
         dispatch(getQuoteListApi());
         dispatch(getTrashedQuoteList());
-    }, [quoteId]);
+        dispatch(getDataProducts())
+    }, []);
 
-    // eslint-disable-next-line eqeqeq
-    const quoteDetail = quoteList.filter((quote) => quote.id == quoteId.id);
+    // ---> update thay doi -> set lai store -> check json old + new
+
+    useEffect(() => {
+        dispatch(oldSetting(quoteList));
+        dispatch(currentSetting(quoteList));
+    }, [quoteList])
+
+    const showUnsavedChanges = JSON.stringify(oldSettingValue) === JSON.stringify(currentSettingValue)
+
+
+    const clickTest = () => {
+        console.log(quoteList)
+        console.log(quoteDetailItemState)
+
+    }
+
+
+
+
     //logic expired day checkbox
     const [checkExpiredDay, setCheckExpiredDay] = useState(false);
     const handleCheckExpiredDay = () => {
         setCheckExpiredDay(!checkExpiredDay);
     };
 
+    // ---------> checkbox add discount code
+    const [checkAddDiscountCode, setCheckAddDiscountCode] = useState(false);
+    const handleCheckAddDiscountCode = useCallback((value) => {
+        setCheckAddDiscountCode(value);
+    }, [])
+
+    // ---------> checkbox add shipping code
+    const [checkAddShippingCode, setCheckAddShippingCode] = useState(false);
+    const handleCheckAddShippingCode = useCallback((value) => {
+        setCheckAddShippingCode(value);
+    }, [])
 
     //logic modal discount
     const [activeModalDiscount, setActiveModalDiscount] = useState(false);
@@ -59,8 +105,22 @@ function QuoteListDetail() {
     }
 
     //logic sale person account
-    const [selectedAccount, setSelectedAccount] = useState();
-    const handleSelectAccount = useCallback((value) => setSelectedAccount(value), [])
+    const [selectedAccount, setSelectedAccount] = useState(currentSettingDetail[0]?.assignSalesperson);
+    // const handleSelectAccount = useCallback((value) => {
+    //     console.log(value)
+    //     setSelectedAccount(value)
+    //     currentSettingValue = {...currentSettingValue, assignSalesperson: value}
+    //
+    // }, [selectedAccount])
+
+
+    const handleSelectAccount = (e) => {
+        setSelectedAccount(e)
+        const termArray =
+            {...currentSettingDetail[0], assignSalesperson: e}
+        dispatch(updateCurrentSetting(termArray))
+    }
+
     const optionsAccount = [
         {label: 'Admin', value: 'Admin'},
         {label: 'employee', value: 'employee'},
@@ -69,7 +129,7 @@ function QuoteListDetail() {
 
     //logic handle Discount Type
     const [selectedDiscountType, setSelectedDiscountType] = useState();
-    const handleDiscountType = useState((value) => {
+    const handleDiscountType = useState((id, value) => {
         setSelectedDiscountType(value)
     })
     const OptionsDiscountType = [
@@ -79,33 +139,63 @@ function QuoteListDetail() {
 
 
     //logic quantity
-    const [valueQuantity, setValueQuantity] = useState();
-    const handleQuantity = useCallback((value) => setValueQuantity(value), []);
-    const dataList = [];
+    // const [valueQuantity, setValueQuantity] = useState();
+    const handleQuantity = useCallback((value, id) => {
+        const quantityData = quoteDetailItemState?.filter((item) => item.id === id);
+        // console.log("quantityData", quantityData)
+        const {quantity} = quantityData[0];
+        // console.log("quantityData[0]",quantityData[0])
+
+        const updateQuantity = {
+            ...quantityData.quantity,
+            quantity: value
+        }
+
+        // console.log("updateQuantity", updateQuantity)
+        const newQuantityData = {
+            ...quantityData[0],
+            ...updateQuantity
+        }
+
+        // console.log("newQuantityData", newQuantityData)
+
+        const termArray = quoteDetailItemState.map(t1 => ({...t1, ...[newQuantityData].find(t2 => t2.id === t1.id)}))
+
+        // console.log("termArray", termArray)
+
+        setQuoteDetailItemState(termArray)
+
+        // console.log("quoteDetailItemState", quoteDetailItemState)
+    }, [])
+
+
     //logic product's price
     const [valueProductPrice, setValueProductPrice] = useState([]);
 
-    const handleProductPrice = useCallback((value) => {
-            // const priceData = quoteDetail[0]?.dataQuoteProductsInformation.filter(item => (item.id === id))
-            // const updatePrice = {
-            //     ...priceData[0].price,
-            //     value
-            // }
-            console.log(value)
-            // setValueProductPrice(value)
+
+    const handleProductPrice = useCallback((value, id) => {
+        const productPriceData = quoteDetailItemState?.filter((item) => item.id === id);
+        const {price} = productPriceData[0];
+        const updateProductPrice = {
+            ...productPriceData.price,
+            price: value
         }
-        , [])
+        const newProductPriceData = {
+            ...productPriceData[0],
+            ...updateProductPrice
+        }
+
+        const termArray = quoteDetailItemState.map(t1 => ({...t1, ...[newProductPriceData].find(t2 => t2.id === t1.id)}))
+        setQuoteDetailItemState(termArray)
+    }, [])
+
 
     //logic combobox search product
-    const deSelectedOptionsProductSearch = useMemo(
-        () => [
-            {value: 'rustic', label: 'Rustic'},
-            {value: 'antique', label: 'Antique'},
-            {value: 'vinyl', label: 'Vinyl'},
-            {value: 'vintage', label: 'Vintage'},
-            {value: 'refurbished', label: 'Refurbished'},
-        ],
-        [],);
+    const deSelectedOptionsProductSearch = []
+    dataProducts?.map((item) =>
+        deSelectedOptionsProductSearch.push({value: item.product, label: item.product})
+    )
+
 
     const [valueProductSearch, setValueProductSearch] = useState("");
     const [optionsProductSearch, setOptionsProductSearch] = useState(deSelectedOptionsProductSearch)
@@ -131,6 +221,9 @@ function QuoteListDetail() {
         });
         setSelectedOptionProductSearch(selected);
         setValueProductSearch((matchedOption && matchedOption.label) || "");
+
+
+
     }, [optionsProductSearch],);
 
     const optionsMarkup =
@@ -151,10 +244,6 @@ function QuoteListDetail() {
             })
             : null;
 
-    // handle comment
-    const handleSubmitComment = (quoteId, params) => {
-        dispatch(updateQuoteApi(quoteId))
-    }
 
     //handle add discount
     const [valueDiscount, setValueDiscount] = useState(0)
@@ -175,7 +264,6 @@ function QuoteListDetail() {
     const AddProduct = () => {
         dispatch(
             postQuoteApi({
-                id: 10,
                 customerInformation: quoteDetail[0].customerInformation,
                 assignSalesperson: quoteDetail[0].assignSalesperson,
                 createTime: quoteDetail[0].createTime,
@@ -186,21 +274,84 @@ function QuoteListDetail() {
             })
         )
 
-
-        alert("Quote deleted !")
+        alert("add quote!")
 
     }
 
-    //handle delete quote
+    // handle comment
+    const handleSubmitComment = () => {
+        const termArray = {
+            ...quoteDetail[0], comments: [...quoteDetail[0].comments
+                ,
+                {
+                    date: new Date().toLocaleDateString(),
+                    comment: valueComment
+                }]
+        }
 
+        UpdateQuote(termArray)
+    }
+
+
+    //-------------> update quote
+    const UpdateQuote = (value) => {
+        dispatch(updateQuoteApi(quoteId.id, value))
+    }
+
+
+    //handle delete quote
     const handleDeleteQuote = () => {
         dispatch(deleteQuoteApi(quoteId.id))
         alert("Quote deleted !")
     }
 
+    // ---> handle discard changes button
+    const handleDiscard = () => {
+        UpdateQuote(oldSettingValue)
+
+    }
+
+    // ---> handle save changes button
+    const handleSave = () => {
+        UpdateQuote(currentSettingValue[quoteId.id])
+    }
+
+    // ---> handle comment
+    const [valueComment, setValueComment] = useState("")
+    const handleValueComment = useCallback((value) => {
+        setValueComment(value);
+    })
+
 
     return (
         <div className="quote-view-detail">
+            {!showUnsavedChanges && <div className={"save-changes-confirm"}>
+                <Box>
+                    <AlphaStack fullWidth align={"center"}>
+                        <div className={"save-changes-confirm__container"}>
+                            <div className={"save-changes-confirm__text"}>
+                                <Text as={"h1"} variant={"headingMd"}>
+                                    Unsaved changes
+                                </Text>
+                            </div>
+                            <ButtonGroup>
+                                <Button outline onClick={handleDiscard}>
+                                    <div className={"save-changes-confirm__text"}>
+                                        <Text as={"h1"} variant={"headingSm"}>
+                                            Discard
+                                        </Text>
+                                    </div>
+                                </Button>
+                                <Button
+                                    primary onClick={handleSave}>save</Button>
+                            </ButtonGroup>
+                        </div>
+                    </AlphaStack>
+                </Box>
+                <button onClick={clickTest}/>
+            </div>}
+
+
             <Page
                 fullWidth
                 breadcrumbs={[{url: "/quote/list"}]}
@@ -263,12 +414,15 @@ function QuoteListDetail() {
                                                         label={"Search"}
                                                         labelHidden
                                                         value={valueProductSearch}
-                                                        onChane={updateValueProductSearch}
+                                                        onChange={updateValueProductSearch}
                                                     />
                                                 }
                                             >
                                                 {optionsProductSearch.length > 0 ? (
-                                                    <Listbox onSelect={updateSelection}>{optionsMarkup}</Listbox>
+                                                    <div className={"list-box"}>
+                                                        <Listbox onSelect={updateSelection}>{optionsMarkup}</Listbox>
+                                                    </div>
+
                                                 ) : null}
 
                                             </Combobox>
@@ -328,7 +482,7 @@ function QuoteListDetail() {
                                     </Card.Section>
 
                                     <Card.Section>
-                                        {quoteDetail[0]?.dataQuoteProductsInformation.map((item, index) => (
+                                        {quoteDetailItem?.map((item, index) => (
                                             <div className="product__list" key={index}>
                                                 <Grid>
                                                     <Grid.Cell
@@ -378,15 +532,15 @@ function QuoteListDetail() {
                                                                     }}
                                                                 >
                                                                     <div className="products__list__quantity">
-                                                                        <TextField
-                                                                            label={"quantity"}
-                                                                            labelHidden={true}
-                                                                            type="number"
-                                                                            autoComplete="off"
-                                                                            value={item?.quantity}
-                                                                            onChange={handleQuantity}
+                                                                        <input
+                                                                            onKeyDown={(evt) => ["e", "E", "+", "-", "."].includes(evt.key) && evt.preventDefault()}
+                                                                            className={"quantity__input input-number"}
+                                                                            value={item.quantity}
+                                                                            onChange={(e) => {
+                                                                                handleQuantity(e.target.value, item.id)
+                                                                            }}
+                                                                            type={"number"}/>
 
-                                                                        />
                                                                     </div>
                                                                 </Grid.Cell>
 
@@ -395,15 +549,15 @@ function QuoteListDetail() {
                                                                         xs: 3,
                                                                     }}
                                                                 >
-                                                                    <div className="products__list__price">
-                                                                        <TextField
-                                                                            label={"price"}
-                                                                            labelHidden={true}
-                                                                            type="number"
-                                                                            autoComplete="off"
-                                                                            value={item?.price}
-                                                                            onChange={handleProductPrice}
-                                                                        />
+                                                                    <div className="products__list__price input-number">
+                                                                        <input
+                                                                            onKeyDown={(evt) => ["e", "E", "+", "-", "."].includes(evt.key) && evt.preventDefault()}
+                                                                            className={"price__input"}
+                                                                            value={valueProductPrice}
+                                                                            onChange={(e) => {
+                                                                                handleProductPrice(e.target.value, item.id)
+                                                                            }}
+                                                                            type={"number"}/>
                                                                     </div>
                                                                 </Grid.Cell>
 
@@ -412,27 +566,23 @@ function QuoteListDetail() {
                                                                         xs: 3,
                                                                     }}
                                                                 >
-                                                                    <div className="products__list__price">
-                                                                        <Text
-                                                                            variant="bodyMd"
-                                                                            as="h1"
-                                                                        >
-                                                                            {valueQuantity * valueProductPrice}$
-                                                                        </Text>
-                                                                    </div>
+                                                                    <Text
+                                                                        variant="bodyMd"
+                                                                        as="h1"
+                                                                    >
+                                                                        {/*{valueQuantity * valueProductPrice}$*/}
+                                                                    </Text>
                                                                 </Grid.Cell>
                                                                 <Grid.Cell
                                                                     columnSpan={{
                                                                         xs: 3,
                                                                     }}
                                                                 >
-                                                                    <div className="products__list__price">
-                                                                        <Icon
-                                                                            source={
-                                                                                DeleteMinor
-                                                                            }
-                                                                        />
-                                                                    </div>
+                                                                    <Icon
+                                                                        source={
+                                                                            DeleteMinor
+                                                                        }
+                                                                    />
                                                                 </Grid.Cell>
                                                             </Grid>
                                                         </div>
@@ -558,23 +708,24 @@ function QuoteListDetail() {
 
                                         <Divider borderStyle="base"/>
                                         <div className="timeline__comment">
-                                            <Form>
-                                                <FormLayout>
-                                                    <TextField
-                                                        label={"comment"}
-                                                        labelHidden={true}
-                                                        autoComplete="off"
-                                                        placeholder="leave a comment..."
-                                                    />
-                                                    <div className="status__btn">
-                                                        <Button onClick={handleSubmitComment} submit>
-                                                            Post
-                                                        </Button>
-                                                    </div>
-                                                </FormLayout>
-                                            </Form>
+
+                                            <FormLayout>
+                                                <TextField
+                                                    label={"comment"}
+                                                    labelHidden={true}
+                                                    autoComplete="off"
+                                                    placeholder="leave a comment..."
+                                                    value={valueComment}
+                                                    onChange={handleValueComment}
+                                                />
+                                                <div className="status__btn">
+                                                    <Button onClick={handleSubmitComment} submit>
+                                                        Post
+                                                    </Button>
+                                                </div>
+                                            </FormLayout>
                                         </div>
-                                        {quoteDetail[0]?.comments.map((item, index) => (
+                                        {currentSettingDetail[0]?.comments.map((item, index) => (
                                             <div className="timeline__status" key={index}>
                                                 <Text variant="headingSm" as="h1">
                                                     {item.date}
@@ -582,7 +733,7 @@ function QuoteListDetail() {
                                                 <Text variant="bodyMd" as="p">
                                                     {item.comment}
                                                 </Text>
-                                                <Button plain>Show Details</Button>
+                                                <Button plain >Show Details</Button>
                                             </div>
                                         ))}
 
@@ -602,7 +753,7 @@ function QuoteListDetail() {
                                             Date
                                         </Text>
                                         <Text variant="bodyMd" as="p">
-                                            October 5, 2022 12:00
+                                            {currentSettingDetail[0]?.createTime.date}
                                         </Text>
                                         <Text
                                             variant="headingSm"
@@ -612,7 +763,7 @@ function QuoteListDetail() {
                                             Name
                                         </Text>
                                         <Text variant="bodyMd" as="p">
-                                            Omega test
+                                            {currentSettingDetail[0]?.customerInformation.name}
                                         </Text>
                                         <Text
                                             variant="headingSm"
@@ -622,7 +773,7 @@ function QuoteListDetail() {
                                             Email
                                         </Text>
                                         <Text variant="bodyMd" as="p">
-                                            lynn@omegatheme.com
+                                            {currentSettingDetail[0]?.customerInformation.email}
                                         </Text>
                                         <Text
                                             variant="headingSm"
@@ -632,7 +783,7 @@ function QuoteListDetail() {
                                             Pickup & Return
                                         </Text>
                                         <Text variant="bodyMd" as="p">
-                                            Delivery
+                                            {currentSettingDetail[0]?.pickupReturn}
                                         </Text>
                                         <Text
                                             variant="headingSm"
@@ -642,7 +793,7 @@ function QuoteListDetail() {
                                             Message
                                         </Text>
                                         <Text variant="bodyMd" as="p">
-                                            ola ola message
+                                            {currentSettingDetail[0]?.customerInformation.message}
                                         </Text>
                                         <Text
                                             variant="headingSm"
@@ -653,7 +804,7 @@ function QuoteListDetail() {
                                             conditions
                                         </Text>
                                         <Text variant="bodyMd" as="p">
-                                            yes
+                                            {currentSettingDetail[0]?.termsConditions}
                                         </Text>
                                     </TextContainer>
                                 </Card.Section>
@@ -720,6 +871,8 @@ function QuoteListDetail() {
                             <FormLayout>
                                 <Checkbox
                                     label="Add discount code"
+                                    checked={checkAddDiscountCode}
+                                    onChange={handleCheckAddDiscountCode}
                                 />
                                 <div className={"modal-discount__type-cost"}>
                                     <div className={"type-cost__type"}>
@@ -767,22 +920,21 @@ function QuoteListDetail() {
                    ]}>
                 {/*//shipping*/}
                 <Modal.Section>
-                    <Form>
-                        <FormLayout>
-                            <Checkbox
-                                label="Add custom shipping cost"
-                            />
-                            <TextField
-                                autoComplete={"off"}
-                                requiredIndicator={true}
-                                label="Shipping cost"
-                                type="number"
-                                value={valueShipping}
-                                onChange={handleChangeShipping}
-                            />
-                        </FormLayout>
-
-                    </Form>
+                    <FormLayout>
+                        <Checkbox
+                            label="Add custom shipping cost"
+                            checked={checkAddShippingCode}
+                            onChange={handleCheckAddShippingCode}
+                        />
+                        <TextField
+                            autoComplete={"off"}
+                            requiredIndicator={true}
+                            label="Shipping cost"
+                            type="number"
+                            value={valueShipping}
+                            onChange={handleChangeShipping}
+                        />
+                    </FormLayout>
                 </Modal.Section>
             </Modal>
         </div>
