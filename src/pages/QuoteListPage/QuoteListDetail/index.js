@@ -34,6 +34,7 @@ import {
 import {getTrashedQuoteList} from "../../../redux/trashedQuoteListSlice";
 import {getDataProducts} from "../../../redux/dataProductsSlice";
 import {oldSetting, currentSetting, updateCurrentSetting} from "../../../redux/quoteSettingSlice";
+import {isAllOf} from "@reduxjs/toolkit";
 
 function QuoteListDetail() {
     const dispatch = useDispatch();
@@ -48,7 +49,7 @@ function QuoteListDetail() {
     const currentSettingDetail = currentSettingValue.filter((quote) => quote.id == quoteId.id)
 
     const quoteDetailItem = currentSettingValue[0]?.dataQuoteProductsInformation
-    const [quoteDetailItemState, setQuoteDetailItemState] = useState(quoteDetailItem);
+
 
     useEffect(() => {
         dispatch(getQuoteListApi());
@@ -79,8 +80,6 @@ function QuoteListDetail() {
         }
     }
     subTotalFunction()
-
-    console.log(subTotal)
 
 
     //logic expired day checkbox
@@ -187,11 +186,9 @@ function QuoteListDetail() {
 
     const updateValueProductSearch = useCallback((value) => {
             setValueProductSearch(value);
-
             if (value === "") {
                 setOptionsProductSearch(deSelectedOptionsProductSearch);
             }
-
             const filterRegex = new RegExp(value, "i");
             const resultOptions = deSelectedOptionsProductSearch.filter((option) => option.label.match(filterRegex));
             setOptionsProductSearch(resultOptions);
@@ -206,8 +203,60 @@ function QuoteListDetail() {
         setSelectedOptionProductSearch(selected);
         setValueProductSearch((matchedOption && matchedOption.label) || "");
 
+        const dataProductsSelected = dataProducts.filter((item) => item.product === selected)
 
-    }, [optionsProductSearch],);
+        // 1 data product nho
+        console.log("data moi chon", dataProductsSelected[0])
+
+        console.log("data to can day vao:", quoteDetail[0].dataQuoteProductsInformation)
+
+        console.log()
+
+        let termArrayDuplicate = [...quoteDetail[0].dataQuoteProductsInformation, dataProductsSelected[0]]
+        let termArray = [...quoteDetail[0].dataQuoteProductsInformation]
+
+
+        // console.log(termArray.filter((value, index, array) => array.findIndex(v2 => (v2.id === value.id)) === index))
+
+        const valueArr = termArrayDuplicate.map(function(item){ return item.product });
+        const isDuplicate = valueArr.some(function(item, idx){
+            return valueArr.indexOf(item) !== idx
+        });
+
+        const dataProductsOldDuplicate = quoteDetail[0].dataQuoteProductsInformation.filter((item) => item.product === selected)
+
+        const index = termArray.findIndex(item => item.product === selected)
+
+        let termObject = {
+
+        }
+
+        let term = {}
+       if (isDuplicate) {
+           term = {...dataProductsOldDuplicate[0], quantity: Number(dataProductsOldDuplicate[0].quantity) + 1}
+           termArray[index] = {
+               ...termArray[index],
+               quantity: term.quantity
+           }
+
+           termObject = {
+               ...quoteDetail[0],
+               dataQuoteProductsInformation: termArray
+           }
+           console.log("termArray", termArray)
+           updateQuote(termObject)
+
+       }else{
+           termObject = {
+               ...quoteDetail[0],
+               dataQuoteProductsInformation: termArrayDuplicate
+           }
+           console.log(termObject)
+           updateQuote(termObject)
+       }
+
+
+    }, [optionsProductSearch, quoteList],);
 
     const optionsMarkup =
         optionsProductSearch.length > 0
@@ -272,12 +321,12 @@ function QuoteListDetail() {
                 }]
         }
 
-        UpdateQuote(termArray)
+        updateQuote(termArray)
     }
 
 
     //-------------> update quote
-    const UpdateQuote = (value) => {
+    const updateQuote = (value) => {
         dispatch(updateQuoteApi(quoteId.id, value))
     }
 
@@ -290,13 +339,13 @@ function QuoteListDetail() {
 
     // ---> handle discard changes button
     const handleDiscard = () => {
-        UpdateQuote(oldSettingValue)
+        updateQuote(oldSettingValue)
 
     }
 
     // ---> handle save changes button
     const handleSave = () => {
-        UpdateQuote(currentSettingValue[quoteId.id])
+        updateQuote(currentSettingValue[quoteId.id])
     }
 
     // ---> handle comment
@@ -305,11 +354,19 @@ function QuoteListDetail() {
         setValueComment(value);
     })
 
-    console.log(submitValueShipping)
-
-    function percent(quantity, percent)
-    {
+    // -----> tao ham tinh phan tram
+    function percent(quantity, percent) {
         return (quantity * percent) / 100;
+    }
+
+    // xu ly xoa product
+
+    const handleDeleteProduct = (id) => {
+        const termArray = quoteDetailItem.filter(item => item.id !== id)
+        const termObject = {...quoteDetail[0], dataQuoteProductsInformation: termArray}
+        updateQuote(termObject)
+
+
     }
 
     return (
@@ -568,11 +625,14 @@ function QuoteListDetail() {
                                                                         xs: 3,
                                                                     }}
                                                                 >
-                                                                    <Icon
-                                                                        source={
-                                                                            DeleteMinor
-                                                                        }
-                                                                    />
+                                                                    <Button
+                                                                        onClick={() => handleDeleteProduct(item.id)}>
+                                                                        <Icon
+                                                                            source={
+                                                                                DeleteMinor
+                                                                            }
+                                                                        />
+                                                                    </Button>
                                                                 </Grid.Cell>
                                                             </Grid>
                                                         </div>
@@ -637,11 +697,11 @@ function QuoteListDetail() {
 
                                                                 {selectedDiscountType.label === "Amount" && (
                                                                     <Text variant={"headingMd"} as={"h1"}>
-                                                                        {Number(submitValueShipping)+ subTotal - submitValueDiscount}$
+                                                                        {Number(submitValueShipping) + subTotal - submitValueDiscount}$
                                                                     </Text>)}
                                                                 {selectedDiscountType.label === "Percentage" && (
                                                                     <Text variant={"headingMd"} as={"h1"}>
-                                                                        {Number(submitValueShipping)+ subTotal - percent(subTotal,submitValueDiscount)}$
+                                                                        {Number(submitValueShipping) + subTotal - percent(subTotal, submitValueDiscount)}$
                                                                     </Text>)}
                                                             </TextContainer>
                                                         </AlphaStack>
