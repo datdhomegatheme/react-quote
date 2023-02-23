@@ -1,6 +1,10 @@
 .quote-view-detail {
 
   .save-changes-confirm{
+    position: sticky;
+    top:56px;
+    z-index: 40;
+    width: 100%;
     background: black;
     .save-changes-confirm__container{
       height: 60px;

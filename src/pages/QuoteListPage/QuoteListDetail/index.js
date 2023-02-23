@@ -26,15 +26,13 @@ import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {
     deleteQuoteApi,
-    getQuoteList,
     getQuoteListApi,
     postQuoteApi,
-    updateQuoteApi, updateQuoteListApi
+    updateQuoteApi
 } from "../../../redux/quoteListSlice";
 import {getTrashedQuoteList} from "../../../redux/trashedQuoteListSlice";
 import {getDataProducts} from "../../../redux/dataProductsSlice";
 import {oldSetting, currentSetting, updateCurrentSetting} from "../../../redux/quoteSettingSlice";
-import {isAllOf} from "@reduxjs/toolkit";
 
 function QuoteListDetail() {
     const dispatch = useDispatch();
@@ -66,11 +64,6 @@ function QuoteListDetail() {
 
     const showUnsavedChanges = JSON.stringify(oldSettingValue) === JSON.stringify(currentSettingValue)
 
-
-    const clickTest = () => {
-
-
-    }
     // -----> function tinh sum subtotal
 
     let subTotal = 0
@@ -202,35 +195,16 @@ function QuoteListDetail() {
         });
         setSelectedOptionProductSearch(selected);
         setValueProductSearch((matchedOption && matchedOption.label) || "");
-
         const dataProductsSelected = dataProducts.filter((item) => item.product === selected)
-
-        // 1 data product nho
-        console.log("data moi chon", dataProductsSelected[0])
-
-        console.log("data to can day vao:", quoteDetail[0].dataQuoteProductsInformation)
-
-        console.log()
-
         let termArrayDuplicate = [...quoteDetail[0].dataQuoteProductsInformation, dataProductsSelected[0]]
         let termArray = [...quoteDetail[0].dataQuoteProductsInformation]
-
-
-        // console.log(termArray.filter((value, index, array) => array.findIndex(v2 => (v2.id === value.id)) === index))
-
         const valueArr = termArrayDuplicate.map(function(item){ return item.product });
         const isDuplicate = valueArr.some(function(item, idx){
             return valueArr.indexOf(item) !== idx
         });
-
         const dataProductsOldDuplicate = quoteDetail[0].dataQuoteProductsInformation.filter((item) => item.product === selected)
-
         const index = termArray.findIndex(item => item.product === selected)
-
-        let termObject = {
-
-        }
-
+        let termObject = {}
         let term = {}
        if (isDuplicate) {
            term = {...dataProductsOldDuplicate[0], quantity: Number(dataProductsOldDuplicate[0].quantity) + 1}
@@ -243,18 +217,14 @@ function QuoteListDetail() {
                ...quoteDetail[0],
                dataQuoteProductsInformation: termArray
            }
-           console.log("termArray", termArray)
            updateQuote(termObject)
-
        }else{
            termObject = {
                ...quoteDetail[0],
                dataQuoteProductsInformation: termArrayDuplicate
            }
-           console.log(termObject)
            updateQuote(termObject)
        }
-
 
     }, [optionsProductSearch, quoteList],);
 
@@ -293,6 +263,8 @@ function QuoteListDetail() {
     //save value shipping
     const [submitValueShipping, setSubmitValueShipping] = useState(0);
 
+
+    // post new quote
     const AddProduct = () => {
         dispatch(
             postQuoteApi({
@@ -322,6 +294,7 @@ function QuoteListDetail() {
         }
 
         updateQuote(termArray)
+        setValueComment("")
     }
 
 
@@ -340,7 +313,6 @@ function QuoteListDetail() {
     // ---> handle discard changes button
     const handleDiscard = () => {
         updateQuote(oldSettingValue)
-
     }
 
     // ---> handle save changes button
@@ -352,7 +324,7 @@ function QuoteListDetail() {
     const [valueComment, setValueComment] = useState("")
     const handleValueComment = useCallback((value) => {
         setValueComment(value);
-    })
+    },[])
 
     // -----> tao ham tinh phan tram
     function percent(quantity, percent) {
@@ -360,7 +332,6 @@ function QuoteListDetail() {
     }
 
     // xu ly xoa product
-
     const handleDeleteProduct = (id) => {
         const termArray = quoteDetailItem.filter(item => item.id !== id)
         const termObject = {...quoteDetail[0], dataQuoteProductsInformation: termArray}
@@ -394,9 +365,7 @@ function QuoteListDetail() {
                         </div>
                     </AlphaStack>
                 </Box>
-                <button onClick={clickTest}/>
             </div>}
-
 
             <Page
                 fullWidth

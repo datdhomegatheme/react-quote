@@ -7,7 +7,7 @@
         "email": "hieu1111@gmail.com",
         "message": "hi111"
       },
-      "assignSalesperson": "employee",
+      "assignSalesperson": "Admin",
       "createTime": {
         "date": "02/07/2023",
         "time": "04:47:00"
@@ -16,21 +16,31 @@
       "logs": "Send Email Successful",
       "dataQuoteProductsInformation": [
         {
-          "id": 0,
+          "id": 10,
           "idQuote": 0,
           "image": "https://i.pinimg.com/564x/da/7b/e2/da7be2e45116fcfa45acd813e2b01090.jpg",
-          "product": "product_1_1",
-          "quantity": "12",
-          "price": "213",
+          "product": "product A",
+          "quantity": 2,
+          "price": 200,
           "variant": "40 / gold-black",
           "sku": 21345
+        },
+        {
+          "id": 12,
+          "idQuote": 0,
+          "image": "https://i.pinimg.com/564x/fe/e8/44/fee84496ccbf95c48a4928a6b634c710.jpg",
+          "product": "product C",
+          "quantity": 1,
+          "price": 100,
+          "variant": "43",
+          "sku": 32111
         },
         {
           "id": 11,
           "idQuote": 0,
           "image": "https://www.etsy.com/img/32174391/r/il/eb7848/3786277333/il_794xN.3786277333_erbe.jpg",
           "product": "product B",
-          "quantity": 5,
+          "quantity": 1,
           "price": 300,
           "variant": "41 / black",
           "sku": 32111
@@ -101,6 +111,14 @@
         {
           "date": "13/10/2022",
           "comment": "hieu2 comment"
+        },
+        {
+          "date": "2/23/2023",
+          "comment": "test"
+        },
+        {
+          "date": "2/23/2023",
+          "comment": "hoho"
         },
         {
           "date": "2/23/2023",
