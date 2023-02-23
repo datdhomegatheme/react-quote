@@ -67,12 +67,20 @@ function QuoteListDetail() {
 
 
     const clickTest = () => {
-        console.log(quoteList)
-        console.log(quoteDetailItemState)
+
 
     }
+    // -----> function tinh sum subtotal
 
+    let subTotal = 0
+    const subTotalFunction = () => {
+        for (let i in quoteDetailItem) {
+            subTotal = subTotal + quoteDetailItem[i].price * quoteDetailItem[i].quantity;
+        }
+    }
+    subTotalFunction()
 
+    console.log(subTotal)
 
 
     //logic expired day checkbox
@@ -106,14 +114,6 @@ function QuoteListDetail() {
 
     //logic sale person account
     const [selectedAccount, setSelectedAccount] = useState(currentSettingDetail[0]?.assignSalesperson);
-    // const handleSelectAccount = useCallback((value) => {
-    //     console.log(value)
-    //     setSelectedAccount(value)
-    //     currentSettingValue = {...currentSettingValue, assignSalesperson: value}
-    //
-    // }, [selectedAccount])
-
-
     const handleSelectAccount = (e) => {
         setSelectedAccount(e)
         const termArray =
@@ -128,54 +128,37 @@ function QuoteListDetail() {
     ];
 
     //logic handle Discount Type
-    const [selectedDiscountType, setSelectedDiscountType] = useState();
-    const handleDiscountType = useState((id, value) => {
-        setSelectedDiscountType(value)
-    })
+    const [selectedDiscountType, setSelectedDiscountType] = useState({label: "Amount", value: "Amount"},);
+    const handleDiscountType = (value) => {
+        setSelectedDiscountType({label: value, value: value})
+    }
+
     const OptionsDiscountType = [
-        {label: "50%", value: "50%"},
-        {label: "20%", value: "20%"}
+        {label: "Amount", value: "Amount"},
+        {label: "Percentage", value: "Percentage"}
     ]
 
 
     //logic quantity
-    // const [valueQuantity, setValueQuantity] = useState();
-    const handleQuantity = useCallback((value, id) => {
-        const quantityData = quoteDetailItemState?.filter((item) => item.id === id);
-        // console.log("quantityData", quantityData)
-        const {quantity} = quantityData[0];
-        // console.log("quantityData[0]",quantityData[0])
-
+    const handleQuantity = (value, id) => {
+        const quantityData = quoteDetailItem?.filter((item) => item.id === id);
         const updateQuantity = {
             ...quantityData.quantity,
             quantity: value
         }
-
-        // console.log("updateQuantity", updateQuantity)
         const newQuantityData = {
             ...quantityData[0],
             ...updateQuantity
         }
-
-        // console.log("newQuantityData", newQuantityData)
-
-        const termArray = quoteDetailItemState.map(t1 => ({...t1, ...[newQuantityData].find(t2 => t2.id === t1.id)}))
-
-        // console.log("termArray", termArray)
-
-        setQuoteDetailItemState(termArray)
-
-        // console.log("quoteDetailItemState", quoteDetailItemState)
-    }, [])
+        const termArrayDetail = quoteDetailItem.map(t1 => ({...t1, ...[newQuantityData].find(t2 => t2.id === t1.id)}))
+        const termObject = {...currentSettingDetail[0], dataQuoteProductsInformation: termArrayDetail}
+        dispatch(updateCurrentSetting(termObject))
+    }
 
 
     //logic product's price
-    const [valueProductPrice, setValueProductPrice] = useState([]);
-
-
-    const handleProductPrice = useCallback((value, id) => {
-        const productPriceData = quoteDetailItemState?.filter((item) => item.id === id);
-        const {price} = productPriceData[0];
+    const handleProductPrice = (value, id) => {
+        const productPriceData = quoteDetailItem?.filter((item) => item.id === id);
         const updateProductPrice = {
             ...productPriceData.price,
             price: value
@@ -185,9 +168,10 @@ function QuoteListDetail() {
             ...updateProductPrice
         }
 
-        const termArray = quoteDetailItemState.map(t1 => ({...t1, ...[newProductPriceData].find(t2 => t2.id === t1.id)}))
-        setQuoteDetailItemState(termArray)
-    }, [])
+        const termArrayDetail = quoteDetailItem.map(t1 => ({...t1, ...[newProductPriceData].find(t2 => t2.id === t1.id)}))
+        const termObject = {...currentSettingDetail[0], dataQuoteProductsInformation: termArrayDetail}
+        dispatch(updateCurrentSetting(termObject))
+    }
 
 
     //logic combobox search product
@@ -221,7 +205,6 @@ function QuoteListDetail() {
         });
         setSelectedOptionProductSearch(selected);
         setValueProductSearch((matchedOption && matchedOption.label) || "");
-
 
 
     }, [optionsProductSearch],);
@@ -322,6 +305,12 @@ function QuoteListDetail() {
         setValueComment(value);
     })
 
+    console.log(submitValueShipping)
+
+    function percent(quantity, percent)
+    {
+        return (quantity * percent) / 100;
+    }
 
     return (
         <div className="quote-view-detail">
@@ -553,7 +542,7 @@ function QuoteListDetail() {
                                                                         <input
                                                                             onKeyDown={(evt) => ["e", "E", "+", "-", "."].includes(evt.key) && evt.preventDefault()}
                                                                             className={"price__input"}
-                                                                            value={valueProductPrice}
+                                                                            value={item.price}
                                                                             onChange={(e) => {
                                                                                 handleProductPrice(e.target.value, item.id)
                                                                             }}
@@ -570,7 +559,8 @@ function QuoteListDetail() {
                                                                         variant="bodyMd"
                                                                         as="h1"
                                                                     >
-                                                                        {/*{valueQuantity * valueProductPrice}$*/}
+                                                                        {item.quantity * item.price}$
+
                                                                     </Text>
                                                                 </Grid.Cell>
                                                                 <Grid.Cell
@@ -631,19 +621,31 @@ function QuoteListDetail() {
                                                         <AlphaStack align={"end"}>
                                                             <TextContainer>
                                                                 <Text variant={"bodyLg"} as={"h1"}>
-                                                                    600$
+                                                                    {subTotal}
                                                                 </Text>
-                                                                <Text variant={"bodyLg"} as={"h1"}>
-                                                                    {submitValueDiscount}$
-                                                                </Text>
+                                                                {selectedDiscountType.label === "Amount" && (
+                                                                    <Text variant={"bodyLg"} as={"h1"}>
+                                                                        {submitValueDiscount}$
+                                                                    </Text>)}
+                                                                {selectedDiscountType.label === "Percentage" && (
+                                                                    <Text variant={"bodyLg"} as={"h1"}>
+                                                                        {submitValueDiscount}%
+                                                                    </Text>)}
                                                                 <Text variant={"bodyLg"} as={"h1"}>
                                                                     {submitValueShipping}$
                                                                 </Text>
-                                                                <Text variant={"headingMd"} as={"h1"}>
-                                                                    {submitValueShipping + (600 - (600 / 100 * submitValueDiscount))}$
-                                                                </Text>
+
+                                                                {selectedDiscountType.label === "Amount" && (
+                                                                    <Text variant={"headingMd"} as={"h1"}>
+                                                                        {Number(submitValueShipping)+ subTotal - submitValueDiscount}$
+                                                                    </Text>)}
+                                                                {selectedDiscountType.label === "Percentage" && (
+                                                                    <Text variant={"headingMd"} as={"h1"}>
+                                                                        {Number(submitValueShipping)+ subTotal - percent(subTotal,submitValueDiscount)}$
+                                                                    </Text>)}
                                                             </TextContainer>
                                                         </AlphaStack>
+
                                                     </Grid.Cell>
                                                 </Grid>
                                             </Box>
@@ -733,7 +735,7 @@ function QuoteListDetail() {
                                                 <Text variant="bodyMd" as="p">
                                                     {item.comment}
                                                 </Text>
-                                                <Button plain >Show Details</Button>
+                                                <Button plain>Show Details</Button>
                                             </div>
                                         ))}
 
@@ -876,8 +878,8 @@ function QuoteListDetail() {
                                 />
                                 <div className={"modal-discount__type-cost"}>
                                     <div className={"type-cost__type"}>
-                                        <Select options={OptionsDiscountType} value={selectedDiscountType}
-                                                onChange={handleDiscountType}
+                                        <Select options={OptionsDiscountType} value={selectedDiscountType.value}
+                                                onChange={(e) => handleDiscountType(e)}
                                                 label={"Discount type"}
                                         />
                                     </div>
