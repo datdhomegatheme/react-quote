@@ -19,6 +19,10 @@
 
   }
   .quote-view-detail__product {
+    .product__search{
+      width: 100%;
+
+    }
     .product__heading {
       display: flex;
       flex-direction: row;
@@ -155,3 +159,6 @@
   }
 }
 
+.list-box{
+  width: 100vw;
+}

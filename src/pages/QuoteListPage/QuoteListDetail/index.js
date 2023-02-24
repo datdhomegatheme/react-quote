@@ -189,7 +189,7 @@ function QuoteListDetail() {
         [deSelectedOptionsProductSearch]
     )
 
-    const updateSelection = useCallback((selected) => {
+    const updateSelection = (selected) => {
         const matchedOption = optionsProductSearch.find((option) => {
             return option.value.match(selected);
         });
@@ -212,7 +212,6 @@ function QuoteListDetail() {
                ...termArray[index],
                quantity: term.quantity
            }
-
            termObject = {
                ...quoteDetail[0],
                dataQuoteProductsInformation: termArray
@@ -226,7 +225,7 @@ function QuoteListDetail() {
            updateQuote(termObject)
        }
 
-    }, [optionsProductSearch, quoteList],);
+    }
 
     const optionsMarkup =
         optionsProductSearch.length > 0
@@ -234,14 +233,16 @@ function QuoteListDetail() {
                 const {label, value} = option;
 
                 return (
-                    <Listbox.Option
-                        key={`${value}`}
-                        value={value}
-                        selected={selectedOptionsProductSearch === value}
-                        accessibilityLabel={label}
-                    >
-                        {label}
-                    </Listbox.Option>
+                    <div className={"test"}>
+                        <Listbox.Option
+                            key={`${value}`}
+                            value={value}
+                            selected={selectedOptionsProductSearch === value}
+                        >
+                            {label}
+                        </Listbox.Option>
+                    </div>
+
                 );
             })
             : null;
@@ -294,7 +295,7 @@ function QuoteListDetail() {
         }
 
         updateQuote(termArray)
-        setValueComment("")
+        setValueComment("");
     }
 
 
