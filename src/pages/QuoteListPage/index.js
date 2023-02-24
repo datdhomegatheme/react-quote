@@ -48,7 +48,7 @@ function QuoteListPage() {
     const [quoteDetail, setQuoteDetail] = useState({});
 
     //get data from redux global state
-    const quoteList = useSelector((state) => state.quoteList.data);
+    const quoteList = useSelector((state) => state.quoteList.quote);
     const trashedQuoteList = useSelector((state) => state.trashedQuoteList.data)
 
     const handleChangeModal = (quote) => {
@@ -159,6 +159,7 @@ function QuoteListPage() {
 
     const dispatch = useDispatch();
 
+
     //call api update global state
     useEffect(() => {
         dispatch(getQuoteListApi());
@@ -195,7 +196,7 @@ function QuoteListPage() {
                 </Button>
             </IndexTable.Cell>
             <IndexTable.Cell>
-                {quote.assignSalesperson.name + " "}
+                {quote.assignSalesperson + " "}
                 <Button
                     plain
                     onClick={(e) => {
@@ -332,8 +333,7 @@ function QuoteListPage() {
                 </Button>
             </IndexTable.Cell>
             <IndexTable.Cell>
-                {quote.assignSalesperson.name + " "}
-
+                {quote.assignSalesperson + " "}
 
 
             </IndexTable.Cell>
@@ -389,6 +389,8 @@ function QuoteListPage() {
     ));
 
 
+
+
 //tab route
     const tabs = [
         {
@@ -415,6 +417,7 @@ function QuoteListPage() {
                                     <Popover
                                         active={showCalendar}
                                         activator={buttonCalendar}
+                                        onClose={handleClickCalendar}
                                     >
                                         <div className="quote-list__date-picker">
                                             <DatePicker

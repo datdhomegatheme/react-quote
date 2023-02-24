@@ -1,5 +1,28 @@
 .quote-view-detail {
+
+  .save-changes-confirm{
+    position: sticky;
+    top:56px;
+    z-index: 40;
+    width: 100%;
+    background: black;
+    .save-changes-confirm__container{
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      .save-changes-confirm__text{
+        color: white;
+      }
+    }
+
+
+  }
   .quote-view-detail__product {
+    .product__search{
+      width: 100%;
+
+    }
     .product__heading {
       display: flex;
       flex-direction: row;
@@ -28,23 +51,25 @@
         .Polaris-Grid {
           display: flex;
           align-items: center;
-          gap: 32px;
-        }
+          gap: 60px;
 
-
-        .products__list__quantity {
-          width: 120px;
-        }
-
-        .products__list__price {
-          width: 120px;
+          .products__list__quantity {
+            width: 100%;
+            input {
+              width: 60px;
+              height: 30px;
+            }
+          }
+          .products__list__price {
+            width: 100%;
+            input {
+              width: 60px;
+              height: 30px;
+            }
+          }
         }
       }
-
-
     }
-
-
   }
 
 
@@ -92,7 +117,7 @@
         height: 10px;
         border-radius: 50%;
         background: #5c6ac4;
-        inset: 22px -19px;
+        inset: 22px -25px;
       }
 
       .status__btn {
@@ -111,7 +136,7 @@
         height: 10px;
         border-radius: 50%;
         background: #5c6ac4;
-        inset: 16px -19px;
+        inset: 16px -25px;
       }
     }
   }
@@ -132,4 +157,8 @@
       width: 46%;
     }
   }
+}
+
+.list-box{
+  width: 100vw;
 }
