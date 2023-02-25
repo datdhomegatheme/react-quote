@@ -20,8 +20,8 @@
           "idQuote": 0,
           "image": "https://i.pinimg.com/564x/da/7b/e2/da7be2e45116fcfa45acd813e2b01090.jpg",
           "product": "product A",
-          "quantity": 3,
-          "price": 200,
+          "quantity": "5",
+          "price": "192",
           "variant": "40 / gold-black",
           "sku": 21345
         },
@@ -30,8 +30,8 @@
           "idQuote": 0,
           "image": "https://i.pinimg.com/564x/fe/e8/44/fee84496ccbf95c48a4928a6b634c710.jpg",
           "product": "product C",
-          "quantity": 1,
-          "price": 100,
+          "quantity": "5",
+          "price": "98",
           "variant": "43",
           "sku": 32111
         },
@@ -128,51 +128,7 @@
       "pickupReturn": "Delivery",
       "termsConditions": "yes"
     },
-    {
-      "id": 2,
-      "customerInformation": {
-        "name": "Hieu33333",
-        "email": "hieu3333@gmail.com",
-        "message": "hi33333"
-      },
-      "assignSalesperson": "Admin",
-      "createTime": {
-        "date": "02/07/2023",
-        "time": "04:47:00"
-      },
-      "status": "read",
-      "logs": "Email has not been sent to customer",
-      "dataQuoteProductsInformation": [
-        {
-          "idQuote": 0,
-          "id": 0,
-          "image": "https://i.pinimg.com/564x/13/c8/3e/13c83eb16501b895fc0144b8be6b1d7c.jpg",
-          "product": "rough hill33333",
-          "quantity": 4,
-          "price": 100,
-          "variant": "41 / gold-black",
-          "sku": 21322
-        },
-        {
-          "idQuote": 0,
-          "id": 1,
-          "image": "https://i.pinimg.com/564x/2e/4e/db/2e4edb0fb4320a90e266d2cb5ab99f88.jpg",
-          "product": "roar333333",
-          "quantity": 3,
-          "price": 100,
-          "variant": "40",
-          "sku": 87811
-        }
-      ],
-      "comments": [
-        {
-          "date": "13/10/2022",
-          "comment": "hieu3 comment"
-        }
-      ],
-      "pickupReturn": "Delivery",
-      "termsConditions": "yes"
-    },
+
     {
       "customerInformation": {
         "name": "Hieu111",

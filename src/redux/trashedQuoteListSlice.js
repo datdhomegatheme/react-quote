@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL_GET_TRASHED_QUOTE_LIST = " http://localhost:3000/DataTrashedQuoteLists";
+const API_URL_GET_TRASHED_QUOTE_LIST = "http://localhost:3000/DataTrashedQuoteLists\n";
 
 const initialState = { data: []};
 

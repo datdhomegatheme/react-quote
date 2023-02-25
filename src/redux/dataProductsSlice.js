@@ -1,7 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL_GET_DATA_PRODUCTS = "http://localhost:3000/DataProducts";
+const API_URL_GET_DATA_PRODUCTS = " http://localhost:3000/DataProducts";
 
 const initialState = { product: []};
 export const dataProductsSlice = createSlice({

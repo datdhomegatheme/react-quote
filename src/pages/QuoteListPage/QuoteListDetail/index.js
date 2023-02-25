@@ -267,17 +267,17 @@ function QuoteListDetail() {
 
     // post new quote
     const AddProduct = () => {
-        dispatch(
-            postQuoteApi({
-                customerInformation: quoteDetail[0].customerInformation,
-                assignSalesperson: quoteDetail[0].assignSalesperson,
-                createTime: quoteDetail[0].createTime,
-                status: quoteDetail[0].status,
-                logs: quoteDetail[0].logs,
-                dataQuoteProductsInformation: quoteDetail[0].dataQuoteProductsInformation,
-                comments: quoteDetail[0].comments,
-            })
-        )
+        // dispatch(
+        //     postQuoteApi({
+        //         customerInformation: quoteDetail[0].customerInformation,
+        //         assignSalesperson: quoteDetail[0].assignSalesperson,
+        //         createTime: quoteDetail[0].createTime,
+        //         status: quoteDetail[0].status,
+        //         logs: quoteDetail[0].logs,
+        //         dataQuoteProductsInformation: quoteDetail[0].dataQuoteProductsInformation,
+        //         comments: quoteDetail[0].comments,
+        //     })
+        // )
 
         alert("add quote!")
 
@@ -404,8 +404,8 @@ function QuoteListDetail() {
                 }}
             >
                 <Page fullWidth>
-                    <Grid columns={{xs: 12}}>
-                        <Grid.Cell columnSpan={{lg: 8}}>
+                    <Grid columns={{xs: 6}}>
+                        <Grid.Cell columnSpan={{xs: 6, lg: 8}}>
                             <div className="quote-view-detail__product">
                                 <Card
                                     title={
@@ -446,7 +446,7 @@ function QuoteListDetail() {
                                         <div className="product__heading">
                                             <Grid>
                                                 <Grid.Cell
-                                                    columnSpan={{xs: 6}}
+                                                    columnSpan={{xs: 3, lg: 6}}
                                                 >
                                                     <div className="heading__product">
                                                         <Grid>
@@ -460,12 +460,12 @@ function QuoteListDetail() {
                                                     </div>
                                                 </Grid.Cell>
                                                 <Grid.Cell
-                                                    columnSpan={{xs: 6}}
+                                                    columnSpan={{xs: 3, lg: 6}}
                                                 >
                                                     <Grid>
                                                         <Grid.Cell
                                                             columnSpan={{
-                                                                xs: 3,
+                                                                xs: 3, sm:2
                                                             }}
                                                         >
                                                             <div className="product__quantity">
@@ -479,7 +479,7 @@ function QuoteListDetail() {
                                                         </Grid.Cell>
                                                         <Grid.Cell
                                                             columnSpan={{
-                                                                xs: 3,
+                                                                xs: 3, sm:4
                                                             }}
                                                         >
                                                             <div className="product__price">
@@ -502,7 +502,7 @@ function QuoteListDetail() {
                                             <div className="product__list" key={index}>
                                                 <Grid>
                                                     <Grid.Cell
-                                                        columnSpan={{xs: 6}}
+                                                        columnSpan={{xs: 3, lg: 6}}
                                                     >
                                                         <div className="products__list__cell-product">
                                                             <img
@@ -538,13 +538,13 @@ function QuoteListDetail() {
                                                     </Grid.Cell>
 
                                                     <Grid.Cell
-                                                        columnSpan={{xs: 6}}
+                                                        columnSpan={{xs: 3, lg: 6}}
                                                     >
                                                         <div className="product__list__quantity-price">
                                                             <Grid>
                                                                 <Grid.Cell
                                                                     columnSpan={{
-                                                                        xs: 3,
+                                                                        xs: 2, lg: 3,
                                                                     }}
                                                                 >
                                                                     <div className="products__list__quantity">
@@ -562,7 +562,7 @@ function QuoteListDetail() {
 
                                                                 <Grid.Cell
                                                                     columnSpan={{
-                                                                        xs: 3,
+                                                                        xs: 2, lg: 3,
                                                                     }}
                                                                 >
                                                                     <div className="products__list__price input-number">
@@ -579,20 +579,23 @@ function QuoteListDetail() {
 
                                                                 <Grid.Cell
                                                                     columnSpan={{
-                                                                        xs: 3,
+                                                                        xs: 1, lg: 3,
                                                                     }}
                                                                 >
-                                                                    <Text
-                                                                        variant="bodyMd"
-                                                                        as="h1"
-                                                                    >
-                                                                        {item.quantity * item.price}$
+                                                                    <div className={"products__list__total"}>
+                                                                        <Text
+                                                                            variant="bodyMd"
+                                                                            as="h1"
+                                                                        >
+                                                                            {item.quantity * item.price}$
 
-                                                                    </Text>
+                                                                        </Text>
+                                                                    </div>
+
                                                                 </Grid.Cell>
                                                                 <Grid.Cell
                                                                     columnSpan={{
-                                                                        xs: 3,
+                                                                        xs: 1, lg: 3
                                                                     }}
                                                                 >
                                                                     <Button
@@ -627,7 +630,7 @@ function QuoteListDetail() {
                                         <Card.Section>
                                             <Box padding={"2"}>
                                                 <Grid>
-                                                    <Grid.Cell columnSpan={{xs: 6}}>
+                                                    <Grid.Cell columnSpan={{xs: 3, lg: 6 }}>
                                                         <AlphaStack>
                                                             <TextContainer>
                                                                 <Text variant={"bodyLg"} as={"h1"}>
@@ -647,7 +650,7 @@ function QuoteListDetail() {
                                                             </TextContainer>
                                                         </AlphaStack>
                                                     </Grid.Cell>
-                                                    <Grid.Cell columnSpan={{xs: 6}}>
+                                                    <Grid.Cell columnSpan={{xs: 3, lg: 6}}>
                                                         <AlphaStack align={"end"}>
                                                             <TextContainer>
                                                                 <Text variant={"bodyLg"} as={"h1"}>
@@ -773,7 +776,7 @@ function QuoteListDetail() {
                                 </div>
                             </div>
                         </Grid.Cell>
-                        <Grid.Cell columnSpan={{lg: 4}}>
+                        <Grid.Cell columnSpan={{xs: 6, lg: 4}}>
                             <Card title="Additional Details">
                                 <Card.Section>
                                     <TextContainer>

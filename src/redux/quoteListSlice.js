@@ -2,7 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
 import {currentSetting, oldSetting} from "./quoteSettingSlice";
 
-const API_URL_GET_QUOTE_LIST = " http://localhost:3000/DataQuoteLists";
+const API_URL_GET_QUOTE_LIST = "http://localhost:3000/DataQuoteLists";
 
 const initialState = {
     quote: []
