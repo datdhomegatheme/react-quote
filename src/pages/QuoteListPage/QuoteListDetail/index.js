@@ -267,17 +267,17 @@ function QuoteListDetail() {
 
     // post new quote
     const AddProduct = () => {
-        dispatch(
-            postQuoteApi({
-                customerInformation: quoteDetail[0].customerInformation,
-                assignSalesperson: quoteDetail[0].assignSalesperson,
-                createTime: quoteDetail[0].createTime,
-                status: quoteDetail[0].status,
-                logs: quoteDetail[0].logs,
-                dataQuoteProductsInformation: quoteDetail[0].dataQuoteProductsInformation,
-                comments: quoteDetail[0].comments,
-            })
-        )
+        // dispatch(
+        //     postQuoteApi({
+        //         customerInformation: quoteDetail[0].customerInformation,
+        //         assignSalesperson: quoteDetail[0].assignSalesperson,
+        //         createTime: quoteDetail[0].createTime,
+        //         status: quoteDetail[0].status,
+        //         logs: quoteDetail[0].logs,
+        //         dataQuoteProductsInformation: quoteDetail[0].dataQuoteProductsInformation,
+        //         comments: quoteDetail[0].comments,
+        //     })
+        // )
 
         alert("add quote!")
 
