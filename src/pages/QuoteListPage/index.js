@@ -146,7 +146,7 @@ function QuoteListPage() {
         setOnShowCalendar(false);
     };
     const buttonCalendar = (
-        <div className="card-wrapper__btn-calendar">
+        <div className="card-wrapper__btn-calendar d-flex">
             <Button
                 fullWidth
                 icon={CalendarMinor}
@@ -201,7 +201,7 @@ function QuoteListPage() {
                     plain
                     onClick={(e) => {
                         const element = document.getElementById(`quote-list__assign-btn-${quote.id}`);
-                        element.classList.toggle("show-element")
+                        element.classList.toggle("show-element-visibility")
                         // setShowChangeAssign(true);
                         e.preventDefault();
                         e.stopPropagation();
@@ -210,7 +210,7 @@ function QuoteListPage() {
                     Change
                 </Button>
 
-                <div id={`quote-list__assign-btn-${quote.id}`} className={"hide-element"}>
+                <div id={`quote-list__assign-btn-${quote.id}`} className={"hide-element-visibility"}>
                     <ButtonGroup>
                         <div className={"quote-list__select-assign"}>
                             <Select
@@ -228,7 +228,7 @@ function QuoteListPage() {
                                 e.preventDefault();
                                 e.stopPropagation();
                                 const element = document.getElementById(`quote-list__assign-btn-${quote.id}`);
-                                element.classList.toggle("show-element")
+                                element.classList.toggle("show-element-visibility")
                             }}
                         >
                             Save
@@ -238,7 +238,7 @@ function QuoteListPage() {
                                 e.preventDefault();
                                 e.stopPropagation();
                                 const element = document.getElementById(`quote-list__assign-btn-${quote.id}`);
-                                element.classList.toggle("show-element")
+                                element.classList.toggle("show-element-visibility")
                             }}
                         >
                             Cancel
@@ -374,7 +374,7 @@ function QuoteListPage() {
                             icon={ViewMinor}
                         />
                     </div>
-                    <div className={"data-table__btn-restore"}>
+                    <div className={"data-table__btn-restore d-flex justify-content-center "}>
                         <Button plain icon={CircleDownMajor} onClick={(e) => {
                             alert("quote restored !!")
                             e.preventDefault();
@@ -404,7 +404,7 @@ function QuoteListPage() {
                             showModal={showModal}
                             quote={quoteDetail}
                         />
-                        <div className="quote-list__card-wrapper">
+                        <div className="quote-list__card-wrapper d-flex justify-content-between">
                             <div className="card-wrapper__btn-search">
                                 <TextField
                                     placeholder={"search by Quote Id"}
@@ -482,7 +482,7 @@ function QuoteListPage() {
                             </ButtonGroup>
                         </div>
                         <Card.Section>
-                            <div className="quote-list__data-table">
+                            <div className="quote-list__data-table w-100">
                                 <IndexTable
                                     itemCount={quoteList.length}
                                     selectedItemsCount={
@@ -738,7 +738,7 @@ function QuoteListPage() {
                         </TextContainer>
                     </Modal.Section>
                     <Modal.Section>
-                        <div className="modal-delete__btn">
+                        <div className="d-flex flex-row-reverse">
                             <ButtonGroup>
                                 <Button>Move to Trashed</Button>
                                 <Button destructive onClick={handleDeleteQuote}>Delete</Button>
@@ -761,7 +761,7 @@ function QuoteListPage() {
                         </TextContainer>
                     </Modal.Section>
                     <Modal.Section>
-                        <div className="modal-delete__btn">
+                        <div className="d-flex flex-row-reverse">
                             <ButtonGroup>
                                 <Button>Move to Trashed</Button>
                                 <Button destructive onClick={handleDeleteTrashedQuote}>Delete</Button>
