@@ -76,7 +76,6 @@ function QuoteListDetail() {
     }, []);
 
 
-    console.log("loading:", loading)
     // ---> update thay doi -> set lai store -> check json old + new
 
     useEffect(() => {
