@@ -54,11 +54,7 @@
     }
 
 
-    .quote-list__select-index-table {
-        width: fit-content;
-        position: relative;
-        left: 96%;
-    }
+
 }
 
 .quote-list__modal-delete{
@@ -69,7 +65,6 @@
 .Polaris-PositionedOverlay {
 
     .Polaris-Box {
-
         .Polaris-Popover__Content {
             max-width: fit-content;
             max-height: fit-content;
@@ -93,3 +88,4 @@
 
 
 @import "../quoteListPage/modalQuickView";
+@import "../quoteListPage/quoteList";

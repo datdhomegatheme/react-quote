@@ -5,7 +5,9 @@ import {currentSetting, oldSetting} from "./quoteSettingSlice";
 const API_URL_GET_QUOTE_LIST = "http://localhost:3000/DataQuoteLists";
 
 const initialState = {
-    quote: []
+    quote: [],
+    limit: 10,
+    currentPage: 1,
 };
 
 
@@ -15,6 +17,9 @@ export const quoteListSlice = createSlice({
     reducers: {
         getQuoteList: (state, action) => {
             state.quote = action.payload;
+            state.limit = action.payload.limit;
+            state.currentPage = action.payload.currentPage;
+
         },
 
         deleteQuote: (state, action) => {
@@ -31,13 +36,31 @@ export const quoteListSlice = createSlice({
         },
         postQuote: (state, action) => {
             state.quote.unshift(action.payload);
-        }
+        },
+
+        hasError(state, action) {
+            state.error = action.payload;
+        },
     },
 
 });
 
 export const {getQuoteList} = quoteListSlice.actions
 
+export const getQuoteListFilterApi = (currentPage, limit, filter) => async (dispatch) => {
+
+    const queryParams = `&currentPage=${currentPage} &limit=${limit} &filter=${filter}`;
+    try {
+        axios
+            .get(`${API_URL_GET_QUOTE_LIST}?${queryParams}`)
+            .then((response) => {
+                dispatch(quoteListSlice.actions.getQuoteList(response.data));
+            })
+    } catch (error) {
+        dispatch(quoteListSlice.actions.hasError(error));
+    }
+
+}
 export const getQuoteListApi = () => async (dispatch) => {
     try {
         axios
@@ -77,13 +100,12 @@ export const updateQuoteApi = (id, ...params) => async (dispatch) => {
                 dispatch(quoteListSlice.actions.updateQuote(response.data))
             })
             .catch(function (error) {
-            console.log(error)
-        })
+                console.log(error)
+            })
     } catch (err) {
         console.log(err)
     }
 }
-
 
 
 export const postQuoteApi = (...params) => async (dispatch) => {

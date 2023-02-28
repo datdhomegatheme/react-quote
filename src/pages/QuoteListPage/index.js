@@ -10,7 +10,7 @@ import {
     IndexTable,
     List,
     Modal,
-    Page,
+    Page, Pagination,
     Popover,
     Select,
     Tabs,
@@ -18,6 +18,7 @@ import {
     TextContainer,
     TextField,
     useIndexResourceState,
+    Stack
 } from "@shopify/polaris";
 import {
     CalendarMinor,
@@ -28,17 +29,18 @@ import {
     ViewMinor,
 } from "@shopify/polaris-icons";
 
-import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteQuoteApi, getQuoteListApi } from "../../redux/quoteListSlice";
-import { AssignSalesperson, OptionsPageIndex } from "./DataItemQuoteList";
+import {useCallback, useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {deleteQuoteApi, getQuoteListApi, getQuoteListFilterApi} from "../../redux/quoteListSlice";
+import {AssignSalesperson, OptionsPageIndex} from "./DataItemQuoteList";
 import ModalQuickView from "../QuoteListPage/ModalQuickView";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import Images from "../../assets/Images";
 import {
     deleteTrashedQuote,
     getTrashedQuoteList,
 } from "../../redux/trashedQuoteListSlice";
+import {QuoteList} from "./QuoteList";
 
 function QuoteListPage() {
     const navigate = useNavigate();
@@ -46,9 +48,11 @@ function QuoteListPage() {
     const [textFieldValue, setTextFieldValue] = useState("");
     const [showCalendar, setOnShowCalendar] = useState(false);
     const [popoverActive, setPopoverActive] = useState(false);
-    const [selectedIndexTable, setSelectedIndexTable] = useState(1);
+    const [selectedIndexTable, setSelectedIndexTable] = useState(10);
     const [showModal, setShowModal] = useState(false);
     const [quoteDetail, setQuoteDetail] = useState({});
+    const [currentPage, setCurrentPage] = useState(1)
+
 
     //get data from redux global state
     const quoteList = useSelector((state) => state.quoteList.quote);
@@ -77,7 +81,7 @@ function QuoteListPage() {
     const handleTabChange = useCallback((selectedTabIndex) =>
         setSelectedTab(selectedTabIndex)
     );
-    const [{ month, year }, setDate] = useState({
+    const [{month, year}, setDate] = useState({
         month: new Date().getMonth(),
         year: new Date().getFullYear(),
     });
@@ -88,7 +92,7 @@ function QuoteListPage() {
     });
 
     const handleMonthChange = useCallback(
-        (month, year) => setDate({ month, year }),
+        (month, year) => setDate({month, year}),
         []
     );
 
@@ -96,7 +100,7 @@ function QuoteListPage() {
         setOnShowCalendar(!showCalendar);
     };
 
-    const { selectedResources, allResourcesSelected, handleSelectionChange } =
+    const {selectedResources, allResourcesSelected, handleSelectionChange} =
         useIndexResourceState(quoteList);
 
     const [quoteId, setQuoteId] = useState();
@@ -138,8 +142,8 @@ function QuoteListPage() {
     const handleDateApplyButton = () => {
         setDatePickerValue(
             selectedDates.start.toLocaleDateString("en-US") +
-                "-" +
-                selectedDates.end.toLocaleDateString("en-US")
+            "-" +
+            selectedDates.end.toLocaleDateString("en-US")
         );
         setOnShowCalendar(false);
     };
@@ -161,12 +165,12 @@ function QuoteListPage() {
     );
 
     const dispatch = useDispatch();
-
     //call api update global state
     useEffect(() => {
-        dispatch(getQuoteListApi());
-        dispatch(getTrashedQuoteList());
-    }, []);
+        dispatch(getQuoteListFilterApi(currentPage, selectedIndexTable, textFieldValue))
+        // dispatch(getQuoteListApi());
+        // dispatch(getTrashedQuoteList());
+    }, [currentPage, selectedIndexTable, textFieldValue]);
 
     //row of each tab quote's table
     const rowMarkupQuoteLists = quoteList?.map((quote, index) => (
@@ -182,9 +186,9 @@ function QuoteListPage() {
                     <Text variant={"headingSm"} as="span" fontWeight="bold">
                         Name:
                     </Text>
-                    <br />
+                    <br/>
                     {quote.customerInformation.name}
-                    <br />
+                    <br/>
                 </Text>
                 <Button
                     removeUnderline
@@ -265,7 +269,7 @@ function QuoteListPage() {
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="p">
                     {quote.createTime.date}
-                    <br />
+                    <br/>
                     {quote.createTime.time}
                 </Text>
             </IndexTable.Cell>
@@ -333,9 +337,9 @@ function QuoteListPage() {
                     <Text variant={"headingSm"} as="span" fontWeight="bold">
                         Name:
                     </Text>
-                    <br />
+                    <br/>
                     {quote.customerInformation.name}
-                    <br />
+                    <br/>
                 </Text>
                 <Button
                     removeUnderline
@@ -353,7 +357,7 @@ function QuoteListPage() {
             <IndexTable.Cell>
                 <Text variant="bodyMd" as="p">
                     {quote.createTime.date}
-                    <br />
+                    <br/>
                     {quote.createTime.time}
                 </Text>
             </IndexTable.Cell>
@@ -414,148 +418,173 @@ function QuoteListPage() {
         </IndexTable.Row>
     ));
 
+
     //tab route
     const tabs = [
         {
             id: "quote-list",
             content: "Quote List",
             ui: (
-                <Box padding={"4"}>
-                    <Card>
-                        <Card.Section>
-                            <ModalQuickView
-                                handleChangeModal={handleChangeModal}
-                                showModal={showModal}
-                                quote={quoteDetail}
-                            />
-                            <div className="quote-list__card-wrapper d-flex justify-content-between">
-                                <div className="card-wrapper__btn-search">
-                                    <TextField
-                                        placeholder={"search by Quote Id"}
-                                        value={textFieldValue}
-                                        onChange={handleTextFieldChange}
+                <>
+                    {quoteList.length !== 0 ?
+                        <Box padding={"4"}>
+                            <Card>
+                                <Card.Section>
+                                    <ModalQuickView
+                                        handleChangeModal={handleChangeModal}
+                                        showModal={showModal}
+                                        quote={quoteDetail}
                                     />
-                                </div>
-                                <ButtonGroup>
-                                    <div className="quote-list__popover-calendar">
-                                        <Popover
-                                            active={showCalendar}
-                                            activator={buttonCalendar}
-                                            onClose={handleClickCalendar}
-                                        >
-                                            <div className="quote-list__date-picker">
-                                                <DatePicker
-                                                    month={month}
-                                                    year={year}
-                                                    onChange={setSelectedDates}
-                                                    onMonthChange={
-                                                        handleMonthChange
-                                                    }
-                                                    selected={selectedDates}
-                                                    multiMonth
-                                                    allowRange
-                                                />
-                                                <div className="quote-list__date-picker__btn-group">
-                                                    <ButtonGroup>
-                                                        <Button
-                                                            onClick={
-                                                                handleDateResetButton
+                                    <div className="quote-list__card-wrapper d-flex justify-content-between">
+                                        <div className="card-wrapper__btn-search">
+                                            <TextField
+                                                placeholder={"search by Quote Id"}
+                                                value={textFieldValue}
+                                                onChange={handleTextFieldChange}
+                                            />
+                                        </div>
+                                        <ButtonGroup>
+                                            <div className="quote-list__popover-calendar">
+                                                <Popover
+                                                    active={showCalendar}
+                                                    activator={buttonCalendar}
+                                                    onClose={handleClickCalendar}
+                                                >
+                                                    <div className="quote-list__date-picker">
+                                                        <DatePicker
+                                                            month={month}
+                                                            year={year}
+                                                            onChange={setSelectedDates}
+                                                            onMonthChange={
+                                                                handleMonthChange
                                                             }
-                                                        >
-                                                            Reset
-                                                        </Button>
-                                                        <Button
-                                                            primary
-                                                            onClick={
-                                                                handleDateApplyButton
-                                                            }
-                                                        >
-                                                            Apply
-                                                        </Button>
-                                                    </ButtonGroup>
-                                                </div>
+                                                            selected={selectedDates}
+                                                            multiMonth
+                                                            allowRange
+                                                        />
+                                                        <div className="quote-list__date-picker__btn-group">
+                                                            <ButtonGroup>
+                                                                <Button
+                                                                    onClick={
+                                                                        handleDateResetButton
+                                                                    }
+                                                                >
+                                                                    Reset
+                                                                </Button>
+                                                                <Button
+                                                                    primary
+                                                                    onClick={
+                                                                        handleDateApplyButton
+                                                                    }
+                                                                >
+                                                                    Apply
+                                                                </Button>
+                                                            </ButtonGroup>
+                                                        </div>
+                                                    </div>
+                                                </Popover>
                                             </div>
-                                        </Popover>
-                                    </div>
 
-                                    <Popover
-                                        active={popoverActive}
-                                        activator={buttonSelect}
-                                        onClose={togglePopoverActive}
-                                    >
-                                        <ActionList
-                                            actionRole="menuitem"
-                                            items={[
-                                                { content: "Refresh data" },
-                                                {
-                                                    content:
-                                                        "Export quote list",
-                                                },
-                                            ]}
-                                        />
-                                    </Popover>
-                                    <Button
-                                        primary
-                                        onClick={() =>
-                                            navigate("/quote/create")
-                                        }
-                                        icon={PlusMinor}
-                                    >
-                                        Create a quote
-                                    </Button>
-                                </ButtonGroup>
-                            </div>
-                            <Card.Section>
-                                <div className="quote-list__data-table w-100">
-                                    <IndexTable
-                                        itemCount={quoteList.length}
-                                        selectedItemsCount={
-                                            allResourcesSelected
-                                                ? "All"
-                                                : selectedResources.length
-                                        }
-                                        onSelectionChange={
-                                            handleSelectionChange
-                                        }
-                                        headings={[
-                                            { title: "Quote Id" },
-                                            { title: "Customer Information" },
-                                            { title: "Assign Salesperson" },
-                                            { title: "Create Time" },
-                                            { title: "Status" },
-                                            { title: "Logs" },
-                                            { title: "Actions" },
-                                        ]}
-                                        sortable={[
-                                            true,
-                                            false,
-                                            false,
-                                            false,
-                                            true,
-                                            true,
-                                            false,
-                                        ]}
-                                    >
-                                        {rowMarkupQuoteLists}
-                                    </IndexTable>
-                                    <div
-                                        className={
-                                            "quote-list__select-index-table"
-                                        }
-                                    >
-                                        <Select
-                                            options={OptionsPageIndex}
-                                            onChange={
-                                                handleSelectIndexPageChange
-                                            }
-                                            value={selectedIndexTable}
-                                        />
+                                            <Popover
+                                                active={popoverActive}
+                                                activator={buttonSelect}
+                                                onClose={togglePopoverActive}
+                                            >
+                                                <ActionList
+                                                    actionRole="menuitem"
+                                                    items={[
+                                                        {content: "Refresh data"},
+                                                        {
+                                                            content:
+                                                                "Export quote list",
+                                                        },
+                                                    ]}
+                                                />
+                                            </Popover>
+                                            <Button
+                                                primary
+                                                onClick={() =>
+                                                    navigate("/quote/create")
+                                                }
+                                                icon={PlusMinor}
+                                            >
+                                                Create a quote
+                                            </Button>
+                                        </ButtonGroup>
                                     </div>
-                                </div>
-                            </Card.Section>
-                        </Card.Section>
-                    </Card>
-                </Box>
+                                    <Card.Section>
+                                        <div className="quote-list__data-table w-100">
+                                            <IndexTable
+                                                itemCount={quoteList.length}
+                                                selectedItemsCount={
+                                                    allResourcesSelected
+                                                        ? "All"
+                                                        : selectedResources.length
+                                                }
+                                                onSelectionChange={
+                                                    handleSelectionChange
+                                                }
+                                                headings={[
+                                                    {title: "Quote Id"},
+                                                    {title: "Customer Information"},
+                                                    {title: "Assign Salesperson"},
+                                                    {title: "Create Time"},
+                                                    {title: "Status"},
+                                                    {title: "Logs"},
+                                                    {title: "Actions"},
+                                                ]}
+                                                sortable={[
+                                                    true,
+                                                    false,
+                                                    false,
+                                                    false,
+                                                    true,
+                                                    true,
+                                                    false,
+                                                ]}
+                                            >
+                                                {rowMarkupQuoteLists}
+                                            </IndexTable>
+                                            <Box paddingBlockStart={"10"} >
+                                                <Stack>
+                                                    <Stack.Item fill>
+                                                        <Pagination
+                                                            hasPrevious
+                                                            onPrevious={() => {
+                                                                if (currentPage === 1) {
+                                                                    setCurrentPage(1)
+                                                                }else {
+                                                                    setCurrentPage(currentPage-1)
+                                                                }
+                                                            }}
+                                                            hasNext
+                                                            onNext={() => {
+                                                                setCurrentPage(currentPage+1)
+                                                            }}
+                                                        />
+                                                    </Stack.Item>
+                                                    <Stack.Item>
+                                                        <Select
+                                                            label={"select"}
+                                                            labelHidden
+                                                            options={OptionsPageIndex}
+                                                            onChange={
+                                                                handleSelectIndexPageChange
+                                                            }
+                                                            value={selectedIndexTable}
+                                                        />
+                                                    </Stack.Item>
+
+                                                </Stack>
+                                            </Box>
+
+                                        </div>
+                                    </Card.Section>
+                                </Card.Section>
+                            </Card>
+                        </Box>
+                        : <QuoteList/>}
+                </>
             ),
         },
         {
@@ -661,16 +690,16 @@ function QuoteListPage() {
                                                     handleSelectionChange
                                                 }
                                                 headings={[
-                                                    { title: "Quote Id" },
+                                                    {title: "Quote Id"},
                                                     {
                                                         title: "Customer Information",
                                                     },
                                                     {
                                                         title: "Assign Salesperson",
                                                     },
-                                                    { title: "Create Time" },
-                                                    { title: "Logs" },
-                                                    { title: "Actions" },
+                                                    {title: "Create Time"},
+                                                    {title: "Logs"},
+                                                    {title: "Actions"},
                                                 ]}
                                                 sortable={[
                                                     true,
@@ -790,6 +819,7 @@ function QuoteListPage() {
                 >
                     {tabs[selectedTab].ui}
                 </Tabs>
+
             </Page>
             {/*-------> Modal delete quote list*/}
             <Modal
