@@ -19,18 +19,18 @@ import {
     TextContainer,
     TextField,
 } from "@shopify/polaris";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { DeleteMinor, ImportMinor, SearchMajor } from "@shopify/polaris-icons";
+import {useCallback, useEffect, useMemo, useState} from "react";
+import {DeleteMinor, ImportMinor, SearchMajor} from "@shopify/polaris-icons";
 import Images from "../../../assets/Images";
-import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import {useParams} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
 import {
     deleteQuoteApi,
     getQuoteListApi,
     updateQuoteApi,
 } from "../../../redux/quoteListSlice";
-import { getTrashedQuoteList } from "../../../redux/trashedQuoteListSlice";
-import { getDataProducts } from "../../../redux/dataProductsSlice";
+import {getTrashedQuoteList} from "../../../redux/trashedQuoteListSlice";
+import {getDataProducts} from "../../../redux/dataProductsSlice";
 import {
     oldSetting,
     currentSetting,
@@ -41,10 +41,10 @@ function QuoteListDetail() {
     const dispatch = useDispatch();
     //get data quote detail
 
-
     const quoteId = useParams();
+
     const quoteList = useSelector((state) => state.quoteList.quote);
-    const quoteDetail = quoteList.filter((quote) => quote.id == quoteId.id);
+    const quoteDetail = useMemo(() => quoteList.filter((quote) => quote.id === Number(quoteId.id)), [quoteList]);
     const dataProducts = useSelector((state) => state.dataProducts.product);
     const oldSettingValue = useSelector(
         (state) => state.quoteSetting.oldSettingValue
@@ -53,30 +53,27 @@ function QuoteListDetail() {
     const currentSettingValue = useSelector(
         (state) => state.quoteSetting.currentSettingValue
     );
-    const currentSettingDetail = currentSettingValue.filter(
-        (quote) => quote.id == quoteId.id
+    const currentSettingDetail = useMemo(() => currentSettingValue.filter(
+        (quote) => quote.id === Number(quoteId.id), [currentSettingValue])
     );
 
-    const quoteDetailItem =
-        currentSettingValue[0]?.dataQuoteProductsInformation;
-
+    const quoteDetailItem = useMemo(() =>
+        currentSettingValue[0]?.dataQuoteProductsInformation, [currentSettingValue]
+    )
 
     const [loading, setLoading] = useState(false)
-
-    const getAllApi = async() => {
+    const getAllApi = async () => {
         setLoading(true)
         await
             dispatch(getQuoteListApi());
-            dispatch(getTrashedQuoteList());
-            dispatch(getDataProducts())
+        dispatch(getTrashedQuoteList());
+        dispatch(getDataProducts())
         setLoading(false)
     }
 
     useEffect(() => {
         getAllApi()
     }, []);
-
-
 
 
     console.log("loading:", loading)
@@ -143,13 +140,13 @@ function QuoteListDetail() {
     );
     const handleSelectAccount = (e) => {
         setSelectedAccount(e);
-        const termArray = { ...currentSettingDetail[0], assignSalesperson: e };
+        const termArray = {...currentSettingDetail[0], assignSalesperson: e};
         dispatch(updateCurrentSetting(termArray));
     };
 
     const optionsAccount = [
-        { label: "Admin", value: "Admin" },
-        { label: "employee", value: "employee" },
+        {label: "Admin", value: "Admin"},
+        {label: "employee", value: "employee"},
     ];
 
     //logic handle Discount Type
@@ -158,12 +155,12 @@ function QuoteListDetail() {
         value: "Amount",
     });
     const handleDiscountType = (value) => {
-        setSelectedDiscountType({ label: value, value: value });
+        setSelectedDiscountType({label: value, value: value});
     };
 
     const OptionsDiscountType = [
-        { label: "Amount", value: "Amount" },
-        { label: "Percentage", value: "Percentage" },
+        {label: "Amount", value: "Amount"},
+        {label: "Percentage", value: "Percentage"},
     ];
 
     //logic quantity
@@ -297,7 +294,7 @@ function QuoteListDetail() {
     const optionsMarkup =
         optionsProductSearch.length > 0 &&
         optionsProductSearch.map((option) => {
-            const { label, value } = option;
+            const {label, value} = option;
             return (
                 <div className={"test"}>
                     <Listbox.Option
@@ -446,7 +443,7 @@ function QuoteListDetail() {
 
             <Page
                 fullWidth
-                breadcrumbs={[{ url: "/quote/list" }]}
+                breadcrumbs={[{url: "/quote/list"}]}
                 title={"Quote #" + quoteId.id}
                 subtitle="update by Admin Otc 11, 10:13 pm"
                 secondaryActions={[
@@ -480,8 +477,8 @@ function QuoteListDetail() {
                 }}
             >
                 <Page fullWidth>
-                    <Grid columns={{ xs: 6 }}>
-                        <Grid.Cell columnSpan={{ xs: 6, lg: 8 }}>
+                    <Grid columns={{xs: 6}}>
+                        <Grid.Cell columnSpan={{xs: 6, lg: 8}}>
                             <div className="quote-view-detail__product">
                                 <Card
                                     title={
@@ -605,7 +602,8 @@ function QuoteListDetail() {
                                                             lg: 6,
                                                         }}
                                                     >
-                                                        <div className="products__list__cell-product d-flex justify-items-center align-items-center">
+                                                        <div
+                                                            className="products__list__cell-product d-flex justify-items-center align-items-center">
                                                             <img
                                                                 className="cell-product__image"
                                                                 alt="white-background-product-photography-example"
@@ -700,7 +698,8 @@ function QuoteListDetail() {
                                                                         lg: 3,
                                                                     }}
                                                                 >
-                                                                    <div className="products__list__price w-100 input-number">
+                                                                    <div
+                                                                        className="products__list__price w-100 input-number">
                                                                         <input
                                                                             onKeyDown={(
                                                                                 evt
@@ -881,36 +880,36 @@ function QuoteListDetail() {
                                                                 </Text>
                                                                 {selectedDiscountType.label ===
                                                                     "Amount" && (
-                                                                    <Text
-                                                                        variant={
-                                                                            "bodyLg"
-                                                                        }
-                                                                        as={
-                                                                            "h1"
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            submitValueDiscount
-                                                                        }
-                                                                        $
-                                                                    </Text>
-                                                                )}
+                                                                        <Text
+                                                                            variant={
+                                                                                "bodyLg"
+                                                                            }
+                                                                            as={
+                                                                                "h1"
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                submitValueDiscount
+                                                                            }
+                                                                            $
+                                                                        </Text>
+                                                                    )}
                                                                 {selectedDiscountType.label ===
                                                                     "Percentage" && (
-                                                                    <Text
-                                                                        variant={
-                                                                            "bodyLg"
-                                                                        }
-                                                                        as={
-                                                                            "h1"
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            submitValueDiscount
-                                                                        }
-                                                                        %
-                                                                    </Text>
-                                                                )}
+                                                                        <Text
+                                                                            variant={
+                                                                                "bodyLg"
+                                                                            }
+                                                                            as={
+                                                                                "h1"
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                submitValueDiscount
+                                                                            }
+                                                                            %
+                                                                        </Text>
+                                                                    )}
                                                                 <Text
                                                                     variant={
                                                                         "bodyLg"
@@ -925,43 +924,43 @@ function QuoteListDetail() {
 
                                                                 {selectedDiscountType.label ===
                                                                     "Amount" && (
-                                                                    <Text
-                                                                        variant={
-                                                                            "headingMd"
-                                                                        }
-                                                                        as={
-                                                                            "h1"
-                                                                        }
-                                                                    >
-                                                                        {Number(
-                                                                            submitValueShipping
-                                                                        ) +
-                                                                            subTotal -
-                                                                            submitValueDiscount}
-                                                                        $
-                                                                    </Text>
-                                                                )}
+                                                                        <Text
+                                                                            variant={
+                                                                                "headingMd"
+                                                                            }
+                                                                            as={
+                                                                                "h1"
+                                                                            }
+                                                                        >
+                                                                            {Number(
+                                                                                    submitValueShipping
+                                                                                ) +
+                                                                                subTotal -
+                                                                                submitValueDiscount}
+                                                                            $
+                                                                        </Text>
+                                                                    )}
                                                                 {selectedDiscountType.label ===
                                                                     "Percentage" && (
-                                                                    <Text
-                                                                        variant={
-                                                                            "headingMd"
-                                                                        }
-                                                                        as={
-                                                                            "h1"
-                                                                        }
-                                                                    >
-                                                                        {Number(
-                                                                            submitValueShipping
-                                                                        ) +
-                                                                            subTotal -
-                                                                            percent(
-                                                                                subTotal,
-                                                                                submitValueDiscount
-                                                                            )}
-                                                                        $
-                                                                    </Text>
-                                                                )}
+                                                                        <Text
+                                                                            variant={
+                                                                                "headingMd"
+                                                                            }
+                                                                            as={
+                                                                                "h1"
+                                                                            }
+                                                                        >
+                                                                            {Number(
+                                                                                    submitValueShipping
+                                                                                ) +
+                                                                                subTotal -
+                                                                                percent(
+                                                                                    subTotal,
+                                                                                    submitValueDiscount
+                                                                                )}
+                                                                            $
+                                                                        </Text>
+                                                                    )}
                                                             </TextContainer>
                                                         </AlphaStack>
                                                     </Grid.Cell>
@@ -1024,7 +1023,7 @@ function QuoteListDetail() {
                                             </Text>
                                         </div>
 
-                                        <Divider borderStyle="base" />
+                                        <Divider borderStyle="base"/>
                                         <div className="timeline__comment">
                                             <FormLayout>
                                                 <TextField
@@ -1077,7 +1076,7 @@ function QuoteListDetail() {
                                 </div>
                             </div>
                         </Grid.Cell>
-                        <Grid.Cell columnSpan={{ xs: 6, lg: 4 }}>
+                        <Grid.Cell columnSpan={{xs: 6, lg: 4}}>
                             <Card title="Additional Details">
                                 <Card.Section>
                                     <TextContainer>
