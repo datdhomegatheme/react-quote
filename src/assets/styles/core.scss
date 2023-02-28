@@ -1,10 +1,6 @@
-@import "../../../node_modules/bootstrap/scss/functions";
-@import "../../../node_modules/bootstrap/scss/variables";
-@import "../../../node_modules/bootstrap/scss/maps";
-@import "../../../node_modules/bootstrap/scss/mixins";
-@import "../../../node_modules/bootstrap/scss/utilities";
-
+@import "../../../node_modules/bootstrap/scss/bootstrap";
 @import "../../../node_modules/@shopify/polaris/build/esm/styles.css";
+@import "variables.scss";
 
 
 
@@ -24,20 +20,20 @@
 }
 
 
-.icon404{
+body {
+    font-size: 14px
+}
+
+.icon404 {
     width: 100px;
     height: auto;
 }
 
-tr {
-    // display: flex;
-}
-
-.hide-element{
+.hide-element-visibility {
     visibility: hidden;
 }
 
-.show-element {
+.show-element-visibility {
     visibility: visible;
 }
 

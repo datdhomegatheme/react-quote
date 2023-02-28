@@ -1,7 +1,5 @@
 .quote-list__card-wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+
 
     .card-wrapper__btn-search {
         width: 24%;
@@ -10,16 +8,12 @@
     .quote-list__popover-calendar {
 
         .card-wrapper__btn-calendar {
-            display: flex;
-
             .Polaris-Button {
                 .Polaris-Button__Content {
                     width: 200px;
                     flex-direction: row-reverse;
-
                     .Polaris-Button__Icon {
                         margin-left: 1%;
-
                     }
                 }
             }
@@ -29,8 +23,6 @@
 }
 
 .quote-list__data-table {
-    width: 100%;
-
     .quote-list__select-assign {
         width: 110px;
     }
@@ -53,8 +45,6 @@
         }
     }
     .data-table__btn-restore{
-        display: flex;
-        justify-content: center;
         margin-left: 50%;
         .Polaris-Icon__Svg {
             width: 14px;
@@ -73,8 +63,6 @@
 
 .quote-list__modal-delete{
     .modal-delete__btn{
-        display: flex;
-        flex-direction: row-reverse;
     }
 }
 
