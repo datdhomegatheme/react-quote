@@ -27,7 +27,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     deleteQuoteApi,
     getQuoteListApi,
-    postQuoteApi,
     updateQuoteApi,
 } from "../../../redux/quoteListSlice";
 import { getTrashedQuoteList } from "../../../redux/trashedQuoteListSlice";
@@ -41,6 +40,8 @@ import {
 function QuoteListDetail() {
     const dispatch = useDispatch();
     //get data quote detail
+
+
     const quoteId = useParams();
     const quoteList = useSelector((state) => state.quoteList.quote);
     const quoteDetail = quoteList.filter((quote) => quote.id == quoteId.id);
@@ -59,12 +60,26 @@ function QuoteListDetail() {
     const quoteDetailItem =
         currentSettingValue[0]?.dataQuoteProductsInformation;
 
+
+    const [loading, setLoading] = useState(false)
+
+    const getAllApi = async() => {
+        setLoading(true)
+        await
+            dispatch(getQuoteListApi());
+            dispatch(getTrashedQuoteList());
+            dispatch(getDataProducts())
+        setLoading(false)
+    }
+
     useEffect(() => {
-        dispatch(getQuoteListApi());
-        dispatch(getTrashedQuoteList());
-        dispatch(getDataProducts());
+        getAllApi()
     }, []);
 
+
+
+
+    console.log("loading:", loading)
     // ---> update thay doi -> set lai store -> check json old + new
 
     useEffect(() => {
@@ -95,15 +110,21 @@ function QuoteListDetail() {
 
     // ---------> checkbox add discount code
     const [checkAddDiscountCode, setCheckAddDiscountCode] = useState(false);
-    const handleCheckAddDiscountCode = useCallback((value) => {
-        setCheckAddDiscountCode(value);
-    }, []);
+    const handleCheckAddDiscountCode = useCallback(
+        (value) => {
+            setCheckAddDiscountCode(value);
+        },
+        [setCheckAddDiscountCode]
+    );
 
     // ---------> checkbox add shipping code
     const [checkAddShippingCode, setCheckAddShippingCode] = useState(false);
-    const handleCheckAddShippingCode = useCallback((value) => {
-        setCheckAddShippingCode(value);
-    }, []);
+    const handleCheckAddShippingCode = useCallback(
+        (value) => {
+            setCheckAddShippingCode(value);
+        },
+        [setCheckAddShippingCode]
+    );
 
     //logic modal discount
     const [activeModalDiscount, setActiveModalDiscount] = useState(false);
@@ -274,23 +295,21 @@ function QuoteListDetail() {
     };
 
     const optionsMarkup =
-        optionsProductSearch.length > 0
-            ? optionsProductSearch.map((option) => {
-                  const { label, value } = option;
-
-                  return (
-                      <div className={"test"}>
-                          <Listbox.Option
-                              key={`${value}`}
-                              value={value}
-                              selected={selectedOptionsProductSearch === value}
-                          >
-                              {label}
-                          </Listbox.Option>
-                      </div>
-                  );
-              })
-            : null;
+        optionsProductSearch.length > 0 &&
+        optionsProductSearch.map((option) => {
+            const { label, value } = option;
+            return (
+                <div className={"test"}>
+                    <Listbox.Option
+                        key={`${value}`}
+                        value={value}
+                        selected={selectedOptionsProductSearch === value}
+                    >
+                        {label}
+                    </Listbox.Option>
+                </div>
+            );
+        });
 
     //handle add discount
     const [valueDiscount, setValueDiscount] = useState(0);

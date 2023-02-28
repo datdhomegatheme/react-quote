@@ -33,6 +33,16 @@
           "price": 100,
           "variant": "43 / black",
           "sku": 32111
+        },
+        {
+          "id": 10,
+          "idQuote": 0,
+          "image": "https://i.pinimg.com/564x/da/7b/e2/da7be2e45116fcfa45acd813e2b01090.jpg",
+          "product": "product A",
+          "quantity": 2,
+          "price": 200,
+          "variant": "40 / gold-black",
+          "sku": 21345
         }
       ],
       "comments": [
