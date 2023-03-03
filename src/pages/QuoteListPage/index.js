@@ -31,9 +31,9 @@ import {
     FilterMajor, CalendarTickMajor,
 } from "@shopify/polaris-icons";
 
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {deleteQuoteApi, getQuoteListFilterApi} from "../../redux/quoteListSlice";
+import {deleteQuoteApi, getQuoteListFilterApi, updateQuoteApi} from "../../redux/quoteListSlice";
 import {AssignSalesperson, OptionsPageIndex} from "./DataItemQuoteList";
 import ModalQuickView from "../QuoteListPage/ModalQuickView";
 import {useNavigate} from "react-router-dom";
@@ -46,8 +46,10 @@ import {QuoteList} from "./QuoteList";
 import {DatePickerComponent} from "../../components/DatePickerComponent";
 import {SalePersonFilter} from "./QuoteList/SalePersonFilter";
 import {SalePersonFilterTag} from "./QuoteList/SalePersonFilterTag";
+import {click} from "@testing-library/user-event/dist/click";
 
 function QuoteListPage() {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [selectedTab, setSelectedTab] = useState(0);
     const [textFieldValue, setTextFieldValue] = useState("");
@@ -229,7 +231,6 @@ function QuoteListPage() {
     );
 
 
-    const dispatch = useDispatch();
     //call api update global state
 
 
@@ -306,6 +307,10 @@ function QuoteListPage() {
                                 element.classList.toggle(
                                     "show-element-visibility"
                                 );
+                                //
+                                // dispatch(updateQuoteApi(quote.id,
+                                //     {}));
+
                             }}
                         >
                             Save
@@ -483,21 +488,9 @@ function QuoteListPage() {
 
 
     const handleSelectedAllQuotes = () => {
-        // quoteList.map(item => {
-        //     !selectedResources.includes(item.id) && (
-        //         selectedResources = [...selectedResources, item.id])
-        // })
-        // console.log(selectedResources)
-
-        let ele=document.getElementsByClassName('Polaris-Checkbox__Input');
-        for(let i=0; i<ele.length; i++){
-            if(ele[i].type=='checkbox')
-                ele[i].checked=true;
-        }
-
-
+        let ele = document.getElementsByClassName('Polaris-Checkbox__Input');
+        ele[0].click();
     }
-
     useEffect(() => {
         dispatch(getQuoteListFilterApi(currentPage, selectedIndexTable, textFieldValue, selectedTagFilter, salePersonValue))
     }, [currentPage, selectedIndexTable, textFieldValue, selectedTagFilter, salePersonValue]);
@@ -747,9 +740,7 @@ function QuoteListPage() {
                                             <IndexTable
                                                 itemCount={quoteList.length}
                                                 selectedItemsCount={
-                                                    allResourcesSelected
-                                                        ? "All"
-                                                        : selectedResources.length
+                                                selectedResources.length
                                                 }
                                                 onSelectionChange={
                                                     handleSelectionChange
