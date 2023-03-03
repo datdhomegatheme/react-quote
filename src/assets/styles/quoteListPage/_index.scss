@@ -5,20 +5,6 @@
         width: 24%;
     }
 
-    .quote-list__popover-calendar {
-
-        .card-wrapper__btn-calendar {
-            .Polaris-Button {
-                .Polaris-Button__Content {
-                    width: 200px;
-                    flex-direction: row-reverse;
-                    .Polaris-Button__Icon {
-                        margin-left: 1%;
-                    }
-                }
-            }
-        }
-    }
 
 }
 
@@ -63,14 +49,12 @@
 }
 
 .Polaris-PositionedOverlay {
-
     .Polaris-Box {
         .Polaris-Popover__Content {
             max-width: fit-content;
             max-height: fit-content;
 
             .quote-list__date-picker {
-                max-width: 600px;
                 padding: 4%;
 
                 .quote-list__date-picker__btn-group {
@@ -86,6 +70,10 @@
 
 }
 
+.quote-list__popover-calendar {
+    width: 600px;
+
+}
 
 @import "../quoteListPage/modalQuickView";
 @import "../quoteListPage/quoteList";

@@ -3,43 +3,47 @@
 @import "variables.scss";
 
 
-
-// custom btn-primary 
+// custom btn-primary
 
 .Polaris-Button--primary {
 
-    background: linear-gradient(180deg, #6371c7, #5563c1);
+  background: linear-gradient(180deg, #6371c7, #5563c1);
 
-    &:hover {
-        background: linear-gradient(180deg, #5c6ac4, #4959bd);
-    }
+  &:hover {
+    background: linear-gradient(180deg, #5c6ac4, #4959bd);
+  }
 
-    &:active {
-        background: linear-gradient(180deg, #3f4eae, #3f4eae);
-    }
+  &:active {
+    background: linear-gradient(180deg, #3f4eae, #3f4eae);
+  }
 }
 
 
 body {
-    font-size: 14px
+  font-size: 14px
 }
 
 .icon404 {
-    width: 100px;
-    height: auto;
+  width: 100px;
+  height: auto;
 }
 
 .hide-element-visibility {
-    visibility: hidden;
+  visibility: hidden;
 }
 
 .show-element-visibility {
-    visibility: visible;
+  visibility: visible;
 }
 
-.Polaris-Link{
-    text-decoration: none !important;
+.Polaris-Link {
+  text-decoration: none !important;
 }
+
+table {
+  caption-side: top;
+}
+
 
 
 @import "../styles/quoteListPage";

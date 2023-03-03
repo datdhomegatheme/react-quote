@@ -18,20 +18,22 @@ import {
     TextContainer,
     TextField,
     useIndexResourceState,
-    Stack
+    Stack,
+    Tag
+
 } from "@shopify/polaris";
 import {
-    CalendarMinor,
     CircleDownMajor,
     DeleteMinor,
     PlusMinor,
     SettingsMinor,
     ViewMinor,
+    FilterMajor, CalendarTickMajor,
 } from "@shopify/polaris-icons";
 
 import {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {deleteQuoteApi, getQuoteListApi, getQuoteListFilterApi} from "../../redux/quoteListSlice";
+import {deleteQuoteApi, getQuoteListFilterApi} from "../../redux/quoteListSlice";
 import {AssignSalesperson, OptionsPageIndex} from "./DataItemQuoteList";
 import ModalQuickView from "../QuoteListPage/ModalQuickView";
 import {useNavigate} from "react-router-dom";
@@ -41,6 +43,9 @@ import {
     getTrashedQuoteList,
 } from "../../redux/trashedQuoteListSlice";
 import {QuoteList} from "./QuoteList";
+import {DatePickerComponent} from "../../components/DatePickerComponent";
+import {SalePersonFilter} from "./QuoteList/SalePersonFilter";
+import {SalePersonFilterTag} from "./QuoteList/SalePersonFilterTag";
 
 function QuoteListPage() {
     const navigate = useNavigate();
@@ -51,8 +56,83 @@ function QuoteListPage() {
     const [selectedIndexTable, setSelectedIndexTable] = useState(10);
     const [showModal, setShowModal] = useState(false);
     const [quoteDetail, setQuoteDetail] = useState({});
-    const [currentPage, setCurrentPage] = useState(1)
+    const [currentPage, setCurrentPage] = useState(1);
 
+
+    // xu ly popover filter date
+    const [togglePopoverActiveFilter, setTogglePopoverActive] = useState(false);
+    const [togglePopoverActiveFilter2, setTogglePopoverActive2] = useState(false);
+    const [showCalendar2, setOnShowCalendar2] = useState(false);
+
+    const handleTogglePopoverActiveFilter = () => {
+        setTimeout(() => {
+            setOnShowCalendar(false);
+            setShowFilterSalePerson(false);
+        }, 100)
+
+        setTogglePopoverActive(!togglePopoverActiveFilter)
+    }
+    const handleTogglePopoverActiveFilter2 = () => {
+        setTimeout(() => {
+            setOnShowCalendar2(false);
+        }, 100)
+        setTogglePopoverActive2(!togglePopoverActiveFilter2)
+    }
+
+    const handleToggleTagDateFilter = () => {
+        setOnShowCalendar2(true);
+        setTogglePopoverActive2(true);
+    }
+
+
+    const handleDateApplyButton = () => {
+        setSelectedTagFilter([selectedDates.start.toLocaleDateString("en-US") +
+        "-" +
+        selectedDates.end.toLocaleDateString("en-US"),])
+
+        setTimeout(() => {
+            setOnShowCalendar(false);
+        }, 500)
+
+        setTogglePopoverActive(false);
+
+        setTimeout(() => {
+            setOnShowCalendar2(false);
+        }, 500)
+
+        setTogglePopoverActive2(false);
+
+
+    };
+
+    const handleDateResetButton = () => {
+
+        setSelectedTagFilter([]);
+
+        setTimeout(() => {
+            setOnShowCalendar(false);
+        }, 500)
+
+        setTogglePopoverActive(false);
+
+        setTimeout(() => {
+            setOnShowCalendar2(false);
+        }, 500)
+
+        setTogglePopoverActive2(false);
+    };
+
+    //xu ly tag filter date va salePerson
+
+    const [selectedTagFilter, setSelectedTagFilter] = useState([])
+
+    // xu ly filter saleperson
+
+
+    const handleRemoveTagFilter = (tag) => {
+        setSelectedTagFilter((previousTags) =>
+            previousTags.filter((previousTags) => previousTags !== tag))
+    }
 
     //get data from redux global state
     const quoteList = useSelector((state) => state.quoteList.quote);
@@ -91,17 +171,28 @@ function QuoteListPage() {
         end: new Date(new Date().setDate(new Date().getDate() + 7)),
     });
 
+
     const handleMonthChange = useCallback(
         (month, year) => setDate({month, year}),
         []
     );
 
+
     const handleClickCalendar = () => {
         setOnShowCalendar(!showCalendar);
     };
 
-    const {selectedResources, allResourcesSelected, handleSelectionChange} =
-        useIndexResourceState(quoteList);
+    // show salePerson filter
+
+    const [showFilterSalePerson, setShowFilterSalePerson] = useState(false)
+    const handleClickSalesperson = () => {
+        setShowFilterSalePerson(!showFilterSalePerson)
+    }
+
+
+    let {selectedResources, allResourcesSelected, handleSelectionChange, clearSelection, removeSelectedResources} =
+        useIndexResourceState(quoteList)
+
 
     const [quoteId, setQuoteId] = useState();
     //-------> logic modal delete
@@ -137,40 +228,10 @@ function QuoteListPage() {
         <Button onClick={togglePopoverActive} icon={SettingsMinor}></Button>
     );
 
-    const [datePickerValue, setDatePickerValue] = useState("Choose time");
-
-    const handleDateApplyButton = () => {
-        setDatePickerValue(
-            selectedDates.start.toLocaleDateString("en-US") +
-            "-" +
-            selectedDates.end.toLocaleDateString("en-US")
-        );
-        setOnShowCalendar(false);
-    };
-
-    const handleDateResetButton = () => {
-        setDatePickerValue("Choose time");
-        setOnShowCalendar(false);
-    };
-    const buttonCalendar = (
-        <div className="card-wrapper__btn-calendar d-flex">
-            <Button
-                fullWidth
-                icon={CalendarMinor}
-                onClick={handleClickCalendar}
-            >
-                {datePickerValue}
-            </Button>
-        </div>
-    );
 
     const dispatch = useDispatch();
     //call api update global state
-    useEffect(() => {
-        dispatch(getQuoteListFilterApi(currentPage, selectedIndexTable, textFieldValue))
-        // dispatch(getQuoteListApi());
-        // dispatch(getTrashedQuoteList());
-    }, [currentPage, selectedIndexTable, textFieldValue]);
+
 
     //row of each tab quote's table
     const rowMarkupQuoteLists = quoteList?.map((quote, index) => (
@@ -418,7 +479,28 @@ function QuoteListPage() {
         </IndexTable.Row>
     ));
 
+    const [salePersonValue, setSalePersonValue] = useState('');
 
+
+    const handleSelectedAllQuotes = () => {
+        // quoteList.map(item => {
+        //     !selectedResources.includes(item.id) && (
+        //         selectedResources = [...selectedResources, item.id])
+        // })
+        // console.log(selectedResources)
+
+        let ele=document.getElementsByClassName('Polaris-Checkbox__Input');
+        for(let i=0; i<ele.length; i++){
+            if(ele[i].type=='checkbox')
+                ele[i].checked=true;
+        }
+
+
+    }
+
+    useEffect(() => {
+        dispatch(getQuoteListFilterApi(currentPage, selectedIndexTable, textFieldValue, selectedTagFilter, salePersonValue))
+    }, [currentPage, selectedIndexTable, textFieldValue, selectedTagFilter, salePersonValue]);
     //tab route
     const tabs = [
         {
@@ -435,82 +517,230 @@ function QuoteListPage() {
                                         showModal={showModal}
                                         quote={quoteDetail}
                                     />
-                                    <div className="quote-list__card-wrapper d-flex justify-content-between">
-                                        <div className="card-wrapper__btn-search">
-                                            <TextField
-                                                placeholder={"search by Quote Id"}
-                                                value={textFieldValue}
-                                                onChange={handleTextFieldChange}
-                                            />
-                                        </div>
-                                        <ButtonGroup>
-                                            <div className="quote-list__popover-calendar">
-                                                <Popover
-                                                    active={showCalendar}
-                                                    activator={buttonCalendar}
-                                                    onClose={handleClickCalendar}
-                                                >
-                                                    <div className="quote-list__date-picker">
-                                                        <DatePicker
-                                                            month={month}
-                                                            year={year}
-                                                            onChange={setSelectedDates}
-                                                            onMonthChange={
-                                                                handleMonthChange
-                                                            }
-                                                            selected={selectedDates}
-                                                            multiMonth
-                                                            allowRange
-                                                        />
-                                                        <div className="quote-list__date-picker__btn-group">
-                                                            <ButtonGroup>
-                                                                <Button
-                                                                    onClick={
-                                                                        handleDateResetButton
-                                                                    }
-                                                                >
-                                                                    Reset
-                                                                </Button>
-                                                                <Button
-                                                                    primary
-                                                                    onClick={
-                                                                        handleDateApplyButton
-                                                                    }
-                                                                >
-                                                                    Apply
-                                                                </Button>
-                                                            </ButtonGroup>
-                                                        </div>
-                                                    </div>
-                                                </Popover>
-                                            </div>
 
-                                            <Popover
-                                                active={popoverActive}
-                                                activator={buttonSelect}
-                                                onClose={togglePopoverActive}
-                                            >
-                                                <ActionList
-                                                    actionRole="menuitem"
-                                                    items={[
-                                                        {content: "Refresh data"},
-                                                        {
-                                                            content:
-                                                                "Export quote list",
-                                                        },
-                                                    ]}
-                                                />
-                                            </Popover>
-                                            <Button
-                                                primary
-                                                onClick={() =>
-                                                    navigate("/quote/create")
+                                    <div className="quote-list__card-wrapper d-flex justify-content-between">
+                                        {selectedResources.length === 0 ?
+                                            <>
+                                                <div className="card-wrapper__btn-search">
+                                                    <TextField
+                                                        placeholder={"search by Quote Id"}
+                                                        value={textFieldValue}
+                                                        onChange={handleTextFieldChange}
+                                                    />
+
+
+                                                </div>
+                                                <ButtonGroup>
+                                                    <Stack spacing={"tight"}>
+                                                        {salePersonValue && <SalePersonFilterTag
+                                                            setSalePersonValue={setSalePersonValue}
+                                                            salePersonValue={salePersonValue}
+                                                            handleTogglePopoverActiveFilter={handleTogglePopoverActiveFilter}
+                                                        />}
+
+                                                        {selectedTagFilter.map((item, index) => (
+                                                            <div key={index}>
+                                                                <Popover
+                                                                    active={
+                                                                        togglePopoverActiveFilter2
+                                                                    }
+                                                                    onClose={handleTogglePopoverActiveFilter2}
+                                                                    activator={
+                                                                        <Tag key={index}
+                                                                             onRemove={() => handleRemoveTagFilter(item)}>
+                                                                            <Button icon={CalendarTickMajor} monochrome
+                                                                                    removeUnderline plain
+                                                                                    onClick={handleToggleTagDateFilter}>
+                                                                                {item}
+                                                                            </Button>
+                                                                        </Tag>
+                                                                    }
+                                                                >
+                                                                    <div className="quote-list__popover-calendar">
+                                                                        <div className="quote-list__date-picker">
+                                                                            <DatePicker
+                                                                                month={month}
+                                                                                year={year}
+                                                                                onChange={setSelectedDates}
+                                                                                onMonthChange={
+                                                                                    handleMonthChange
+                                                                                }
+                                                                                selected={selectedDates}
+                                                                                multiMonth
+                                                                                allowRange
+                                                                            />
+                                                                            <div
+                                                                                className="quote-list__date-picker__btn-group">
+                                                                                <ButtonGroup>
+                                                                                    <Button
+                                                                                        onClick={
+                                                                                            handleDateResetButton
+                                                                                        }
+                                                                                    >
+                                                                                        Reset
+                                                                                    </Button>
+                                                                                    <Button
+                                                                                        primary
+                                                                                        onClick={
+                                                                                            handleDateApplyButton
+                                                                                        }
+                                                                                    >
+                                                                                        Apply
+                                                                                    </Button>
+                                                                                </ButtonGroup>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </Popover>
+                                                            </div>
+
+
+                                                        ))}
+                                                    </Stack>
+
+                                                    <Popover
+                                                        active={togglePopoverActiveFilter}
+                                                        activator=
+                                                            {
+                                                                <Button
+                                                                    onClick={handleTogglePopoverActiveFilter}
+                                                                    icon={FilterMajor}/>
+                                                            }
+                                                        onClose={handleTogglePopoverActiveFilter}
+
+                                                    >
+                                                        <div>
+                                                            {showCalendar &&
+                                                                <div className="quote-list__popover-calendar">
+                                                                    <div className="quote-list__date-picker">
+                                                                        <DatePicker
+                                                                            month={month}
+                                                                            year={year}
+                                                                            onChange={setSelectedDates}
+                                                                            onMonthChange={
+                                                                                handleMonthChange
+                                                                            }
+                                                                            selected={selectedDates}
+                                                                            multiMonth
+                                                                            allowRange
+                                                                        />
+                                                                        <div
+                                                                            className="quote-list__date-picker__btn-group">
+                                                                            <ButtonGroup>
+                                                                                <Button
+                                                                                    onClick={
+                                                                                        handleDateResetButton
+                                                                                    }
+                                                                                >
+                                                                                    Reset
+                                                                                </Button>
+                                                                                <Button
+                                                                                    primary
+                                                                                    onClick={
+                                                                                        handleDateApplyButton
+                                                                                    }
+                                                                                >
+                                                                                    Apply
+                                                                                </Button>
+                                                                            </ButtonGroup>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>}
+
+                                                            {showFilterSalePerson && (
+                                                                <SalePersonFilter
+                                                                    handleTogglePopoverActiveFilter={handleTogglePopoverActiveFilter}
+                                                                    setSalePersonValue={setSalePersonValue}
+                                                                />)
+                                                            }
+
+                                                            {!showCalendar && !showFilterSalePerson && (
+                                                                <ActionList
+                                                                    actionRole="menuitem"
+                                                                    items={[
+                                                                        {
+                                                                            content: "Create at",
+                                                                            onAction: handleClickCalendar
+
+                                                                        },
+                                                                        {
+                                                                            content:
+                                                                                "Salesperson",
+                                                                            onAction: handleClickSalesperson
+                                                                        },
+                                                                    ]}
+                                                                />
+                                                            )
+                                                            }
+
+                                                        </div>
+                                                    </Popover>
+
+
+                                                    <Popover
+                                                        active={popoverActive}
+                                                        activator={buttonSelect}
+                                                        onClose={togglePopoverActive}
+                                                    >
+                                                        <ActionList
+                                                            actionRole="menuitem"
+                                                            items={[
+                                                                {
+                                                                    content: "Refresh data",
+                                                                    onAction() {
+                                                                        dispatch(getQuoteListFilterApi(currentPage, selectedIndexTable, textFieldValue, selectedTagFilter, salePersonValue))
+                                                                    }
+                                                                },
+                                                                {
+                                                                    content:
+                                                                        "Export quote list",
+                                                                },
+                                                            ]}
+                                                        />
+                                                    </Popover>
+
+
+                                                    <Button
+                                                        primary
+                                                        onClick={() =>
+                                                            navigate("/quote/create")
+                                                        }
+                                                        icon={PlusMinor}
+                                                    >
+                                                        Create a quote
+                                                    </Button>
+                                                </ButtonGroup>
+                                            </>
+                                            : <ButtonGroup segmented>
+                                                <Button disabled><Text as={"h1"}
+                                                                       variant={"bodyMd"}>{selectedResources.length + " "}
+                                                    selected</Text></Button>
+                                                <Button><Text as={"h1"} variant={"bodyMd"}>Export
+                                                    Selected</Text></Button>
+                                                <Button><Text as={"h1"}
+                                                              variant={"bodyMd"}>Delete Selected</Text></Button>
+                                                {selectedResources.length > 0 && selectedResources.length !== quoteList.length &&
+                                                    <Box paddingInlineStart={"4"}>
+                                                        <Button onClick={handleSelectedAllQuotes} removeUnderline plain>
+                                                            <Text as={"h1"} variant={"bodyMd"}>Selected all quotes
+                                                            </Text>
+                                                        </Button>
+                                                    </Box>
                                                 }
-                                                icon={PlusMinor}
-                                            >
-                                                Create a quote
-                                            </Button>
-                                        </ButtonGroup>
+                                                {selectedResources.length === quoteList.length &&
+                                                    <Box paddingInlineStart={"4"}>
+                                                        <Button onClick={clearSelection} removeUnderline plain>
+                                                            <Text as={"h1"} variant={"bodyMd"}>
+                                                                Unselected all quotes
+                                                            </Text>
+                                                        </Button>
+                                                    </Box>}
+                                            </ButtonGroup>
+
+                                        }
+
+
                                     </div>
                                     <Card.Section>
                                         <div className="quote-list__data-table w-100">
@@ -545,7 +775,7 @@ function QuoteListPage() {
                                             >
                                                 {rowMarkupQuoteLists}
                                             </IndexTable>
-                                            <Box paddingBlockStart={"10"} >
+                                            <Box paddingBlockStart={"10"}>
                                                 <Stack>
                                                     <Stack.Item fill>
                                                         <Pagination
@@ -553,13 +783,13 @@ function QuoteListPage() {
                                                             onPrevious={() => {
                                                                 if (currentPage === 1) {
                                                                     setCurrentPage(1)
-                                                                }else {
-                                                                    setCurrentPage(currentPage-1)
+                                                                } else {
+                                                                    setCurrentPage(currentPage - 1)
                                                                 }
                                                             }}
                                                             hasNext
                                                             onNext={() => {
-                                                                setCurrentPage(currentPage+1)
+                                                                setCurrentPage(currentPage + 1)
                                                             }}
                                                         />
                                                     </Stack.Item>
@@ -615,7 +845,6 @@ function QuoteListPage() {
                                             <div className="quote-list__popover-calendar">
                                                 <Popover
                                                     active={showCalendar}
-                                                    activator={buttonCalendar}
                                                 >
                                                     <div className="quote-list__date-picker">
                                                         <DatePicker
