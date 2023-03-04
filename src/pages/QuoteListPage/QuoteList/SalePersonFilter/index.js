@@ -17,9 +17,7 @@ export const SalePersonFilter = ({handleTogglePopoverActiveFilter, setSalePerson
         setSalePersonValue(_checked)
     }
 
-
-    return
-    <div>
+    return (
         <Box padding={"5"}>
             <Stack vertical>
                 {DataSalePersons.map((item, index) => (
@@ -35,6 +33,5 @@ export const SalePersonFilter = ({handleTogglePopoverActiveFilter, setSalePerson
                 ))}
             </Stack>
         </Box>
-
-    </div>
+    )
 }
