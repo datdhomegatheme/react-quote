@@ -41,6 +41,8 @@ export const quoteListSlice = createSlice({
         hasError(state, action) {
             state.error = action.payload;
         },
+
+
     },
 
 });
@@ -96,6 +98,18 @@ export const deleteQuoteApi = (id) => async (dispatch) => {
     }
 }
 
+export const deleteQuoteApi2 = (id) => async (dispatch) => {
+    try {
+        axios
+            .post(`${API_URL_GET_QUOTE_LIST}/deleteSeletedQuote`, {id: [id]})
+            .catch(function (error) {
+            console.log(error)
+        })
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 export const updateQuoteApi = (id, ...params) => async (dispatch) => {
     try {
         const param = params[0]
@@ -123,6 +137,21 @@ export const postQuoteApi = (...params) => async (dispatch) => {
         }).catch(function (error) {
             console.log(error);
         });
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+export const deleteQuoteAll = () => async (dispatch) => {
+    try {
+        axios
+            .post(`${API_URL_GET_QUOTE_LIST}/deleteAllQuote`)
+            .then((response) => {
+                console.log(response.data)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
     } catch (err) {
         console.log(err)
     }

@@ -33,7 +33,13 @@ import {
 
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {deleteQuoteApi, getQuoteListFilterApi, updateQuoteApi} from "../../redux/quoteListSlice";
+import {
+    deleteQuoteAll,
+    deleteQuoteApi,
+    deleteQuoteApi2,
+    getQuoteListFilterApi,
+    updateQuoteApi
+} from "../../redux/quoteListSlice";
 import {AssignSalesperson, OptionsPageIndex} from "./DataItemQuoteList";
 import ModalQuickView from "../QuoteListPage/ModalQuickView";
 import {useNavigate} from "react-router-dom";
@@ -46,9 +52,10 @@ import {QuoteList} from "./QuoteList";
 import {DatePickerComponent} from "../../components/DatePickerComponent";
 import {SalePersonFilter} from "./QuoteList/SalePersonFilter";
 import {SalePersonFilterTag} from "./QuoteList/SalePersonFilterTag";
-import {click} from "@testing-library/user-event/dist/click";
+import {TrashQuoteList} from "./TrashQuoteList";
 
 function QuoteListPage() {
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [selectedTab, setSelectedTab] = useState(0);
@@ -56,12 +63,14 @@ function QuoteListPage() {
     const [showCalendar, setOnShowCalendar] = useState(false);
     const [popoverActive, setPopoverActive] = useState(false);
     const [selectedIndexTable, setSelectedIndexTable] = useState(10);
+    const [selectedAssignSalesPerson, setSelectedAssignSalesPerson] = useState("Admin");
     const [showModal, setShowModal] = useState(false);
     const [quoteDetail, setQuoteDetail] = useState({});
     const [currentPage, setCurrentPage] = useState(1);
 
 
     // xu ly popover filter date
+
     const [togglePopoverActiveFilter, setTogglePopoverActive] = useState(false);
     const [togglePopoverActiveFilter2, setTogglePopoverActive2] = useState(false);
     const [showCalendar2, setOnShowCalendar2] = useState(false);
@@ -138,9 +147,7 @@ function QuoteListPage() {
 
     //get data from redux global state
     const quoteList = useSelector((state) => state.quoteList.quote);
-    const trashedQuoteList = useSelector(
-        (state) => state.trashedQuoteList.data
-    );
+
 
     const handleChangeModal = (quote) => {
         setShowModal(!showModal);
@@ -149,6 +156,11 @@ function QuoteListPage() {
 
     const handleSelectIndexPageChange = useCallback(
         (value) => setSelectedIndexTable(value),
+        []
+    );
+
+    const handleSelectAssignSalesPerson = useCallback(
+        (value) => setSelectedAssignSalesPerson(value),
         []
     );
 
@@ -196,30 +208,38 @@ function QuoteListPage() {
         useIndexResourceState(quoteList)
 
 
-    const [quoteId, setQuoteId] = useState();
+    const [quoteId, setQuoteId] = useState([]);
     //-------> logic modal delete
     const [showModalQuoteDelete, setShowModalQuoteDelete] = useState(false);
     const handleModalQuoteDelete = (e, id) => {
         e.preventDefault();
         e.stopPropagation();
-        setQuoteId(id);
+        setQuoteId([id]);
         setShowModalQuoteDelete(!showModalQuoteDelete);
     };
     // --------> logic delete quote
     const handleDeleteQuote = () => {
+        console.log(quoteId.length === 1)
+        if (quoteId.length === 1) {
+            dispatch(deleteQuoteApi(quoteId[0]));
+            dispatch(getQuoteListFilterApi(currentPage, selectedIndexTable, textFieldValue, selectedTagFilter, salePersonValue))
+
+        }else if(quoteId.length === quoteList.length){
+            dispatch(deleteQuoteAll());
+        }
+        else{
+            dispatch(deleteQuoteApi2(quoteId))
+        }
+        dispatch(getQuoteListFilterApi(currentPage, selectedIndexTable, textFieldValue, selectedTagFilter, salePersonValue))
+
         setShowModalQuoteDelete(false);
-        dispatch(deleteQuoteApi(quoteId));
+
     };
 
     // --------> logic modal delete trashed quote
     const [showModalTrashedQuoteDelete, setShowModalTrashedQuoteDelete] =
         useState(false);
-    const handleModalTrashedQuoteDelete = (e, id) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setQuoteId(id);
-        setShowModalTrashedQuoteDelete(!showModalTrashedQuoteDelete);
-    };
+
     // --------> logic delete trashed quote
     const handleDeleteTrashedQuote = () => {
         setShowModalTrashedQuoteDelete(false);
@@ -232,8 +252,24 @@ function QuoteListPage() {
 
 
     //call api update global state
+    const updateAssignSalesPerson = (id, value) => {
+        console.log(id, value)
 
+        const termObject = quoteList.filter(quote => quote.id === id)
 
+        const params = {...termObject[0], assignSalesperson: value}
+
+        dispatch(updateQuoteApi(id, params))
+    }
+
+    //delete Quote selected
+    const handleDeleteSelected = () => {
+        setShowModalQuoteDelete(true)
+        setQuoteId(selectedResources)
+        console.log(selectedResources)
+        // dispatch(deleteQuoteApi2(selectedResources))
+        // dispatch(getQuoteListFilterApi(currentPage, selectedIndexTable, textFieldValue, selectedTagFilter, salePersonValue))
+    }
     //row of each tab quote's table
     const rowMarkupQuoteLists = quoteList?.map((quote, index) => (
         <IndexTable.Row
@@ -290,8 +326,8 @@ function QuoteListPage() {
                             <Select
                                 arrow
                                 options={AssignSalesperson}
-                                onChange={handleSelectIndexPageChange}
-                                value={selectedIndexTable}
+                                onChange={handleSelectAssignSalesPerson}
+                                value={selectedAssignSalesPerson}
                                 label={"assign"}
                                 labelHidden={true}
                             />
@@ -307,10 +343,7 @@ function QuoteListPage() {
                                 element.classList.toggle(
                                     "show-element-visibility"
                                 );
-                                //
-                                // dispatch(updateQuoteApi(quote.id,
-                                //     {}));
-
+                                updateAssignSalesPerson(quote.id, selectedAssignSalesPerson);
                             }}
                         >
                             Save
@@ -390,99 +423,6 @@ function QuoteListPage() {
             {/*----Modal delete-----*/}
         </IndexTable.Row>
     ));
-    const rowMarkupTrashedQuoteLists = trashedQuoteList?.map((quote, index) => (
-        <IndexTable.Row
-            id={quote.id}
-            key={index}
-            selected={selectedResources.includes(quote.id)}
-            position={index}
-        >
-            <IndexTable.Cell>{quote.id}</IndexTable.Cell>
-            <IndexTable.Cell>
-                <Text variant="bodyMd" as="p">
-                    <Text variant={"headingSm"} as="span" fontWeight="bold">
-                        Name:
-                    </Text>
-                    <br/>
-                    {quote.customerInformation.name}
-                    <br/>
-                </Text>
-                <Button
-                    removeUnderline
-                    onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleChangeModal(quote);
-                    }}
-                    plain
-                >
-                    Quick View
-                </Button>
-            </IndexTable.Cell>
-            <IndexTable.Cell>{quote.assignSalesperson + " "}</IndexTable.Cell>
-            <IndexTable.Cell>
-                <Text variant="bodyMd" as="p">
-                    {quote.createTime.date}
-                    <br/>
-                    {quote.createTime.time}
-                </Text>
-            </IndexTable.Cell>
-
-            <IndexTable.Cell>
-                {quote.logs === `Send Email Successful` && (
-                    <List.Item>
-                        <Text variant="bodyMd" as="span">
-                            {quote.logs}
-                        </Text>
-                    </List.Item>
-                )}
-                {quote.logs === `Email has not been sent to customer` && (
-                    <List.Item>
-                        <Text color="warning" variant="bodyMd" as="span">
-                            {quote.logs}
-                        </Text>
-                    </List.Item>
-                )}
-            </IndexTable.Cell>
-            <IndexTable.Cell>
-                <ButtonGroup>
-                    <div className="data-table__btn-view">
-                        <Button
-                            onClick={(e) => {
-                                navigate(`${quote.id}`);
-                                e.preventDefault();
-                                e.stopPropagation();
-                            }}
-                            plain
-                            icon={ViewMinor}
-                        />
-                    </div>
-                    <div
-                        className={
-                            "data-table__btn-restore d-flex justify-content-center "
-                        }
-                    >
-                        <Button
-                            plain
-                            icon={CircleDownMajor}
-                            onClick={(e) => {
-                                alert("quote restored !!");
-                                e.preventDefault();
-                                e.stopPropagation();
-                            }}
-                        />
-                    </div>
-                    <Button
-                        plain
-                        icon={DeleteMinor}
-                        onClick={(e) =>
-                            handleModalTrashedQuoteDelete(e, quote.id)
-                        }
-                    />
-                </ButtonGroup>
-            </IndexTable.Cell>
-        </IndexTable.Row>
-    ));
 
     const [salePersonValue, setSalePersonValue] = useState('');
 
@@ -494,6 +434,12 @@ function QuoteListPage() {
     useEffect(() => {
         dispatch(getQuoteListFilterApi(currentPage, selectedIndexTable, textFieldValue, selectedTagFilter, salePersonValue))
     }, [currentPage, selectedIndexTable, textFieldValue, selectedTagFilter, salePersonValue]);
+
+    const handleRefreshData = () => {
+        setPopoverActive(false)
+        dispatch(getQuoteListFilterApi(currentPage, selectedIndexTable, textFieldValue, selectedTagFilter, salePersonValue))
+    }
+
     //tab route
     const tabs = [
         {
@@ -655,7 +601,6 @@ function QuoteListPage() {
                                                                         {
                                                                             content: "Create at",
                                                                             onAction: handleClickCalendar
-
                                                                         },
                                                                         {
                                                                             content:
@@ -681,9 +626,7 @@ function QuoteListPage() {
                                                             items={[
                                                                 {
                                                                     content: "Refresh data",
-                                                                    onAction() {
-                                                                        dispatch(getQuoteListFilterApi(currentPage, selectedIndexTable, textFieldValue, selectedTagFilter, salePersonValue))
-                                                                    }
+                                                                    onAction: handleRefreshData
                                                                 },
                                                                 {
                                                                     content:
@@ -711,8 +654,12 @@ function QuoteListPage() {
                                                     selected</Text></Button>
                                                 <Button><Text as={"h1"} variant={"bodyMd"}>Export
                                                     Selected</Text></Button>
-                                                <Button><Text as={"h1"}
-                                                              variant={"bodyMd"}>Delete Selected</Text></Button>
+                                                <Button
+                                                    onClick={handleDeleteSelected}>
+                                                    <Text as={"h1"}
+                                                          variant={"bodyMd"}>Delete Selected
+                                                    </Text>
+                                                </Button>
                                                 {selectedResources.length > 0 && selectedResources.length !== quoteList.length &&
                                                     <Box paddingInlineStart={"4"}>
                                                         <Button onClick={handleSelectedAllQuotes} removeUnderline plain>
@@ -723,7 +670,13 @@ function QuoteListPage() {
                                                 }
                                                 {selectedResources.length === quoteList.length &&
                                                     <Box paddingInlineStart={"4"}>
-                                                        <Button onClick={clearSelection} removeUnderline plain>
+                                                        <Button
+                                                            onClick={() => {
+                                                                clearSelection();
+
+                                                            }}
+                                                            removeUnderline
+                                                            plain>
                                                             <Text as={"h1"} variant={"bodyMd"}>
                                                                 Unselected all quotes
                                                             </Text>
@@ -740,7 +693,7 @@ function QuoteListPage() {
                                             <IndexTable
                                                 itemCount={quoteList.length}
                                                 selectedItemsCount={
-                                                selectedResources.length
+                                                    selectedResources.length
                                                 }
                                                 onSelectionChange={
                                                     handleSelectionChange
@@ -812,181 +765,14 @@ function QuoteListPage() {
             id: "quote-trashed",
             content: "Trashed Quote",
             ui: (
-                <>
-                    {trashedQuoteList.length !== 0 ? (
-                        <Box padding={"4"}>
-                            <Card>
-                                <Card.Section>
-                                    <ModalQuickView
-                                        handleChangeModal={handleChangeModal}
-                                        showModal={showModal}
-                                        quote={quoteDetail}
-                                    />
-                                    <div className="quote-list__card-wrapper">
-                                        <div className="card-wrapper__btn-search">
-                                            <TextField
-                                                placeholder={
-                                                    "search by Quote Id"
-                                                }
-                                                value={textFieldValue}
-                                                onChange={handleTextFieldChange}
-                                            />
-                                        </div>
-                                        <ButtonGroup>
-                                            <div className="quote-list__popover-calendar">
-                                                <Popover
-                                                    active={showCalendar}
-                                                >
-                                                    <div className="quote-list__date-picker">
-                                                        <DatePicker
-                                                            month={month}
-                                                            year={year}
-                                                            onChange={
-                                                                setSelectedDates
-                                                            }
-                                                            onMonthChange={
-                                                                handleMonthChange
-                                                            }
-                                                            selected={
-                                                                selectedDates
-                                                            }
-                                                            multiMonth
-                                                            allowRange
-                                                        />
-                                                        <div className="quote-list__date-picker__btn-group">
-                                                            <ButtonGroup>
-                                                                <Button
-                                                                    onClick={
-                                                                        handleDateResetButton
-                                                                    }
-                                                                >
-                                                                    Reset
-                                                                </Button>
-                                                                <Button
-                                                                    primary
-                                                                    onClick={
-                                                                        handleDateApplyButton
-                                                                    }
-                                                                >
-                                                                    Apply
-                                                                </Button>
-                                                            </ButtonGroup>
-                                                        </div>
-                                                    </div>
-                                                </Popover>
-                                            </div>
+                <TrashQuoteList
+                    selectedResources={selectedResources}
+                    showCalendar={showCalendar}
+                    month={month}
+                    year={year}
 
-                                            <Popover
-                                                active={popoverActive}
-                                                activator={buttonSelect}
-                                                onClose={togglePopoverActive}
-                                            >
-                                                <ActionList
-                                                    actionRole="menuitem"
-                                                    items={[
-                                                        {
-                                                            content:
-                                                                "Refresh data",
-                                                        },
-                                                        {
-                                                            content:
-                                                                "Export quote list",
-                                                        },
-                                                    ]}
-                                                />
-                                            </Popover>
-                                        </ButtonGroup>
-                                    </div>
-                                    <Card.Section>
-                                        <div className="quote-list__data-table">
-                                            <IndexTable
-                                                itemCount={quoteList.length}
-                                                selectedItemsCount={
-                                                    allResourcesSelected
-                                                        ? "All"
-                                                        : selectedResources.length
-                                                }
-                                                onSelectionChange={
-                                                    handleSelectionChange
-                                                }
-                                                headings={[
-                                                    {title: "Quote Id"},
-                                                    {
-                                                        title: "Customer Information",
-                                                    },
-                                                    {
-                                                        title: "Assign Salesperson",
-                                                    },
-                                                    {title: "Create Time"},
-                                                    {title: "Logs"},
-                                                    {title: "Actions"},
-                                                ]}
-                                                sortable={[
-                                                    true,
-                                                    false,
-                                                    false,
-                                                    false,
-                                                    true,
-                                                    false,
-                                                ]}
-                                            >
-                                                {rowMarkupTrashedQuoteLists}
-                                            </IndexTable>
-                                            <div
-                                                className={
-                                                    "quote-list__select-index-table"
-                                                }
-                                            >
-                                                <Select
-                                                    options={OptionsPageIndex}
-                                                    onChange={
-                                                        handleSelectIndexPageChange
-                                                    }
-                                                    value={selectedIndexTable}
-                                                />
-                                            </div>
-                                        </div>
-                                    </Card.Section>
-                                </Card.Section>
-                            </Card>
-                        </Box>
-                    ) : (
-                        <Box padding={"10"}>
-                            <AlphaStack fullWidth align={"center"}>
-                                <Card>
-                                    <Card.Section>
-                                        <Box
-                                            paddingBlockEnd={"12"}
-                                            paddingBlockStart={"4"}
-                                        >
-                                            <AlphaStack align={"center"}>
-                                                <img
-                                                    alt={"empty quote"}
-                                                    src={Images.emptyQuote}
-                                                />
-                                                <Text
-                                                    variant={"headingMd"}
-                                                    as={"h1"}
-                                                >
-                                                    This is where you'll manage
-                                                    your trashed quote
-                                                </Text>
-                                                <Text
-                                                    variant={"bodySm"}
-                                                    as={"p"}
-                                                    fontWeight={"regular"}
-                                                >
-                                                    You can edit and restore
-                                                    quote that you trashed
-                                                </Text>
-                                            </AlphaStack>
-                                        </Box>
-                                    </Card.Section>
-                                </Card>
-                            </AlphaStack>
-                        </Box>
-                    )}
-                </>
+
+                />
             ),
         },
         {
@@ -1028,6 +814,7 @@ function QuoteListPage() {
             ),
         },
     ];
+
 
     return (
         <section className="quote-list">
@@ -1078,45 +865,7 @@ function QuoteListPage() {
                 </div>
             </Modal>
             {/*-------> modal delete trashed quote list */}
-            <Modal
-                open={showModalTrashedQuoteDelete}
-                title={"Delete this quote"}
-                onClose={handleModalTrashedQuoteDelete}
-            >
-                <div className="quote-list__modal-delete">
-                    <Modal.Section>
-                        <TextContainer>
-                            <Text variant={"bodyLg"} as={"p"}>
-                                Are you sure you want to delete this trashed
-                                quote?
-                            </Text>
-                            <Text variant={"bodyLg"} as={"p"}>
-                                Or move this quote to trash?
-                            </Text>
-                            <Text variant={"bodyLg"} as={"p"}>
-                                The quote has been in 60 days if it's in trashed
-                                box.
-                            </Text>
-                            <Text variant={"bodyLg"} as={"p"}>
-                                This action cannot be undone.
-                            </Text>
-                        </TextContainer>
-                    </Modal.Section>
-                    <Modal.Section>
-                        <div className="d-flex flex-row-reverse">
-                            <ButtonGroup>
-                                <Button>Move to Trashed</Button>
-                                <Button
-                                    destructive
-                                    onClick={handleDeleteTrashedQuote}
-                                >
-                                    Delete
-                                </Button>
-                            </ButtonGroup>
-                        </div>
-                    </Modal.Section>
-                </div>
-            </Modal>
+
         </section>
     );
 }
