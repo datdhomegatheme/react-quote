@@ -8,6 +8,8 @@ const initialState = {
     quote: [],
     limit: 10,
     currentPage: 1,
+    filter: "",
+    salesPerson: "",
 };
 
 
@@ -19,7 +21,8 @@ export const quoteListSlice = createSlice({
             state.quote = action.payload;
             state.limit = action.payload.limit;
             state.currentPage = action.payload.currentPage;
-
+            state.filter = action.payload.filter;
+            state.salesPerson= action.payload.salesPerson;
         },
 
         deleteQuote: (state, action) => {

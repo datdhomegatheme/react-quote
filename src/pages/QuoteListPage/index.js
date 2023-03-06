@@ -45,13 +45,11 @@ import ModalQuickView from "../QuoteListPage/ModalQuickView";
 import {useNavigate} from "react-router-dom";
 import Images from "../../assets/Images";
 import {
-    deleteTrashedQuote,
-    getTrashedQuoteList,
+    deleteTrashedQuote
 } from "../../redux/trashedQuoteListSlice";
 import {QuoteList} from "./QuoteList";
-import {DatePickerComponent} from "../../components/DatePickerComponent";
-import {SalePersonFilter} from "./QuoteList/SalePersonFilter";
-import {SalePersonFilterTag} from "./QuoteList/SalePersonFilterTag";
+import {SalePersonFilter} from "./SalePersonFilter";
+import {SalePersonFilterTag} from "./SalePersonFilterTag";
 import {TrashQuoteList} from "./TrashQuoteList";
 
 function QuoteListPage() {
@@ -247,7 +245,7 @@ function QuoteListPage() {
     };
 
     const buttonSelect = (
-        <Button onClick={togglePopoverActive} icon={SettingsMinor}></Button>
+        <Button onClick={togglePopoverActive} icon={SettingsMinor}/>
     );
 
 
@@ -266,7 +264,6 @@ function QuoteListPage() {
     const handleDeleteSelected = () => {
         setShowModalQuoteDelete(true)
         setQuoteId(selectedResources)
-        console.log(selectedResources)
         // dispatch(deleteQuoteApi2(selectedResources))
         // dispatch(getQuoteListFilterApi(currentPage, selectedIndexTable, textFieldValue, selectedTagFilter, salePersonValue))
     }
@@ -424,7 +421,7 @@ function QuoteListPage() {
         </IndexTable.Row>
     ));
 
-    const [salePersonValue, setSalePersonValue] = useState('');
+    const [salePersonValue, setSalePersonValue] = useState();
 
 
     const handleSelectedAllQuotes = () => {
@@ -466,8 +463,6 @@ function QuoteListPage() {
                                                         value={textFieldValue}
                                                         onChange={handleTextFieldChange}
                                                     />
-
-
                                                 </div>
                                                 <ButtonGroup>
                                                     <Stack spacing={"tight"}>
@@ -585,7 +580,8 @@ function QuoteListPage() {
                                                                             </ButtonGroup>
                                                                         </div>
                                                                     </div>
-                                                                </div>}
+                                                                </div>
+                                                            }
 
                                                             {showFilterSalePerson && (
                                                                 <SalePersonFilter
@@ -648,7 +644,8 @@ function QuoteListPage() {
                                                     </Button>
                                                 </ButtonGroup>
                                             </>
-                                            : <ButtonGroup segmented>
+                                            :
+                                            <ButtonGroup segmented>
                                                 <Button disabled><Text as={"h1"}
                                                                        variant={"bodyMd"}>{selectedResources.length + " "}
                                                     selected</Text></Button>
@@ -770,7 +767,24 @@ function QuoteListPage() {
                     showCalendar={showCalendar}
                     month={month}
                     year={year}
-
+                    setSelectedDates={setSelectedDates}
+                    handleMonthChange={handleMonthChange}
+                    selectedDates={selectedDates}
+                    handleDateResetButton={handleDateResetButton}
+                    handleDateApplyButton={handleDateApplyButton}
+                    active={popoverActive}
+                    buttonSelect={buttonSelect}
+                    togglePopoverActive={togglePopoverActive}
+                    handleRefreshData={handleRefreshData}
+                    allResourcesSelected={allResourcesSelected}
+                    handleSelectionChange={handleSelectionChange}
+                    handleSelectIndexPageChange={handleSelectIndexPageChange}
+                    selectedIndexTable={selectedIndexTable}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    textFieldValue={textFieldValue}
+                    selectedTagFilter={selectedTagFilter}
+                    salePersonValue={salePersonValue}
 
                 />
             ),

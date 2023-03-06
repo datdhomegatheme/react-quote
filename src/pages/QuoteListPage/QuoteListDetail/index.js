@@ -29,7 +29,6 @@ import {
     getQuoteListApi,
     updateQuoteApi,
 } from "../../../redux/quoteListSlice";
-import {getTrashedQuoteList} from "../../../redux/trashedQuoteListSlice";
 import {getDataProducts} from "../../../redux/dataProductsSlice";
 import {
     oldSetting,
@@ -66,7 +65,6 @@ function QuoteListDetail() {
         setLoading(true)
         await
             dispatch(getQuoteListApi());
-        dispatch(getTrashedQuoteList());
         dispatch(getDataProducts())
         setLoading(false)
     }

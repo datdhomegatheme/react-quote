@@ -3,35 +3,49 @@ import axios from "axios";
 
 const API_URL_GET_TRASHED_QUOTE_LIST = "http://localhost:3000/DataTrashedQuoteLists";
 
-const initialState = { data: []};
+const initialState = {
+    trashQuote: [],
+    limit: 10,
+    currentPage: 1,
+    filter: "",
+    salesPerson: "",
+};
 
 export const trashedQuoteListSlice = createSlice({
     name: "trashQuoteList",
     initialState,
     reducers: {
         getTrashedQuoteList: (state, action) => {
-            state.data = action.payload;
+            state.trashQuote = action.payload;
+            state.limit = action.payload.limit;
+            state.currentPage = action.payload.currentPage;
+            state.filter = action.payload.filter;
+            state.salesPerson= action.payload.salesPerson;
         },
 
-        deleteTrashQuote: (state, action) => {
-            state.data = state.data.filter((data)=> data.id !== action.payload.id)
-        }
+        hasError(state, action) {
+            state.error = action.payload;
+        },
 
     },
 });
 
-export const getTrashedQuoteList = () => async(dispatch) => {
+export const getTrashedQuoteListFilterApi = (currentPage, limit, search, filter, salesPerson) => async(dispatch) => {
+    const queryParams = `
+    &currentPage=${currentPage} 
+    &limit=${limit} 
+    &search=${search} 
+    &filter=${filter} 
+    &salesPerson=${salesPerson}`;
+
     try{
         axios
-            .get(API_URL_GET_TRASHED_QUOTE_LIST)
+            .get(`${API_URL_GET_TRASHED_QUOTE_LIST}?${queryParams}`)
             .then((response) => {
                 dispatch(trashedQuoteListSlice.actions.getTrashedQuoteList(response.data));
             })
-            .catch(function(error){
-                console.log(error);
-            })
-    } catch(err){
-        console.log(err);
+    } catch(error){
+        dispatch(trashedQuoteListSlice.actions.hasError(error));
     }
 }
 
