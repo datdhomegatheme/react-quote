@@ -6,7 +6,7 @@
         "email": "hieu1111@gmail.com",
         "message": "hi111"
       },
-      "assignSalesperson": "employee",
+      "assignSalesperson": "hieu",
       "createTime": {
         "date": "02/07/2023",
         "time": "04:47:00"
@@ -39,20 +39,20 @@
           "idQuote": 0,
           "image": "https://www.etsy.com/img/32174391/r/il/eb7848/3786277333/il_794xN.3786277333_erbe.jpg",
           "product": "product B",
-          "quantity": 1,
+          "quantity": "6",
           "price": 300,
           "variant": "41 / black",
           "sku": 32111
         },
         {
-          "id": 12,
+          "id": 10,
           "idQuote": 0,
-          "image": "https://i.pinimg.com/564x/fe/e8/44/fee84496ccbf95c48a4928a6b634c710.jpg",
-          "product": "product C",
-          "quantity": 1,
-          "price": 100,
-          "variant": "43",
-          "sku": 32111
+          "image": "https://i.pinimg.com/564x/da/7b/e2/da7be2e45116fcfa45acd813e2b01090.jpg",
+          "product": "product A",
+          "quantity": "6",
+          "price": 200,
+          "variant": "40 / gold-black",
+          "sku": 21345
         }
       ],
       "comments": [

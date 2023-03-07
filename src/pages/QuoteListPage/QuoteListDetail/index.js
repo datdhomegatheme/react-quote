@@ -248,10 +248,10 @@ function QuoteListDetail() {
             (item) => item.product === selected
         );
         let termArrayDuplicate = [
-            ...quoteDetail[0].dataQuoteProductsInformation,
+            ...currentSettingDetail[0].dataQuoteProductsInformation,
             dataProductsSelected[0],
         ];
-        let termArray = [...quoteDetail[0].dataQuoteProductsInformation];
+        let termArray = [...currentSettingDetail[0].dataQuoteProductsInformation];
         const valueArr = termArrayDuplicate.map(function (item) {
             return item.product;
         });
@@ -259,7 +259,7 @@ function QuoteListDetail() {
             return valueArr.indexOf(item) !== idx;
         });
         const dataProductsOldDuplicate =
-            quoteDetail[0].dataQuoteProductsInformation.filter(
+            currentSettingDetail[0].dataQuoteProductsInformation.filter(
                 (item) => item.product === selected
             );
         const index = termArray.findIndex((item) => item.product === selected);
@@ -275,16 +275,18 @@ function QuoteListDetail() {
                 quantity: term.quantity,
             };
             termObject = {
-                ...quoteDetail[0],
+                ...currentSettingDetail[0],
                 dataQuoteProductsInformation: termArray,
             };
-            updateQuote(termObject);
+            dispatch(updateCurrentSetting(termObject));
+
         } else {
             termObject = {
-                ...quoteDetail[0],
+                ...currentSettingDetail[0],
                 dataQuoteProductsInformation: termArrayDuplicate,
             };
-            updateQuote(termObject);
+            dispatch(updateCurrentSetting(termObject));
+
         }
     };
 
@@ -368,12 +370,14 @@ function QuoteListDetail() {
 
     // ---> handle discard changes button
     const handleDiscard = () => {
-        updateQuote(oldSettingValue[quoteId.id]);
+        const termObject = oldSettingValue.find(item=> item.id === Number(quoteId.id))
+        updateQuote(termObject);
     };
 
     // ---> handle save changes button
     const handleSave = () => {
-        updateQuote(currentSettingValue[quoteId.id]);
+        const termObject = currentSettingValue.find(item=> item.id === Number(quoteId.id))
+        updateQuote(termObject);
     };
 
     // ---> handle comment
