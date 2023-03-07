@@ -28,14 +28,21 @@
     .data-table__btn-view {
         .Polaris-Icon__Svg {
             fill: #5c6ac4;
+            width: 18px;
+            height: 18px;
         }
     }
     .data-table__btn-restore{
-        margin-left: 50%;
         .Polaris-Icon__Svg {
-            width: 14px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             fill: #5c6ac4;
+        }
+    }
+    .data-table__btn-delete{
+        .Polaris-Icon__Svg {
+            width: 18px;
+            height: 18px;
         }
     }
 

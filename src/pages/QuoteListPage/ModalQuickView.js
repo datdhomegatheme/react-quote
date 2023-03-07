@@ -36,9 +36,7 @@ function ModalQuickView({handleChangeModal, showModal, quote}) {
                                                 position={index}
                                             >
                                                 <IndexTable.Cell>
-
                                                     <Thumbnail alt={itemProduct.title} source={itemProduct.image}/>
-
                                                 </IndexTable.Cell>
                                                 <IndexTable.Cell>
                                                     <Button

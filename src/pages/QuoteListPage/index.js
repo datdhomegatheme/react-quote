@@ -51,6 +51,7 @@ import {QuoteList} from "./QuoteList";
 import {SalePersonFilter} from "./SalePersonFilter";
 import {SalePersonFilterTag} from "./SalePersonFilterTag";
 import {TrashQuoteList} from "./TrashQuoteList";
+import {AbandonedQuoteList} from "./AbandonedQuoteList";
 
 function QuoteListPage() {
 
@@ -852,40 +853,9 @@ function QuoteListPage() {
         },
         {
             id: "quote-abandon",
-            content: "Abandon Quote",
+            content: "Abandoned Quote",
             ui: (
-                <Box padding={"10"}>
-                    <AlphaStack fullWidth align={"center"}>
-                        <Card>
-                            <Card.Section>
-                                <Box
-                                    paddingBlockEnd={"12"}
-                                    paddingBlockStart={"4"}
-                                >
-                                    <AlphaStack align={"center"}>
-                                        <img
-                                            alt={"empty quote"}
-                                            src={Images.emptyQuote}
-                                        />
-                                        <Text variant={"headingMd"} as={"h1"}>
-                                            This is where you'll manage your
-                                            Abandon quote
-                                        </Text>
-                                        <Text
-                                            variant={"bodySm"}
-                                            as={"p"}
-                                            fontWeight={"regular"}
-                                        >
-                                            When your customer has not submitted
-                                            a quote request, a abandoned quote
-                                            will be created
-                                        </Text>
-                                    </AlphaStack>
-                                </Box>
-                            </Card.Section>
-                        </Card>
-                    </AlphaStack>
-                </Box>
+                <AbandonedQuoteList />
             ),
         },
     ];

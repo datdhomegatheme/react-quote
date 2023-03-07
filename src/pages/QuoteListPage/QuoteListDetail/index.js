@@ -20,7 +20,7 @@ import {
     TextField,
 } from "@shopify/polaris";
 import {useCallback, useEffect, useMemo, useState} from "react";
-import {DeleteMinor, ImportMinor, SearchMajor} from "@shopify/polaris-icons";
+import {DeleteMinor, CircleCancelMinor, ImportMinor, SearchMajor} from "@shopify/polaris-icons";
 import Images from "../../../assets/Images";
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
@@ -455,10 +455,12 @@ function QuoteListDetail() {
                         actions: [
                             {
                                 content: "Cancel Quote",
+                                icon: CircleCancelMinor,
                                 onAction: () => alert("Cancel Quote"),
                             },
                             {
                                 content: "Delete Quote",
+                                icon: DeleteMinor,
                                 onAction: () => {
                                     handleDeleteQuote();
                                 },

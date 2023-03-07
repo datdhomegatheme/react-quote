@@ -54,7 +54,7 @@ export const deleteTrashedQuote = (id) => async(dispatch) => {
         axios
             .delete(`${API_URL_GET_TRASHED_QUOTE_LIST}/${id}`)
             .then((response)=> {
-                dispatch(trashedQuoteListSlice.actions.deleteTrashQuote(response))
+                // dispatch(trashedQuoteListSlice.actions.deleteTrashQuote(response))
             }).catch(function (error){
                 console.log(error)
         })

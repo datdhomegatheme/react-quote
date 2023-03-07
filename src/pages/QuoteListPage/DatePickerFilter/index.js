@@ -30,8 +30,12 @@ export const DatePickerFilter = (props) => {
 
     const handleDateApplyButton = () => {
         props.setSelectedTagFilter(selectedDates.start.toLocaleDateString("en-US") +
-        "-" +
-        selectedDates.end.toLocaleDateString("en-US"))
+            "-" +
+            selectedDates.end.toLocaleDateString("en-US"));
+
+        props.setSelectedDates(selectedDates.start.toLocaleDateString("en-US") +
+            "-" +
+            selectedDates.end.toLocaleDateString("en-US"))
 
         setTimeout(() => {
             props.setOnShowCalendar(false);
