@@ -42,7 +42,12 @@ body {
 
 table {
   caption-side: top;
+  .Polaris-IndexTable__TableHeading, .Polaris-IndexTable__TableHeadingSortButton, {
+      color: black;
+  }
 }
+
+
 
 
 

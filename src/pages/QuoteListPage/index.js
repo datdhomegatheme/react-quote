@@ -222,10 +222,9 @@ function QuoteListPage() {
             dispatch(deleteQuoteApi(quoteId[0]));
             dispatch(getQuoteListFilterApi(currentPage, selectedIndexTable, textFieldValue, selectedTagFilter, salePersonValue))
 
-        }else if(quoteId.length === quoteList.length){
+        } else if (quoteId.length === quoteList.length) {
             dispatch(deleteQuoteAll());
-        }
-        else{
+        } else {
             dispatch(deleteQuoteApi2(quoteId))
         }
         dispatch(getQuoteListFilterApi(currentPage, selectedIndexTable, textFieldValue, selectedTagFilter, salePersonValue))
@@ -401,22 +400,26 @@ function QuoteListPage() {
                     </List.Item>
                 )}
             </IndexTable.Cell>
-            <IndexTable.Cell>
-                <ButtonGroup>
-                    <div className="data-table__btn-view">
+
+            {selectedResources.length === 0 &&
+                <IndexTable.Cell>
+                    <ButtonGroup>
+                        <div className="data-table__btn-view">
+                            <Button
+                                onClick={() => navigate(`${quote.id}`)}
+                                plain
+                                icon={ViewMinor}
+                            />
+                        </div>
                         <Button
-                            onClick={() => navigate(`${quote.id}`)}
                             plain
-                            icon={ViewMinor}
+                            icon={DeleteMinor}
+                            onClick={(e) => handleModalQuoteDelete(e, quote.id)}
                         />
-                    </div>
-                    <Button
-                        plain
-                        icon={DeleteMinor}
-                        onClick={(e) => handleModalQuoteDelete(e, quote.id)}
-                    />
-                </ButtonGroup>
-            </IndexTable.Cell>
+                    </ButtonGroup>
+                </IndexTable.Cell>
+            }
+
             {/*----Modal delete-----*/}
         </IndexTable.Row>
     ));
@@ -695,15 +698,73 @@ function QuoteListPage() {
                                                 onSelectionChange={
                                                     handleSelectionChange
                                                 }
-                                                headings={[
-                                                    {title: "Quote Id"},
-                                                    {title: "Customer Information"},
-                                                    {title: "Assign Salesperson"},
-                                                    {title: "Create Time"},
-                                                    {title: "Status"},
-                                                    {title: "Logs"},
-                                                    {title: "Actions"},
-                                                ]}
+                                                headings={
+                                                    selectedResources.length === 0
+                                                        ?
+                                                        [
+                                                            {
+                                                                title: <Text variant={"bodyMd"} as={"h1"}
+                                                                             fontWeight={"semibold"}>Quote Id</Text>
+                                                            },
+                                                            {
+                                                                title: <Text variant={"bodyMd"} as={"h1"}
+                                                                             fontWeight={"semibold"}>Customer
+                                                                    Information</Text>
+                                                            },
+                                                            {
+                                                                title: <Text variant={"bodyMd"} as={"h1"}
+                                                                             fontWeight={"semibold"}>Assign
+                                                                    Salesperson</Text>
+                                                            },
+                                                            {
+                                                                title: <Text variant={"bodyMd"} as={"h1"}
+                                                                             fontWeight={"semibold"}>Create Time</Text>
+                                                            },
+                                                            {
+                                                                title: <Text variant={"bodyMd"} as={"h1"}
+                                                                             fontWeight={"semibold"}>Status</Text>
+                                                            },
+                                                            {
+                                                                title: <Text variant={"bodyMd"} as={"h1"}
+                                                                             fontWeight={"semibold"}>Logs</Text>
+                                                            },
+                                                            {
+                                                                title: <Text variant={"bodyMd"} as={"h1"}
+                                                                             fontWeight={"semibold"}>Actions</Text>
+                                                            },
+                                                        ]
+                                                        :
+
+                                                        [
+                                                            {
+                                                                title: <Text variant={"bodyMd"} as={"h1"}
+                                                                             fontWeight={"semibold"}>Quote Id</Text>
+                                                            },
+                                                            {
+                                                                title: <Text variant={"bodyMd"} as={"h1"}
+                                                                             fontWeight={"semibold"}>Customer
+                                                                    Information</Text>
+                                                            },
+                                                            {
+                                                                title: <Text variant={"bodyMd"} as={"h1"}
+                                                                             fontWeight={"semibold"}>Assign
+                                                                    Salesperson</Text>
+                                                            },
+                                                            {
+                                                                title: <Text variant={"bodyMd"} as={"h1"}
+                                                                             fontWeight={"semibold"}>Create Time</Text>
+                                                            },
+                                                            {
+                                                                title: <Text variant={"bodyMd"} as={"h1"}
+                                                                             fontWeight={"semibold"}>Status</Text>
+                                                            },
+                                                            {
+                                                                title: <Text variant={"bodyMd"} as={"h1"}
+                                                                             fontWeight={"semibold"}>Logs</Text>
+                                                            }
+                                                        ]
+
+                                                }
                                                 sortable={[
                                                     true,
                                                     false,

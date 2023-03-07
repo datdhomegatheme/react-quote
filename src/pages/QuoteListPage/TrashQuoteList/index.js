@@ -342,20 +342,20 @@ export const TrashQuoteList = (props) => {
                                             selectedResources.length === 0
                                                 ?
                                                 [
-                                                    {title: "Quote Id"},
-                                                    {title: "Customer Information"},
-                                                    {title: "Assign Salesperson"},
-                                                    {title: "Create Time"},
-                                                    {title: "Logs"},
-                                                    {title: "Actions"},
+                                                    {title: <Text variant={"bodyMd"} as={"h1"} fontWeight={"semibold"}>Quote Id</Text>},
+                                                    {title: <Text variant={"bodyMd"} as={"h1"} fontWeight={"semibold"}>Customer Information</Text>},
+                                                    {title: <Text variant={"bodyMd"} as={"h1"} fontWeight={"semibold"}>Assign Salesperson</Text>},
+                                                    {title: <Text variant={"bodyMd"} as={"h1"} fontWeight={"semibold"}>Create Time</Text>},
+                                                    {title: <Text variant={"bodyMd"} as={"h1"} fontWeight={"semibold"}>Logs</Text>},
+                                                    {title: <Text variant={"bodyMd"} as={"h1"} fontWeight={"semibold"}>Actions</Text>},
                                                 ]
                                                 :
                                                 [
-                                                    {title: "Quote Id"},
-                                                    {title: "Customer Information"},
-                                                    {title: "Assign Salesperson"},
-                                                    {title: "Create Time"},
-                                                    {title: "Logs"},
+                                                    {title: <Text variant={"bodyMd"} as={"h1"} fontWeight={"semibold"}>Quote Id</Text>},
+                                                    {title: <Text variant={"bodyMd"} as={"h1"} fontWeight={"semibold"}>Customer Information</Text>},
+                                                    {title: <Text variant={"bodyMd"} as={"h1"} fontWeight={"semibold"}>Assign Salesperson</Text>},
+                                                    {title: <Text variant={"bodyMd"} as={"h1"} fontWeight={"semibold"}>Create Time</Text>},
+                                                    {title: <Text variant={"bodyMd"} as={"h1"} fontWeight={"semibold"}>Logs</Text>},
                                                 ]
 
 
