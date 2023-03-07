@@ -2,6 +2,72 @@
   "DataQuoteLists": [
     {
       "customerInformation": {
+      },
+      "assignSalesperson": "hieu",
+      "createTime": {
+        "date": "02/07/2023",
+        "time": "04:47:00"
+      },
+      "status": "read",
+      "logs": "Send Email Successful",
+      "dataQuoteProductsInformation": [
+        {
+          "id": 0,
+          "idQuote": 0,
+          "image": "https://i.pinimg.com/564x/da/7b/e2/da7be2e45116fcfa45acd813e2b01090.jpg",
+          "product": "product_1_1",
+          "quantity": 1,
+          "price": 200,
+          "variant": "40 / gold-black",
+          "sku": 21345
+        },
+        {
+          "id": 1,
+          "idQuote": 0,
+          "image": "https://www.etsy.com/img/32174391/r/il/eb7848/3786277333/il_794xN.3786277333_erbe.jpg",
+          "product": "product_1_2",
+          "quantity": 2,
+          "price": 100,
+          "variant": "43 / black",
+          "sku": 32111
+        },
+        {
+          "id": 11,
+          "idQuote": 0,
+          "image": "https://www.etsy.com/img/32174391/r/il/eb7848/3786277333/il_794xN.3786277333_erbe.jpg",
+          "product": "product B",
+          "quantity": "6",
+          "price": 300,
+          "variant": "41 / black",
+          "sku": 32111
+        },
+        {
+          "id": 10,
+          "idQuote": 0,
+          "image": "https://i.pinimg.com/564x/da/7b/e2/da7be2e45116fcfa45acd813e2b01090.jpg",
+          "product": "product A",
+          "quantity": "6",
+          "price": 200,
+          "variant": "40 / gold-black",
+          "sku": 21345
+        }
+      ],
+      "comments": [
+        {
+          "date": "13/10/2022",
+          "comment": "hieu1 comment"
+        },
+        {
+          "date": "13/10/2022",
+          "comment": "hieu1 comment"
+        }
+      ],
+      "id": 22,
+      "pickupReturn": "Delivery",
+      "termsConditions": "yes"
+    },
+    {
+      "customerInformation": {
         "name": "Hieu111",
         "email": "hieu1111@gmail.com",
         "message": "hi111"

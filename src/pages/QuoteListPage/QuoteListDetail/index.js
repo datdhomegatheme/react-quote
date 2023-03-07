@@ -35,6 +35,7 @@ import {
     currentSetting,
     updateCurrentSetting,
 } from "../../../redux/quoteSettingSlice";
+import AdditionalDetails from "../AdditionalDetails";
 
 function QuoteListDetail() {
     const dispatch = useDispatch();
@@ -1080,7 +1081,8 @@ function QuoteListDetail() {
                             </div>
                         </Grid.Cell>
                         <Grid.Cell columnSpan={{xs: 6, lg: 4}}>
-                            <Card title="Additional Details">
+                            {currentSettingDetail[0]?.customerInformation.name !== undefined ?
+                                <Card title="Additional Details">
                                 <Card.Section>
                                     <TextContainer>
                                         <Text
@@ -1166,6 +1168,8 @@ function QuoteListDetail() {
                                     </TextContainer>
                                 </Card.Section>
                             </Card>
+                                :
+                                <AdditionalDetails /> }
                             <Card title={"Salesperson Account"}>
                                 <Card.Section>
                                     <Select
