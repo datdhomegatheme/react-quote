@@ -4,7 +4,6 @@ export const OptionsPageIndex = [
     { label: "50", value: "50" },
 ];
 
-
 export const AssignSalesperson = [
     { label: "Admin", value: "admin" },
     { label: "Employee", value: "employee" },

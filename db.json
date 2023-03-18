@@ -1,8 +1,7 @@
 {
   "DataQuoteLists": [
     {
-      "customerInformation": {
-      },
+      "customerInformation": {},
       "assignSalesperson": "hieu",
       "createTime": {
         "date": "02/07/2023",

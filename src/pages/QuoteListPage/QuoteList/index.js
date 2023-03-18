@@ -38,8 +38,6 @@ export const QuoteList = () => {
                                                     url="https://help.omegatheme.com/en/category/request-a-quote-hide-prices-ut3g14/">
                                                     contact us
                                                 </Link>
-
-
                                             </Text>
                                         </TextContainer>
                                     </Box>
@@ -72,8 +70,6 @@ export const QuoteList = () => {
                 </div>
             </AlphaStack>
         </Box>
-
-
     )
 
 

@@ -1,6 +1,5 @@
 import {
     ActionList,
-    AlphaStack,
     Badge,
     Box,
     Button,
@@ -23,7 +22,6 @@ import {
 
 } from "@shopify/polaris";
 import {
-    CircleDownMajor,
     DeleteMinor,
     PlusMinor,
     SettingsMinor,
@@ -43,7 +41,6 @@ import {
 import {AssignSalesperson, OptionsPageIndex} from "./DataItemQuoteList";
 import ModalQuickView from "../QuoteListPage/ModalQuickView";
 import {useNavigate} from "react-router-dom";
-import Images from "../../assets/Images";
 import {
     deleteTrashedQuote
 } from "../../redux/trashedQuoteListSlice";
@@ -73,6 +70,7 @@ function QuoteListPage() {
     const [togglePopoverActiveFilter, setTogglePopoverActive] = useState(false);
     const [togglePopoverActiveFilter2, setTogglePopoverActive2] = useState(false);
     const [showCalendar2, setOnShowCalendar2] = useState(false);
+
 
     const handleTogglePopoverActiveFilter = () => {
         setTimeout(() => {
@@ -172,7 +170,7 @@ function QuoteListPage() {
         setTextFieldValue(event);
     };
     const handleTabChange = useCallback((selectedTabIndex) =>
-        setSelectedTab(selectedTabIndex)
+        setSelectedTab(selectedTabIndex),[]
     );
     const [{month, year}, setDate] = useState({
         month: new Date().getMonth(),
@@ -183,6 +181,8 @@ function QuoteListPage() {
         start: new Date(),
         end: new Date(new Date().setDate(new Date().getDate() + 7)),
     });
+
+    console.log(selectedDates,213212)
 
 
     const handleMonthChange = useCallback(
@@ -249,9 +249,9 @@ function QuoteListPage() {
     );
 
 
+
     //call api update global state
     const updateAssignSalesPerson = (id, value) => {
-        console.log(id, value)
 
         const termObject = quoteList.filter(quote => quote.id === id)
 
@@ -684,10 +684,7 @@ function QuoteListPage() {
                                                         </Button>
                                                     </Box>}
                                             </ButtonGroup>
-
                                         }
-
-
                                     </div>
                                     <Card.Section>
                                         <div className="quote-list__data-table w-100">
@@ -704,32 +701,39 @@ function QuoteListPage() {
                                                         ?
                                                         [
                                                             {
+                                                                id: "Quote Id",
                                                                 title: <Text variant={"bodyMd"} as={"h1"}
                                                                              fontWeight={"semibold"}>Quote Id</Text>
                                                             },
                                                             {
+                                                                id: "Customer information",
                                                                 title: <Text variant={"bodyMd"} as={"h1"}
                                                                              fontWeight={"semibold"}>Customer
                                                                     Information</Text>
                                                             },
                                                             {
+                                                                id:"Assign Salesperson",
                                                                 title: <Text variant={"bodyMd"} as={"h1"}
                                                                              fontWeight={"semibold"}>Assign
                                                                     Salesperson</Text>
                                                             },
                                                             {
+                                                                id:"Create Time",
                                                                 title: <Text variant={"bodyMd"} as={"h1"}
                                                                              fontWeight={"semibold"}>Create Time</Text>
                                                             },
                                                             {
+                                                                id: "status",
                                                                 title: <Text variant={"bodyMd"} as={"h1"}
                                                                              fontWeight={"semibold"}>Status</Text>
                                                             },
                                                             {
+                                                                id: "logs",
                                                                 title: <Text variant={"bodyMd"} as={"h1"}
                                                                              fontWeight={"semibold"}>Logs</Text>
                                                             },
                                                             {
+                                                                id: "actions",
                                                                 title: <Text variant={"bodyMd"} as={"h1"}
                                                                              fontWeight={"semibold"}>Actions</Text>
                                                             },

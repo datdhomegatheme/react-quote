@@ -11,7 +11,7 @@ export const DatePickerFilter = (props) => {
         start: new Date(),
         end: new Date(new Date().setDate(new Date().getDate() + 7)),
     });
-
+    
 
     const handleMonthChange = useCallback(
         (month, year) => setDate({month, year}),

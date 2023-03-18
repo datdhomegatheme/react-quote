@@ -44,22 +44,18 @@ export const quoteListSlice = createSlice({
         hasError(state, action) {
             state.error = action.payload;
         },
-
-
     },
-
 });
 
 export const {getQuoteList} = quoteListSlice.actions
 
 export const getQuoteListFilterApi = (currentPage, limit, search, filter, salesPerson) => async (dispatch) => {
-
     const queryParams = `
     &currentPage=${currentPage} 
     &limit=${limit} 
     &search=${search} 
     &filter=${filter} 
-    &salesPerson=${salesPerson}`;
+    &sale_person=${salesPerson}`;
     try {
         axios
             .get(`${API_URL_GET_QUOTE_LIST}?${queryParams}`)

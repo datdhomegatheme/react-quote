@@ -103,7 +103,6 @@ export const TrashQuoteList = (props) => {
             setOnShowCalendar(false);
             setShowFilterSalePerson(false);
         }, 100)
-
         setTogglePopoverActive(!togglePopoverActiveFilter)
     }
 
@@ -179,8 +178,6 @@ export const TrashQuoteList = (props) => {
 
                                         <ButtonGroup>
                                             <Stack spacing={"tight"}>
-
-
                                                 {selectedTagFilter &&
                                                     <Popover
                                                         active={
@@ -216,8 +213,6 @@ export const TrashQuoteList = (props) => {
                                                 }
 
                                             </Stack>
-
-
                                             <Popover
                                                 active={togglePopoverActiveFilter}
                                                 activator=

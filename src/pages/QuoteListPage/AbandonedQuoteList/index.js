@@ -88,6 +88,8 @@ export const AbandonedQuoteList = () => {
 
     const handleDeleteSelected = () => {
         setShowModalQuoteDelete(true)
+
+        console.log("run!!")
         setQuoteId(selectedResources)
         // dispatch(deleteQuoteApi2(selectedResources))
         // dispatch(getQuoteListFilterApi(currentPage, selectedIndexTable, textFieldValue, selectedTagFilter, salePersonValue))
@@ -162,9 +164,7 @@ export const AbandonedQuoteList = () => {
                                                         setSelectedTagFilter={setSelectedTagFilter}
                                                     />
                                                 </div>
-
                                             </Popover>
-
                                             <Popover
                                                 active={popoverActive}
                                                 activator={
